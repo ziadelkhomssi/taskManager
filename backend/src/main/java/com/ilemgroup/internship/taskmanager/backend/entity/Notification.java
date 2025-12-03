@@ -1,5 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.entity;
 
+import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,8 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private NotificationType type;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")
