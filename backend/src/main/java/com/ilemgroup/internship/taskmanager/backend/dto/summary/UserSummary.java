@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotNull;
 
 public record UserSummary(
 
-        @NotNull
+        @NotBlank
         @JsonProperty("id")
-        Long id,
+        String id,
 
         @NotBlank
         @JsonProperty("name")
