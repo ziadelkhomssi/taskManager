@@ -1,5 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.entity;
 
+import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketPriority;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class Ticket {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private Ticket priority;
+    private TicketPriority priority;
 
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
