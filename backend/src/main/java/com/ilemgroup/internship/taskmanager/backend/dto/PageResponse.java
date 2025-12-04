@@ -8,19 +8,19 @@ public record PageResponse<T>(
 
         @NotNull
         @JsonProperty("currentPage")
-        Long currentPage,
+        Integer currentPage,
 
         @NotNull
         @JsonProperty("size")
-        Long size,
+        Integer size,
 
         @NotNull
         @JsonProperty("totalElements")
-        Long totalElements,
+        Integer totalElements,
 
         @NotNull
         @JsonProperty("totalPages")
-        Long totalPages,
+        Integer totalPages,
 
         @NotNull
         @JsonProperty("content")

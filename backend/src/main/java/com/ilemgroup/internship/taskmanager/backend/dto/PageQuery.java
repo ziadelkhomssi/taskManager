@@ -7,11 +7,11 @@ public record PageQuery(
 
         @NotNull
         @JsonProperty("page")
-        Long page,
+        Integer page,
 
         @NotNull
-        @JsonProperty("pageSize")
-        Long pageSize,
+        @JsonProperty("size")
+        Integer size,
 
         @JsonProperty("search")
         String search,
