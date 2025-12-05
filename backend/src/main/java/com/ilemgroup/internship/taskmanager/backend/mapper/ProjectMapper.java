@@ -9,10 +9,13 @@ import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(config = CentralMapperConfiguration.class)
 public interface ProjectMapper {
 
     ProjectSummary toSummary(Project project);
+    List<ProjectSummary> toSummaryList(List<Project> projectList);
 
     ProjectDetails toDetails(Project project);
 

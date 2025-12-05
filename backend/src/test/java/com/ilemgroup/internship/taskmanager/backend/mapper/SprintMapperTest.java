@@ -11,52 +11,57 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@Import(MapperTestConfiguration.class)
 class SprintMapperTest {
 
     @Autowired
     private SprintMapper mapper;
 
     @Test
-    void testToSummary() {
-        Sprint entity = new Sprint(1L, "Sprint 1", "Desc",
+    void testToSummaryList() {
+        Sprint sprint = new Sprint(
+                1L, "Sprint 1", "Description 1",
                 LocalDate.now(), LocalDate.now().plusDays(5), null,
-                SprintStatus.ACTIVE, null, null);
+                SprintStatus.ACTIVE,
+                null, null
+        );
 
-        SprintSummary dto = mapper.toSummary(entity);
+        SprintSummary summary = mapper.toSummary(sprint);
 
-        assertEquals(1L, dto.id());
-        assertEquals("Sprint 1", dto.title());
+        assertEquals(1L, summary.id());
+        assertEquals("Sprint 1", summary.title());
     }
 
     @Test
     void testCreateToEntity() {
         SprintCreate dto = new SprintCreate(
-                "S1", "D", LocalDate.now(), LocalDate.now().plusDays(1), SprintStatus.ACTIVE
+                "Sprint!", "Description", LocalDate.now(), LocalDate.now().plusDays(1), SprintStatus.ACTIVE
         );
 
-        Sprint entity = mapper.createToEntity(dto);
+        Sprint sprint = mapper.createToEntity(dto);
 
-        assertEquals("S1", entity.getTitle());
-        assertNull(entity.getId());
+        assertEquals("Sprint!", sprint.getTitle());
+        assertNull(sprint.getId());
     }
 
     @Test
     void testUpdateToEntity() {
         SprintUpdate dto = new SprintUpdate(
-                5L, "New Title", "New Desc",
+                5L, "New Title", "New Description",
                 LocalDate.now(), LocalDate.now().plusDays(2), SprintStatus.DONE
         );
 
-        Sprint entity = mapper.updateToEntity(dto);
+        Sprint sprint = mapper.updateToEntity(dto);
 
-        assertEquals("New Title", entity.getTitle());
+        assertEquals("New Title", sprint.getTitle());
     }
 }

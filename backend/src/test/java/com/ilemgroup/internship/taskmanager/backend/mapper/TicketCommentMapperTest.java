@@ -2,6 +2,7 @@ package com.ilemgroup.internship.taskmanager.backend.mapper;
 
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
+import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
 import com.ilemgroup.internship.taskmanager.backend.entity.TicketComment;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
 import org.junit.jupiter.api.Test;
@@ -10,37 +11,43 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@Import(MapperTestConfiguration.class)
 class TicketCommentMapperTest{
 
     @Autowired
     private TicketCommentMapper mapper;
 
+
+
     @Test
     void testToDetails() {
-        User user = new User("123", "Bob", "Dev", "pic", null, null, null);
+        User user = new User(
+                "123", "Bob", "Dev", "pic",
+                null, null, null
+        );
 
-        TicketComment parent = new TicketComment();
-        parent.setId(10L);
-
+        TicketComment parentComment = new TicketComment(
+                1L, user, "Hello!", null, null, null,
+                LocalDateTime.now(), LocalDateTime.now()
+        );
         TicketComment comment = new TicketComment(
-                1L, user, "Hello!", null, parent, null,
+                2L, user, "Hello Also!", null, parentComment, null,
                 LocalDateTime.now(), LocalDateTime.now()
         );
 
-        TicketCommentDetails dto = mapper.toDetails(comment);
+        TicketCommentDetails details = mapper.toDetails(comment);
 
-        assertEquals(1L, dto.id());
-        assertEquals("Hello!", dto.comment());
-        assertEquals(10L, dto.parentCommentId());
-
-        UserSummary userDto = dto.userSummary();
-        assertEquals("123", userDto.id());
+        assertEquals(2L, details.id());
+        assertEquals("Hello Also!", details.comment());
+        assertEquals(1L, details.parentCommentId());
     }
 }

@@ -3,6 +3,7 @@ package com.ilemgroup.internship.taskmanager.backend.mapper;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.NotificationDetails;
 import com.ilemgroup.internship.taskmanager.backend.entity.Notification;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
+import com.ilemgroup.internship.taskmanager.backend.entity.User;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +11,15 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@Import(MapperTestConfiguration.class)
 class NotificationMapperTest {
 
     @Autowired
@@ -24,19 +27,23 @@ class NotificationMapperTest {
 
     @Test
     void testToDetails() {
-        Ticket ticket = new Ticket();
-        ticket.setId(5L);
-        ticket.setTitle("Bug");
-
-        Notification entity = new Notification(
-                1L, NotificationType.TICKET_ASSIGNED,
-                ticket, null, false, LocalDateTime.now()
+        Ticket ticket1 = new Ticket(
+                1L, "Ticket 1", null,
+                null, null,
+                null, null,
+                null, null,
+                null, null
         );
 
-        NotificationDetails dto = mapper.toDetails(entity);
+        Notification notification = new Notification(
+                1L, NotificationType.TICKET_ASSIGNED,
+                ticket1, null, false, LocalDateTime.now().minusDays(2)
+        );
 
-        assertEquals(NotificationType.TICKET_ASSIGNED, dto.type());
-        assertEquals(5L, dto.ticketSummary().id());
+        NotificationDetails details = mapper.toDetails(notification);
+
+        assertEquals(NotificationType.TICKET_ASSIGNED, details.type());
+        assertEquals(1L, details.ticketSummary().id());
     }
 }
 

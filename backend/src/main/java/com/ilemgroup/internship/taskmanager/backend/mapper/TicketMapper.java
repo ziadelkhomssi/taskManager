@@ -9,6 +9,8 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(config = CentralMapperConfiguration.class, uses = {UserMapper.class})
 public interface TicketMapper {
 
@@ -17,6 +19,8 @@ public interface TicketMapper {
     @Mapping(target = "priority", source = "priority")
     @Mapping(target = "status", source = "status")
     TicketSummary toSummary(Ticket ticket);
+
+    List<TicketSummary> toSummaryList(List<Ticket> ticketList);
 
     @Mapping(target = "userSummary", source = "user")
     TicketDetails toDetails(Ticket ticket);
@@ -28,7 +32,6 @@ public interface TicketMapper {
     @Mapping(target = "sprint", ignore = true)
     @Mapping(target = "user", ignore = true)
     Ticket createToEntity(TicketCreate dto);
-
 
     @Mapping(target = "comments", ignore = true)
     @Mapping(target = "notifications", ignore = true)

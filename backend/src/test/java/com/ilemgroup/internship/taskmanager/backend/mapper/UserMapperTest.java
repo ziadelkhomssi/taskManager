@@ -9,11 +9,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@Import(MapperTestConfiguration.class)
 public class UserMapperTest {
 
     @Autowired
@@ -21,20 +24,37 @@ public class UserMapperTest {
 
     @Test
     void testToSummary() {
-        User entity = new User("abc123", "John Doe", "Engineer", "pic.png", null, null, null);
+        User user = new User("abc123", "John Doe", "Engineer", "picture.png", null, null, null);
 
-        UserSummary dto = mapper.toSummary(entity);
+        UserSummary dto = mapper.toSummary(user);
 
         assertEquals("abc123", dto.id());
         assertEquals("John Doe", dto.name());
-        assertEquals("pic.png", dto.profilePicture());
+        assertEquals("picture.png", dto.profilePicture());
+    }
+
+    @Test
+    void testToSummaryList() {
+        User user = new User(
+                "abc123", "John Doe", "Engineer", "picture1.png",
+                null, null, null
+        );
+
+        UserSummary summary = mapper.toSummary(user);
+
+        assertEquals("abc123", summary.id());
+        assertEquals("John Doe", summary.name());
+        assertEquals("picture1.png", summary.profilePicture());
     }
 
     @Test
     void testToDetails() {
-        User entity = new User("xyz", "Alice", "Manager", "alice.png", null, null, null);
+        User user = new User(
+                "xyz", "Alice", "Manager", "alice.png",
+                null, null, null
+        );
 
-        UserDetails dto = mapper.toDetails(entity);
+        UserDetails dto = mapper.toDetails(user);
 
         assertEquals("xyz", dto.id());
         assertEquals("Alice", dto.name());

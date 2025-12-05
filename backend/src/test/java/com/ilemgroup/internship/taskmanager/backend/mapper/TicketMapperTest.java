@@ -15,14 +15,17 @@ import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfigur
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@Import(MapperTestConfiguration.class)
 class TicketMapperTest {
 
     @Autowired
@@ -30,22 +33,27 @@ class TicketMapperTest {
 
     @Test
     void testToSummary() {
-        Ticket ticket = new Ticket();
-        ticket.setId(5L);
-        ticket.setTitle("Bug #5");
-        ticket.setPriority(TicketPriority.HIGH);
-        ticket.setStatus(TicketStatus.IN_PROGRESS);
+        Ticket ticket = new Ticket(
+                1L, "Ticket 1", "Description 1",
+                null, null,
+                TicketPriority.MEDIUM, TicketStatus.IN_PROGRESS,
+                null, null,
+                null, null
+        );
 
-        TicketSummary dto = mapper.toSummary(ticket);
+        TicketSummary summary = mapper.toSummary(ticket);
 
-        assertEquals(5L, dto.id());
-        assertEquals("Bug #5", dto.title());
-        assertEquals(TicketPriority.HIGH, dto.priority());
+        assertEquals(1L, summary.id());
+        assertEquals("Ticket 1", summary.title());
+        assertEquals(TicketPriority.MEDIUM, summary.priority());
     }
 
     @Test
     void testToDetails() {
-        User user = new User("id123", "Alice", "Dev", "p.png", null, null, null);
+        User user = new User(
+                "id123", "Alice", "Dev", "p.png",
+                null, null, null
+        );
 
         Ticket ticket = new Ticket(
                 99L, "Fix login", "Auth issue", null, user,

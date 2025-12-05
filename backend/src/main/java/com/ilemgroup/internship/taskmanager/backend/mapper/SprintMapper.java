@@ -7,10 +7,14 @@ import com.ilemgroup.internship.taskmanager.backend.dto.summary.SprintSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(config = CentralMapperConfiguration.class)
 public interface SprintMapper {
 
     SprintSummary toSummary(Sprint sprint);
+
+    List<SprintSummary> toSummaryList(List<Sprint> sprintList);
 
     SprintDetails toDetails(Sprint sprint);
 
@@ -22,5 +26,4 @@ public interface SprintMapper {
     @Mapping(target = "project", ignore = true)
     @Mapping(target = "tickets", ignore = true)
     Sprint updateToEntity(SprintUpdate dto);
-
 }

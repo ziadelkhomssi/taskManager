@@ -11,45 +11,55 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@Import(MapperTestConfiguration.class)
 class ProjectMapperTest {
 
     @Autowired
     private ProjectMapper mapper;
 
     @Test
-    void testToSummary() {
-        Project entity = new Project(10L, "P1", "Desc", "p.png", ProjectStatus.ACTIVE, null);
+    void testToSummaryList() {
+        Project project = new Project(
+                10L,
+                "Project 1",
+                "Description 1",
+                "p1.png",
+                ProjectStatus.ACTIVE,
+                null
+        );
 
-        ProjectSummary dto = mapper.toSummary(entity);
+        ProjectSummary summary = mapper.toSummary(project);
 
-        assertEquals(10L, dto.id());
-        assertEquals("P1", dto.title());
+        assertEquals(10L, summary.id());
+        assertEquals("Project 1", summary.title());
     }
 
     @Test
     void testCreateToEntity() {
-        ProjectCreate dto = new ProjectCreate("Proj", "D", "pp.png", ProjectStatus.ACTIVE);
+        ProjectCreate dto = new ProjectCreate("Project", "Description", "pp.png", ProjectStatus.ACTIVE);
 
-        Project entity = mapper.createToEntity(dto);
+        Project project = mapper.createToEntity(dto);
 
-        assertEquals("Proj", entity.getTitle());
-        assertNull(entity.getId());
+        assertEquals("Project", project.getTitle());
+        assertNull(project.getId());
     }
 
     @Test
     void testUpdateEntity() {
         ProjectUpdate dto = new ProjectUpdate(
-                1L, "New Title", "New Desc", "pic2.png", ProjectStatus.DONE
+                1L, "New Title", "New Description", "pic2.png", ProjectStatus.DONE
         );
 
-        Project entity = mapper.updateToEntity(dto);
+        Project project = mapper.updateToEntity(dto);
 
-        assertEquals("New Title", entity.getTitle());
+        assertEquals("New Title", project.getTitle());
     }
 }
