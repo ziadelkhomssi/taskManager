@@ -16,7 +16,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@Import(MapperTestConfiguration.class)
 public class UserMapperTest {
 
     @Autowired
@@ -24,7 +23,10 @@ public class UserMapperTest {
 
     @Test
     void testToSummary() {
-        User user = new User("abc123", "John Doe", "Engineer", "picture.png", null, null, null);
+        User user = new User(
+                "abc123", "John Doe", "Engineer", "picture.png",
+                null, null
+        );
 
         UserSummary dto = mapper.toSummary(user);
 
@@ -37,7 +39,7 @@ public class UserMapperTest {
     void testToSummaryList() {
         User user = new User(
                 "abc123", "John Doe", "Engineer", "picture1.png",
-                null, null, null
+                null, null
         );
 
         UserSummary summary = mapper.toSummary(user);
@@ -51,7 +53,7 @@ public class UserMapperTest {
     void testToDetails() {
         User user = new User(
                 "xyz", "Alice", "Manager", "alice.png",
-                null, null, null
+                null, null
         );
 
         UserDetails dto = mapper.toDetails(user);

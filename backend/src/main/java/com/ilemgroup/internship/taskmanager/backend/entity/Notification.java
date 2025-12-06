@@ -26,10 +26,6 @@ public class Notification {
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     private boolean isRead;
 
     private LocalDateTime readAt;

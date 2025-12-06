@@ -31,7 +31,7 @@ class TicketCommentMapperTest{
     void testToDetails() {
         User user = new User(
                 "123", "Bob", "Dev", "pic",
-                null, null, null
+                null, null
         );
 
         TicketComment parentComment = new TicketComment(

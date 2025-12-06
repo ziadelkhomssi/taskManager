@@ -36,7 +36,7 @@ class NotificationMapperTest {
 
         Notification notification = new Notification(
                 1L, NotificationType.TICKET_ASSIGNED,
-                ticket1, null, false, LocalDateTime.now().minusDays(2)
+                ticket1, false, LocalDateTime.now().minusDays(2)
         );
 
         NotificationDetails details = mapper.toDetails(notification);

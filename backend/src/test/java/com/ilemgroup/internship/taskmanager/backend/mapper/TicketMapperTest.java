@@ -51,7 +51,7 @@ class TicketMapperTest {
     void testToDetails() {
         User user = new User(
                 "id123", "Alice", "Dev", "p.png",
-                null, null, null
+                null, null
         );
 
         Ticket ticket = new Ticket(

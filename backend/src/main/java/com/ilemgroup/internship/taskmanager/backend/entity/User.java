@@ -26,8 +26,5 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<TicketComment> comments;
-
-    @OneToMany(mappedBy = "user")
-    private List<Notification> notifications;
 }
 

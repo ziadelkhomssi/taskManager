@@ -1,5 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.mapper;
 
+import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCommentCreate;
+import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
 import com.ilemgroup.internship.taskmanager.backend.entity.TicketComment;
 import org.mapstruct.Mapper;
@@ -16,5 +18,9 @@ public interface TicketCommentMapper {
     TicketCommentDetails toDetails(TicketComment ticketComment);
 
     List<TicketCommentDetails> toDetailsList(List<TicketComment> comments);
+
+    TicketComment createToEntity(TicketCommentCreate command);
+
+    TicketComment updateToEntity(TicketCommentUpdate command);
 }
 
