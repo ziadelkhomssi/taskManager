@@ -25,11 +25,11 @@ public class Ticket {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "sprint_id")
+    @JoinColumn(name = "sprint_id", nullable = false)
     private Sprint sprint;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Enumerated(EnumType.STRING)

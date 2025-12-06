@@ -22,8 +22,8 @@ public interface ProjectMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "sprints", ignore = true)
-    Project createToEntity(ProjectCreate dto);
+    Project createToEntity(ProjectCreate command);
 
     @Mapping(target = "sprints", ignore = true)
-    Project updateEntity(ProjectUpdate dto, @MappingTarget Project project);
+    Project updateEntity(ProjectUpdate command, @MappingTarget Project project);
 }

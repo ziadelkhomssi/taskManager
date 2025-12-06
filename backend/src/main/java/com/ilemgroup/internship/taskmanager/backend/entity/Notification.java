@@ -26,7 +26,7 @@ public class Notification {
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
-    private boolean isRead;
+    private boolean isRead = false;
 
     private LocalDateTime readAt;
 }

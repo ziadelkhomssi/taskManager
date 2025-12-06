@@ -40,6 +40,6 @@ public interface TicketMapper {
     @Mapping(target = "closedBy", ignore = true)
     @Mapping(target = "sprint", ignore = true)
     @Mapping(target = "user", ignore = true)
-    Ticket updateEntity(TicketUpdate command, @MappingTarget Project project);
+    Ticket updateEntity(TicketUpdate command, @MappingTarget Ticket ticket);
 
 }

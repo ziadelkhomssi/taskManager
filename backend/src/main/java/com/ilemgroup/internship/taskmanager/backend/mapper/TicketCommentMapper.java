@@ -3,7 +3,6 @@ package com.ilemgroup.internship.taskmanager.backend.mapper;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCommentCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
-import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import com.ilemgroup.internship.taskmanager.backend.entity.TicketComment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -36,6 +35,6 @@ public interface TicketCommentMapper {
     @Mapping(target = "replies", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    TicketComment updateEntity(TicketCommentUpdate command, @MappingTarget Project project);
+    TicketComment updateEntity(TicketCommentUpdate command, @MappingTarget TicketComment ticketComment);
 }
 

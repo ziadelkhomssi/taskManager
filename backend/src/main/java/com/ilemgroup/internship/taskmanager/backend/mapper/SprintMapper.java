@@ -22,9 +22,9 @@ public interface SprintMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "project", ignore = true)
     @Mapping(target = "tickets", ignore = true)
-    Sprint createToEntity(SprintCreate dto);
+    Sprint createToEntity(SprintCreate command);
 
     @Mapping(target = "project", ignore = true)
     @Mapping(target = "tickets", ignore = true)
-    Sprint updateEntity(SprintUpdate dto, @MappingTarget Project project);
+    Sprint updateEntity(SprintUpdate command, @MappingTarget Sprint sprint);
 }
