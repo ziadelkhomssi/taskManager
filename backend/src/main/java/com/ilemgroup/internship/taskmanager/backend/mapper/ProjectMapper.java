@@ -8,6 +8,7 @@ import com.ilemgroup.internship.taskmanager.backend.dto.summary.ProjectSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -24,5 +25,5 @@ public interface ProjectMapper {
     Project createToEntity(ProjectCreate dto);
 
     @Mapping(target = "sprints", ignore = true)
-    Project updateToEntity(ProjectUpdate dto);
+    Project updateEntity(ProjectUpdate dto, @MappingTarget Project project);
 }

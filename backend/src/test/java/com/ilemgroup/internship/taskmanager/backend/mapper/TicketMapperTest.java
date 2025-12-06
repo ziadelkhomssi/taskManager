@@ -71,7 +71,9 @@ class TicketMapperTest {
     @Test
     void testCreateToEntity() {
         TicketCreate dto = new TicketCreate(
-                "New Ticket", "Desc", 10L, TicketPriority.LOW, TicketStatus.IN_PROGRESS
+                "New Ticket", "Desc", 10L,
+                TicketPriority.LOW, TicketStatus.IN_PROGRESS,
+                1L
         );
 
         Ticket entity = mapper.createToEntity(dto);

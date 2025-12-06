@@ -43,7 +43,9 @@ class SprintMapperTest {
     @Test
     void testCreateToEntity() {
         SprintCreate dto = new SprintCreate(
-                "Sprint!", "Description", LocalDate.now(), LocalDate.now().plusDays(1), SprintStatus.ACTIVE
+                "Sprint!", "Description",
+                LocalDate.now(), LocalDate.now().plusDays(1),
+                SprintStatus.ACTIVE, 1L
         );
 
         Sprint sprint = mapper.createToEntity(dto);

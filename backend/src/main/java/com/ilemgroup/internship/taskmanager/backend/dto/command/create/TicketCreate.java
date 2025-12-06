@@ -30,7 +30,10 @@ public record TicketCreate(
 
         @NotNull
         @JsonProperty("status")
-        TicketStatus status
+        TicketStatus status,
 
+        @NotNull
+        @JsonProperty("sprintId")
+        Long sprintId
 ) {}
 

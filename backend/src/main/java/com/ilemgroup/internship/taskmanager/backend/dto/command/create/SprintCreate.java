@@ -28,7 +28,11 @@ public record SprintCreate(
 
         @NotNull
         @JsonProperty("status")
-        SprintStatus status
+        SprintStatus status,
+
+        @NotNull
+        @JsonProperty("projectId")
+        Long projectId
 
 ) {}
 

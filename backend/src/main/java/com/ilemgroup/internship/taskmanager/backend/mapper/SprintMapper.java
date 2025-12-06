@@ -4,6 +4,7 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCre
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.SprintDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.SprintSummary;
+import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
 import org.mapstruct.*;
 
@@ -25,5 +26,5 @@ public interface SprintMapper {
 
     @Mapping(target = "project", ignore = true)
     @Mapping(target = "tickets", ignore = true)
-    Sprint updateToEntity(SprintUpdate dto);
+    Sprint updateEntity(SprintUpdate dto, @MappingTarget Project project);
 }
