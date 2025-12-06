@@ -1,5 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.mapper;
 
+import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCommentCreate;
+import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
@@ -48,5 +50,56 @@ class TicketCommentMapperTest{
         assertEquals(2L, details.id());
         assertEquals("Hello Also!", details.comment());
         assertEquals(1L, details.parentCommentId());
+    }
+
+    @Test
+    void testCreateToEntity() {
+        TicketCommentCreate create = new TicketCommentCreate(
+                "Test comment",
+                20L,
+                30L
+        );
+
+        TicketComment entity = mapper.createToEntity(create);
+
+        assertNull(entity.getId());
+        assertEquals("Test comment", entity.getComment());
+
+        assertNull(entity.getUser());
+        assertNull(entity.getTicket());
+        assertNull(entity.getParentComment());
+
+        assertNull(entity.getReplies());
+
+        assertNull(entity.getCreatedAt());
+        assertNull(entity.getUpdatedAt());
+    }
+
+    @Test
+    void testUpdateToEntity() {
+        TicketComment existing = new TicketComment();
+        existing.setId(5L);
+        existing.setComment("Old comment");
+
+        User user = new User("999", "John", "Dev", "pic", null, null);
+        existing.setUser(user);
+
+        TicketCommentUpdate update = new TicketCommentUpdate(
+                5L,
+                "Updated comment"
+        );
+
+        TicketComment updated = mapper.updateToEntity(update);
+
+        assertEquals(5L, updated.getId());
+        assertEquals("Updated comment", updated.getComment());
+
+        assertNull(updated.getUser());
+        assertNull(updated.getTicket());
+        assertNull(updated.getParentComment());
+        assertNull(updated.getReplies());
+
+        assertNull(updated.getCreatedAt());
+        assertNull(updated.getUpdatedAt());
     }
 }

@@ -19,8 +19,21 @@ public interface TicketCommentMapper {
 
     List<TicketCommentDetails> toDetailsList(List<TicketComment> comments);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "ticket", ignore = true)
+    @Mapping(target = "parentComment", ignore = true)
+    @Mapping(target = "replies", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     TicketComment createToEntity(TicketCommentCreate command);
 
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "ticket", ignore = true)
+    @Mapping(target = "parentComment", ignore = true)
+    @Mapping(target = "replies", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     TicketComment updateToEntity(TicketCommentUpdate command);
 }
 

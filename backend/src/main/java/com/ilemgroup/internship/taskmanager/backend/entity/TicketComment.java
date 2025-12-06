@@ -33,7 +33,7 @@ public class TicketComment {
     @JoinColumn(name = "parent_comment_id")
     private TicketComment parentComment;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TicketComment> replies;
 
     private LocalDateTime createdAt;
