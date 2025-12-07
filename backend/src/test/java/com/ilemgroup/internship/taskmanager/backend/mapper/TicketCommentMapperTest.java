@@ -32,7 +32,7 @@ class TicketCommentMapperTest{
     @Test
     void testToDetails() {
         User user = new User(
-                "123", "Bob", "Dev", "pic",
+                "123", "Bob", "Developer", "pic.png",
                 null, null
         );
 
@@ -76,20 +76,17 @@ class TicketCommentMapperTest{
     }
 
     @Test
-    void testUpdateToEntity() {
-        TicketComment existing = new TicketComment();
-        existing.setId(5L);
-        existing.setComment("Old comment");
+    void testUpdateEntity() {
+        TicketComment old = new TicketComment();
+        old.setId(5L);
+        old.setComment("Old comment");
 
-        User user = new User("999", "John", "Dev", "pic", null, null);
-        existing.setUser(user);
-
-        TicketCommentUpdate update = new TicketCommentUpdate(
+        TicketCommentUpdate command = new TicketCommentUpdate(
                 5L,
                 "Updated comment"
         );
 
-        TicketComment updated = mapper.updateToEntity(update);
+        TicketComment updated = mapper.updateEntity(command, old);
 
         assertEquals(5L, updated.getId());
         assertEquals("Updated comment", updated.getComment());

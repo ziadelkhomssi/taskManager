@@ -60,42 +60,47 @@ class TicketMapperTest {
                 LocalDateTime.now(), null, null, null
         );
 
-        TicketDetails dto = mapper.toDetails(ticket);
+        TicketDetails details = mapper.toDetails(ticket);
 
-        assertEquals(99L, dto.id());
-        assertEquals("Fix login", dto.title());
-        assertEquals("Auth issue", dto.description());
-        assertEquals("Alice", dto.userSummary().name());
+        assertEquals(99L, details.id());
+        assertEquals("Fix login", details.title());
+        assertEquals("Auth issue", details.description());
+        assertEquals("Alice", details.userSummary().name());
     }
 
     @Test
-    void testCreateToEntity() {
-        TicketCreate dto = new TicketCreate(
-                "New Ticket", "Desc", 10L,
+    void testCreateEntity() {
+        TicketCreate command = new TicketCreate(
+                "New Ticket", "Description", "abc123",
                 TicketPriority.LOW, TicketStatus.IN_PROGRESS,
                 1L
         );
 
-        Ticket entity = mapper.createToEntity(dto);
+        Ticket entity = mapper.createToEntity(command);
 
         assertNull(entity.getId());
         assertEquals("New Ticket", entity.getTitle());
-        assertEquals("Desc", entity.getDescription());
+        assertEquals("Description", entity.getDescription());
         assertEquals(TicketPriority.LOW, entity.getPriority());
     }
 
     @Test
     void testUpdateToEntity() {
-        TicketUpdate update = new TicketUpdate(
-                1L, "New Title", "New Desc",
-                null, TicketPriority.HIGH, TicketStatus.COMPLETED
+        Ticket old = new Ticket(
+                99L, "Old Title", "New Description", null, null,
+                TicketPriority.MEDIUM, TicketStatus.IN_PROGRESS,
+                LocalDateTime.now(), null, null, null
+        );
+        TicketUpdate command = new TicketUpdate(
+                1L, "New Title", "New Description",
+                null, null, TicketStatus.COMPLETED
         );
 
-        Ticket entity = mapper.updateToEntity(update);
+        Ticket entity = mapper.updateEntity(command, old);
 
         assertEquals("New Title", entity.getTitle());
-        assertEquals("New Desc", entity.getDescription());
-        assertEquals(TicketPriority.HIGH, entity.getPriority());
+        assertEquals("New Description", entity.getDescription());
+        assertEquals(TicketPriority.MEDIUM, entity.getPriority());
         assertEquals(TicketStatus.COMPLETED, entity.getStatus());
     }
 }

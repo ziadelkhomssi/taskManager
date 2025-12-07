@@ -42,27 +42,34 @@ class SprintMapperTest {
 
     @Test
     void testCreateToEntity() {
-        SprintCreate dto = new SprintCreate(
+        SprintCreate command = new SprintCreate(
                 "Sprint!", "Description",
                 LocalDate.now(), LocalDate.now().plusDays(1),
                 SprintStatus.ACTIVE, 1L
         );
 
-        Sprint sprint = mapper.createToEntity(dto);
+        Sprint sprint = mapper.createToEntity(command);
 
         assertEquals("Sprint!", sprint.getTitle());
         assertNull(sprint.getId());
     }
 
     @Test
-    void testUpdateToEntity() {
-        SprintUpdate dto = new SprintUpdate(
-                5L, "New Title", "New Description",
-                LocalDate.now(), LocalDate.now().plusDays(2), SprintStatus.DONE
+    void testUpdateEntity() {
+        Sprint old = new Sprint(
+                1L, "Old Title", "Old Description",
+                LocalDate.now(), LocalDate.now().plusDays(5), null,
+                SprintStatus.ACTIVE,
+                null, null
+        );
+        SprintUpdate command = new SprintUpdate(
+                1L, "New Title", "New Description",
+                null, null, SprintStatus.DONE
         );
 
-        Sprint sprint = mapper.updateToEntity(dto);
+        Sprint updated = mapper.updateEntity(command, old);
 
-        assertEquals("New Title", sprint.getTitle());
+        assertEquals("New Title", updated.getTitle());
+        assertEquals(LocalDate.now(), updated.getStartDate());
     }
 }

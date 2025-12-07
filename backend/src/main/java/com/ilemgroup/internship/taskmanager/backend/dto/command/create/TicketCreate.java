@@ -20,9 +20,9 @@ public record TicketCreate(
         @JsonProperty("description")
         String description,
 
-        @NotNull
+        @NotBlank
         @JsonProperty("assignedUserId")
-        Long assignedUserId,
+        String assignedUserId,
 
         @NotNull
         @JsonProperty("priority")

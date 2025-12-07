@@ -43,9 +43,9 @@ class ProjectMapperTest {
 
     @Test
     void testCreateToEntity() {
-        ProjectCreate dto = new ProjectCreate("Project", "Description", "pp.png", ProjectStatus.ACTIVE);
+        ProjectCreate command = new ProjectCreate("Project", "Description", "pp.png", ProjectStatus.ACTIVE);
 
-        Project project = mapper.createToEntity(dto);
+        Project project = mapper.createToEntity(command);
 
         assertEquals("Project", project.getTitle());
         assertNull(project.getId());
@@ -53,12 +53,17 @@ class ProjectMapperTest {
 
     @Test
     void testUpdateEntity() {
-        ProjectUpdate dto = new ProjectUpdate(
-                1L, "New Title", "New Description", "pic2.png", ProjectStatus.DONE
+        Project old = new Project(
+                1L, "Old Title", "Old Description", "pic2.png",
+                ProjectStatus.ACTIVE, null
+        );
+        ProjectUpdate command = new ProjectUpdate(
+                1L, "New Title", "New Description", null, ProjectStatus.DONE
         );
 
-        Project project = mapper.updateToEntity(dto);
+        Project updated = mapper.updateEntity(command, old);
 
-        assertEquals("New Title", project.getTitle());
+        assertEquals("New Title", updated.getTitle());
+        assertEquals("pic2.png", updated.getProfilePicture());
     }
 }
