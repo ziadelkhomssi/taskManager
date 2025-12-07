@@ -8,4 +8,5 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectRepository extends JpaRepository<@NonNull Project, @NonNull Long> {
+    Page<@NonNull Project> findAll(Specification<@NonNull Project> specification, Pageable pageable);
 }
