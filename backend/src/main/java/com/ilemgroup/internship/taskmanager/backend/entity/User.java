@@ -1,6 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,10 @@ public class User {
     private String azureOid;
 
     private String name;
+
+    @Email
+    private String email;
+
     private String job;
     private String profilePicture;
 

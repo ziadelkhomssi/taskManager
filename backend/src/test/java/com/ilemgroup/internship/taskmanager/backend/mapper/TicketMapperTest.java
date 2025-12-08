@@ -50,7 +50,8 @@ class TicketMapperTest {
     @Test
     void testToDetails() {
         User user = new User(
-                "id123", "Alice", "Dev", "p.png",
+                "abc123", "John Doe", "johndo@email.com",
+                "Engineer", "picture.png",
                 null, null
         );
 

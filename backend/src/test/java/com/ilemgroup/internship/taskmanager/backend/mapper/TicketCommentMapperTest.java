@@ -32,7 +32,8 @@ class TicketCommentMapperTest{
     @Test
     void testToDetails() {
         User user = new User(
-                "123", "Bob", "Developer", "pic.png",
+                "abc123", "Bob", "bobbob@email.com",
+                "Developer", "pic.png",
                 null, null
         );
 
