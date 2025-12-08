@@ -38,7 +38,8 @@ class TicketMapperTest {
 
     @Test
     void testToDetails() {
-        Ticket ticket = TestEntityFactory.createBaseTicket(null, null);
+        User user = TestEntityFactory.createBaseUser();
+        Ticket ticket = TestEntityFactory.createBaseTicket(null, user);
         ticket.setId(1L);
 
         TicketDetails details = mapper.toDetails(ticket);
