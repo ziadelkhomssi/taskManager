@@ -1,5 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.mapper;
 
+import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
@@ -17,46 +18,34 @@ public class UserMapperTest {
 
     @Test
     void testToSummary() {
-        User user = new User(
-                "abc123", "John Doe", "johndo@email.com",
-                "Engineer", "picture.png",
-                null, null
-        );
+        User user = TestEntityFactory.createBaseUser();
 
         UserSummary dto = mapper.toSummary(user);
 
-        assertEquals("abc123", dto.id());
-        assertEquals("John Doe", dto.name());
-        assertEquals("picture.png", dto.profilePicture());
+        assertEquals(user.getAzureOid(), dto.id());
+        assertEquals(user.getName(), dto.name());
+        assertEquals(user.getProfilePicture(), dto.profilePicture());
     }
 
     @Test
     void testToSummaryList() {
-        User user = new User(
-                "abc123", "John Doe", "johndo@email.com",
-                "Engineer", "picture1.png",
-                null, null
-        );
+        User user = TestEntityFactory.createBaseUser();
 
         UserSummary summary = mapper.toSummary(user);
 
-        assertEquals("abc123", summary.id());
-        assertEquals("John Doe", summary.name());
-        assertEquals("picture1.png", summary.profilePicture());
+        assertEquals(user.getAzureOid(), summary.id());
+        assertEquals(user.getName(), summary.name());
+        assertEquals(user.getProfilePicture(), summary.profilePicture());
     }
 
     @Test
     void testToDetails() {
-        User user = new User(
-                "abc123", "John Doe", "johndo@email.com",
-                "Engineer", "picture1.png",
-                null, null
-        );
+        User user = TestEntityFactory.createBaseUser();
 
         UserDetails dto = mapper.toDetails(user);
 
-        assertEquals("abc123", dto.id());
-        assertEquals("John Doe", dto.name());
-        assertEquals("Engineer", dto.job());
+        assertEquals(user.getAzureOid(), dto.id());
+        assertEquals(user.getName(), dto.name());
+        assertEquals(user.getJob(), dto.job());
     }
 }

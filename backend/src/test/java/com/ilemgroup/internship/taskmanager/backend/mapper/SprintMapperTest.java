@@ -1,5 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.mapper;
 
+import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.SprintSummary;
@@ -7,14 +8,9 @@ import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.SprintStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
-import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -27,17 +23,13 @@ class SprintMapperTest {
 
     @Test
     void testToSummaryList() {
-        Sprint sprint = new Sprint(
-                1L, "Sprint 1", "Description 1",
-                LocalDate.now(), LocalDate.now().plusDays(5), null,
-                SprintStatus.ACTIVE,
-                null, null
-        );
+        Sprint sprint = TestEntityFactory.createBaseSprint(null);
+        sprint.setId(1L);
 
         SprintSummary summary = mapper.toSummary(sprint);
 
-        assertEquals(1L, summary.id());
-        assertEquals("Sprint 1", summary.title());
+        assertEquals(sprint.getId(), summary.id());
+        assertEquals(sprint.getTitle(), summary.title());
     }
 
     @Test
@@ -50,18 +42,15 @@ class SprintMapperTest {
 
         Sprint sprint = mapper.createToEntity(command);
 
-        assertEquals("Sprint!", sprint.getTitle());
+        assertEquals(command.title(), sprint.getTitle());
         assertNull(sprint.getId());
     }
 
     @Test
     void testUpdateEntity() {
-        Sprint old = new Sprint(
-                1L, "Old Title", "Old Description",
-                LocalDate.now(), LocalDate.now().plusDays(5), null,
-                SprintStatus.ACTIVE,
-                null, null
-        );
+        Sprint old = TestEntityFactory.createBaseSprint(null);
+        old.setStartDate(LocalDate.now());
+
         SprintUpdate command = new SprintUpdate(
                 1L, "New Title", "New Description",
                 null, null, SprintStatus.DONE
@@ -69,7 +58,7 @@ class SprintMapperTest {
 
         Sprint updated = mapper.updateEntity(command, old);
 
-        assertEquals("New Title", updated.getTitle());
+        assertEquals(command.title(), updated.getTitle());
         assertEquals(LocalDate.now(), updated.getStartDate());
     }
 }

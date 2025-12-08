@@ -1,10 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend;
 
 import com.ilemgroup.internship.taskmanager.backend.entity.*;
-import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
-import com.ilemgroup.internship.taskmanager.backend.entity.enums.ProjectStatus;
-import com.ilemgroup.internship.taskmanager.backend.entity.enums.SprintStatus;
-import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketStatus;
+import com.ilemgroup.internship.taskmanager.backend.entity.enums.*;
 
 import java.time.LocalDate;
 
@@ -14,6 +11,7 @@ public class TestEntityFactory {
         Project project = new Project();
         project.setTitle("Project");
         project.setDescription("Description");
+        project.setProfilePicture("profilePicture.png");
         project.setStatus(ProjectStatus.ACTIVE);
         return project;
     }
@@ -34,6 +32,7 @@ public class TestEntityFactory {
         ticket.setTitle("Ticket");
         ticket.setDescription("Description");
         ticket.setStatus(TicketStatus.IN_PROGRESS);
+        ticket.setPriority(TicketPriority.MEDIUM);
         ticket.setSprint(parentSprint);
         ticket.setUser(assignedUser);
         return ticket;
@@ -51,7 +50,9 @@ public class TestEntityFactory {
         User user = new User();
         user.setAzureOid("abc123");
         user.setName("John Developer");
+        user.setEmail("johndo@email.com");
         user.setJob("Engineer");
+        user.setProfilePicture("profilePicture.png");
         return user;
     }
 

@@ -1,22 +1,17 @@
 package com.ilemgroup.internship.taskmanager.backend.mapper;
 
+import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCommentCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
-import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
 import com.ilemgroup.internship.taskmanager.backend.entity.TicketComment;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
-import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -27,44 +22,41 @@ class TicketCommentMapperTest{
     @Autowired
     private TicketCommentMapper mapper;
 
-
-
     @Test
     void testToDetails() {
-        User user = new User(
-                "abc123", "Bob", "bobbob@email.com",
-                "Developer", "pic.png",
-                null, null
-        );
+        User user1 = TestEntityFactory.createBaseUser();
+        User user2 = TestEntityFactory.createBaseUser();
+        user1.setAzureOid("abc123");
+        user2.setAzureOid("def456");
 
-        TicketComment parentComment = new TicketComment(
-                1L, user, "Hello!", null, null, null,
-                LocalDateTime.now(), LocalDateTime.now()
-        );
-        TicketComment comment = new TicketComment(
-                2L, user, "Hello Also!", null, parentComment, null,
-                LocalDateTime.now(), LocalDateTime.now()
-        );
+        Ticket ticket = TestEntityFactory.createBaseTicket(null, null);
+        TicketComment parentComment = TestEntityFactory.createBaseTicketComment(ticket, user1);
+        TicketComment comment = TestEntityFactory.createBaseTicketComment(ticket, user2);
+        parentComment.setId(1L);
+        comment.setId(2L);
+        parentComment.setComment("Hello!");
+        comment.setComment("Hello Also!");
+        comment.setParentComment(parentComment);
 
         TicketCommentDetails details = mapper.toDetails(comment);
 
-        assertEquals(2L, details.id());
-        assertEquals("Hello Also!", details.comment());
-        assertEquals(1L, details.parentCommentId());
+        assertEquals(comment.getId(), details.id());
+        assertEquals(comment.getComment(), details.comment());
+        assertEquals(comment.getParentComment().getId(), details.parentCommentId());
     }
 
     @Test
     void testCreateToEntity() {
-        TicketCommentCreate create = new TicketCommentCreate(
+        TicketCommentCreate command = new TicketCommentCreate(
                 "Test comment",
                 20L,
                 30L
         );
 
-        TicketComment entity = mapper.createToEntity(create);
+        TicketComment entity = mapper.createToEntity(command);
 
         assertNull(entity.getId());
-        assertEquals("Test comment", entity.getComment());
+        assertEquals(command.comment(), entity.getComment());
 
         assertNull(entity.getUser());
         assertNull(entity.getTicket());
@@ -78,9 +70,8 @@ class TicketCommentMapperTest{
 
     @Test
     void testUpdateEntity() {
-        TicketComment old = new TicketComment();
+        TicketComment old = TestEntityFactory.createBaseTicketComment(null, null);
         old.setId(5L);
-        old.setComment("Old comment");
 
         TicketCommentUpdate command = new TicketCommentUpdate(
                 5L,
@@ -89,8 +80,8 @@ class TicketCommentMapperTest{
 
         TicketComment updated = mapper.updateEntity(command, old);
 
-        assertEquals(5L, updated.getId());
-        assertEquals("Updated comment", updated.getComment());
+        assertEquals(old.getId(), updated.getId());
+        assertEquals(command.comment(), updated.getComment());
 
         assertNull(updated.getUser());
         assertNull(updated.getTicket());
