@@ -55,6 +55,54 @@ public class UserServiceTest {
     }
 
     @Test
+    void testGetSummaryList_FilterByName() {
+        User user1 = TestEntityFactory.createBaseUser();
+        User user2 = TestEntityFactory.createBaseUser();
+        User user3 = TestEntityFactory.createBaseUser();
+        user1.setAzureOid("abc123");
+        user2.setAzureOid("def456");
+        user3.setAzureOid("ghi789");
+        user1.setName("Jane Developer");
+        user2.setName("Janice Developer");
+        user3.setName("John Developer");
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+
+        PageQuery query = new PageQuery(0, 10, "jan", "name");
+
+        List<UserSummary> results = userService.getSummaryList(query);
+        assertEquals(2, results.size());
+        assertEquals(results.get(0).id(), user1.getAzureOid());
+        assertEquals(results.get(0).name(), user1.getName());
+        assertEquals(results.get(1).id(), user2.getAzureOid());
+        assertEquals(results.get(1).name(), user2.getName());
+    }
+
+    @Test
+    void testGetSummaryList_FilterByJob() {
+        User user1 = TestEntityFactory.createBaseUser();
+        User user2 = TestEntityFactory.createBaseUser();
+        User user3 = TestEntityFactory.createBaseUser();
+        user1.setAzureOid("abc123");
+        user2.setAzureOid("def456");
+        user3.setAzureOid("ghi789");
+        user1.setJob("Developer");
+        user2.setJob("Developer");
+        user3.setJob("Guy");
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+
+        PageQuery query = new PageQuery(0, 10, "dev", "job");
+
+        List<UserSummary> results = userService.getSummaryList(query);
+        assertEquals(2, results.size());
+        assertEquals(results.get(0).id(), user1.getAzureOid());
+        assertEquals(results.get(1).id(), user2.getAzureOid());
+    }
+
+    @Test
     void testGetProjectParticipants_FilterByName() {
         User user1 = TestEntityFactory.createBaseUser();
         User user2 = TestEntityFactory.createBaseUser();

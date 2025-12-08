@@ -41,6 +41,14 @@ public class UserService {
         return userMapper.toDetails(user);
     }
 
+    public List<UserSummary> getSummaryList(PageQuery query) {
+        Specification<@NonNull User> specification = buildSummaryListSpecification(query);
+        Pageable pageable = PageRequest.of(query.page(), query.size());
+        Page<@NonNull User> page = userRepository.findAll(specification, pageable);
+
+        return userMapper.toSummaryList(page.getContent());
+    }
+
     public List<UserSummary> getProjectParticipants(Long projectId, PageQuery query) {
         Specification<@NonNull User> specification = buildProjectParticipantsSpecification(projectId, query);
         Pageable pageable = PageRequest.of(query.page(), query.size());
@@ -75,6 +83,39 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    private Specification<@NonNull User> buildSummaryListSpecification(PageQuery query) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.conjunction();
+
+            String search = query.search();
+            if (search == null || search.isBlank()) {
+                return predicate;
+            }
+
+            String like = "%" + search.toLowerCase() + "%";
+            String filter = query.filterBy().toLowerCase();
+
+            switch (filter) {
+                case "name" -> {
+                    predicate = criteriaBuilder.and(predicate,
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), like)
+                    );
+                }
+                case "job" -> {
+                    predicate = criteriaBuilder.and(predicate,
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("job")), like)
+                    );
+                }
+
+                default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Unknown filter: " + query.filterBy()
+                );
+            }
+
+            return predicate;
+        };
+    }
+
     private Specification<@NonNull User> buildProjectParticipantsSpecification(Long projectId, PageQuery query) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Join<User, Ticket> ticketJoin = root.join("tickets");
@@ -97,7 +138,6 @@ public class UserService {
                     );
                 }
                 case "job" -> {
-
                     predicate = criteriaBuilder.and(predicate,
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("job")), like)
                     );
@@ -133,7 +173,6 @@ public class UserService {
                     );
                 }
                 case "job" -> {
-
                     predicate = criteriaBuilder.and(predicate,
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("job")), like)
                     );
