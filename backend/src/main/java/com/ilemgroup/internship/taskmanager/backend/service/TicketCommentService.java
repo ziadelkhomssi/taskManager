@@ -22,6 +22,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,6 +58,7 @@ public class TicketCommentService {
         TicketComment comment = ticketCommentMapper.createToEntity(command);
         comment.setTicket(ticket);
         comment.setUser(user);
+        comment.setCreatedAt(LocalDateTime.now());
 
         if (command.parentCommentId() != null) {
             TicketComment parentComment = ticketCommentRepository.findById(command.parentCommentId())
@@ -77,6 +80,7 @@ public class TicketCommentService {
         );
 
         TicketComment updated = ticketCommentMapper.updateEntity(command, old);
+        updated.setCreatedAt(LocalDateTime.now());
 
         ticketCommentRepository.save(updated);
     }
