@@ -61,7 +61,7 @@ public class TicketCommentServiceTest {
         ticketComment2 = ticketCommentRepository.save(ticketComment2);
 
         PageQuery query = new PageQuery(0, 10, null, null);
-        List<TicketCommentDetails> result = ticketCommentService.getDetailsList(query);
+        List<TicketCommentDetails> result = ticketCommentService.getDetailsList(ticket.getId(), query);
 
         assertEquals(2, result.size());
         assertEquals(ticketComment1.getComment(), result.get(0).comment());

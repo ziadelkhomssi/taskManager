@@ -12,12 +12,14 @@ import com.ilemgroup.internship.taskmanager.backend.repository.TicketCommentRepo
 import com.ilemgroup.internship.taskmanager.backend.repository.TicketRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +42,13 @@ public class TicketCommentService {
     @Autowired
     private TicketCommentMapper ticketCommentMapper;
 
-    public List<TicketCommentDetails> getDetailsList(PageQuery query) {
+    public List<TicketCommentDetails> getDetailsList(Long ticketId, PageQuery query) {
+        Specification<@NonNull TicketComment> specification = (root, criteriaQuery, criteriaBuilder) -> {
+            Join<TicketComment, Ticket> ticketJoin = root.join("ticket");
+            return criteriaBuilder.equal(ticketJoin.get("id"), ticketId);
+        };
         Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<@NonNull TicketComment> page = ticketCommentRepository.findAll(pageable);
+        Page<@NonNull TicketComment> page = ticketCommentRepository.findAll(specification, pageable);
 
         return ticketCommentMapper.toDetailsList(page.getContent());
     }
