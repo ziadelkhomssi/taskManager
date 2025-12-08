@@ -48,7 +48,7 @@ public class TicketCommentServiceTest {
     }
 
     @Test
-    void getDetailsList() {
+    void testGetDetailsList() {
         Project project = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
         User user = userRepository.save(TestEntityFactory.createBaseUser());
