@@ -9,7 +9,7 @@ import java.nio.file.AccessDeniedException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class AuthorizationServiceTest {
+public class AuthorizationServiceIntegrationTest {
     @Test
     @WithMockUser(username = "abc123", password = "mypasswordwoah", roles = {"TEAM_MEMBER"})
     void testEnsureSameUserOrAdmin() throws AccessDeniedException {

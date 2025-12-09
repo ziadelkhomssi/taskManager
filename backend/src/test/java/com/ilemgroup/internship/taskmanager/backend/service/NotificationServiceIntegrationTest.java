@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class NotificationServiceTest {
+public class NotificationServiceIntegrationTest {
     @Autowired
     private NotificationService notificationService;
 

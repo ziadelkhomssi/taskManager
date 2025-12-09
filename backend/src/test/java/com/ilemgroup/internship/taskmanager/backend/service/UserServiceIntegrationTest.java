@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
-public class UserServiceTest {
+public class UserServiceIntegrationTest {
 
     @Autowired
     private UserService userService;

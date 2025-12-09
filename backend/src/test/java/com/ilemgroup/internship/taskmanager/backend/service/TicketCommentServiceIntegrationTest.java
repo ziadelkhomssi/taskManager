@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TicketCommentServiceTest {
+public class TicketCommentServiceIntegrationTest {
     @Autowired
     private TicketCommentService ticketCommentService;
 

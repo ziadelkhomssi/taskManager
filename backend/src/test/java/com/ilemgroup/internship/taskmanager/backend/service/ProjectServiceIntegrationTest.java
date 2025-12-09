@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ProjectServiceTest {
+class ProjectServiceIntegrationTest {
 
     @Autowired
     private ProjectService projectService;
