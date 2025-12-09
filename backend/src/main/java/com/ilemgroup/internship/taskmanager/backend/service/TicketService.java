@@ -8,6 +8,7 @@ import com.ilemgroup.internship.taskmanager.backend.dto.summary.TicketSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
+import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketStatus;
 import com.ilemgroup.internship.taskmanager.backend.mapper.TicketMapper;
 import com.ilemgroup.internship.taskmanager.backend.repository.SprintRepository;
@@ -32,6 +33,9 @@ import java.util.List;
 @Service
 @Transactional
 public class TicketService {
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private SprintRepository sprintRepository;
@@ -69,7 +73,8 @@ public class TicketService {
         ticket.setUser(assignedUser);
         ticket.setSprint(parentSprint);
 
-        ticketRepository.save(ticket);
+        ticket = ticketRepository.save(ticket);
+        notificationService.createNotification(ticket.getId(), NotificationType.TICKET_ASSIGNED);
     }
 
     public void updateTicket(TicketUpdate command) {
@@ -78,7 +83,8 @@ public class TicketService {
 
         Ticket updated = ticketMapper.updateEntity(command, old);
 
-        ticketRepository.save(updated);
+        updated = ticketRepository.save(updated);
+        notificationService.createNotification(updated.getId(), NotificationType.TICKET_ASSIGNED);
     }
 
     public void deleteTicketById(Long id) {
