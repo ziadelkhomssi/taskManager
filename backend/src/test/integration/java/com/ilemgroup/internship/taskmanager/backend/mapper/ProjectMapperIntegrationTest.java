@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
-class ProjectMapperTest {
+class ProjectMapperIntegrationTest {
 
     @Autowired
     private ProjectMapper mapper;

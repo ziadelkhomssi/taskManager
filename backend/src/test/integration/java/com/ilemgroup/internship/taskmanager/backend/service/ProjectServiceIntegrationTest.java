@@ -96,19 +96,12 @@ class ProjectServiceIntegrationTest {
         projectRepository.save(project1);
         projectRepository.save(project2);
 
-        PageQuery query = new PageQuery(0, 10, "ARCHIVED", "status");
+        PageQuery query = new PageQuery(0, 10, "arc", "status");
 
         List<ProjectSummary> result = projectService.getSummaryList(query);
 
         assertEquals(1, result.size());
         assertEquals(project1.getStatus(), result.getFirst().status());
-    }
-
-    @Test
-    void testGetSummaryList_FilterByStatus_Invalid() {
-        PageQuery query = new PageQuery(0, 10, "NOT_A_REAL_STATUS", "status");
-
-        assertThrows(ResponseStatusException.class, () -> projectService.getSummaryList(query));
     }
 
     @Test

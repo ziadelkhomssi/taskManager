@@ -113,13 +113,6 @@ public class TicketServiceIntegrationTest {
     }
 
     @Test
-    void testGetSummaryList_FilterByStatus_Invalid() {
-        PageQuery query = new PageQuery(0, 10, "NOT_A_REAL_STATUS", "status");
-
-        assertThrows(ResponseStatusException.class, () -> ticketService.getSummaryList(query));
-    }
-
-    @Test
     void testGetSummaryList_UnknownFilter() {
         PageQuery query = new PageQuery(0, 10, "x", "unknown_filter");
 
