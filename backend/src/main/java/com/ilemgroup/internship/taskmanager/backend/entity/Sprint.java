@@ -2,16 +2,15 @@ package com.ilemgroup.internship.taskmanager.backend.entity;
 
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.SprintStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "sprints")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Sprint {

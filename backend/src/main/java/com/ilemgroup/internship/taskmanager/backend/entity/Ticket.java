@@ -3,16 +3,15 @@ package com.ilemgroup.internship.taskmanager.backend.entity;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketPriority;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "tickets")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ticket {
