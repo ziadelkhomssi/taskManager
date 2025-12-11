@@ -1,6 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
@@ -34,7 +35,7 @@ public class UserService {
         return userMapper.toDetails(user);
     }
 
-    public List<UserSummary> getSummaryList(PageQuery query) {
+    public PageResponse<UserSummary> getSummaryList(PageQuery query) {
         Pageable pageable = PageRequest.of(query.page(), query.size());
         Page<User> page;
         switch (query.filterBy()) {
@@ -51,10 +52,16 @@ public class UserService {
             );
         }
 
-        return userMapper.toSummaryList(page.getContent());
+        return new PageResponse<>(
+                query.page(),
+                query.size(),
+                page.getNumberOfElements(),
+                page.getTotalPages(),
+                userMapper.toSummaryList(page.getContent())
+        );
     }
 
-    public List<UserSummary> getProjectParticipants(Long projectId, PageQuery query) {
+    public PageResponse<UserSummary> getProjectParticipants(Long projectId, PageQuery query) {
         Pageable pageable = PageRequest.of(query.page(), query.size());
         Page<User> page;
         switch (query.filterBy()) {
@@ -70,10 +77,16 @@ public class UserService {
             );
         }
 
-        return userMapper.toSummaryList(page.getContent());
+        return new PageResponse<>(
+                query.page(),
+                query.size(),
+                page.getNumberOfElements(),
+                page.getTotalPages(),
+                userMapper.toSummaryList(page.getContent())
+        );
     }
 
-    public List<UserSummary> getSprintParticipants(Long sprintId, PageQuery query) {
+    public PageResponse<UserSummary> getSprintParticipants(Long sprintId, PageQuery query) {
         Pageable pageable = PageRequest.of(query.page(), query.size());
         Page<User> page;
         switch (query.filterBy()) {
@@ -89,7 +102,13 @@ public class UserService {
             );
         }
 
-        return userMapper.toSummaryList(page.getContent());
+        return new PageResponse<>(
+                query.page(),
+                query.size(),
+                page.getNumberOfElements(),
+                page.getTotalPages(),
+                userMapper.toSummaryList(page.getContent())
+        );
     }
 
     public void createUser(User user) {

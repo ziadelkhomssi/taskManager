@@ -1,6 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.SprintDetails;
@@ -41,7 +42,7 @@ public class SprintService {
         return sprintMapper.toDetails(sprint);
     }
 
-    public List<SprintSummary> getSummaryList(PageQuery query) {
+    public PageResponse<SprintSummary> getSummaryList(PageQuery query) {
         Pageable pageable = PageRequest.of(query.page(), query.size());
         Page<Sprint> page;
 
@@ -60,7 +61,13 @@ public class SprintService {
             );
         }
 
-        return sprintMapper.toSummaryList(page.getContent());
+        return new PageResponse<>(
+                query.page(),
+                query.size(),
+                page.getNumberOfElements(),
+                page.getTotalPages(),
+                sprintMapper.toSummaryList(page.getContent())
+        );
     }
 
     public void createSprint(SprintCreate command) {

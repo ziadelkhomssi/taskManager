@@ -2,6 +2,7 @@ package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCommentCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
@@ -61,11 +62,11 @@ public class TicketCommentServiceIntegrationTest {
         ticketComment2 = ticketCommentRepository.save(ticketComment2);
 
         PageQuery query = new PageQuery(0, 10, null, null);
-        List<TicketCommentDetails> result = ticketCommentService.getDetailsList(ticket.getId(), query);
+        PageResponse<TicketCommentDetails> result = ticketCommentService.getDetailsList(ticket.getId(), query);
 
-        assertEquals(2, result.size());
-        assertEquals(ticketComment1.getComment(), result.get(0).comment());
-        assertEquals(ticketComment2.getParentComment().getId(), result.get(1).parentCommentId());
+        assertEquals(2, result.totalElements());
+        assertEquals(ticketComment1.getComment(), result.content().get(0).comment());
+        assertEquals(ticketComment2.getParentComment().getId(), result.content().get(1).parentCommentId());
     }
 
     @Test

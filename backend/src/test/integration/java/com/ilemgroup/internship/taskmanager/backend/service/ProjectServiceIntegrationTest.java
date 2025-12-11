@@ -2,6 +2,7 @@ package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.ProjectCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.ProjectUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.ProjectDetails;
@@ -81,10 +82,10 @@ class ProjectServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "alp", "project");
 
-        List<ProjectSummary> result = projectService.getSummaryList(query);
+        PageResponse<ProjectSummary> result = projectService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(project1.getTitle(), result.getFirst().title());
+        assertEquals(1, result.totalElements());
+        assertEquals(project1.getTitle(), result.content().getFirst().title());
     }
 
     @Test
@@ -98,10 +99,10 @@ class ProjectServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "arc", "status");
 
-        List<ProjectSummary> result = projectService.getSummaryList(query);
+        PageResponse<ProjectSummary> result = projectService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(project1.getStatus(), result.getFirst().status());
+        assertEquals(1, result.totalElements());
+        assertEquals(project1.getStatus(), result.content().getFirst().status());
     }
 
     @Test
@@ -121,10 +122,10 @@ class ProjectServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "alpha", "sprint");
 
-        List<ProjectSummary> result = projectService.getSummaryList(query);
+        PageResponse<ProjectSummary> result = projectService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(project.getTitle(), result.getFirst().title());
+        assertEquals(1, result.totalElements());
+        assertEquals(project.getTitle(), result.content().getFirst().title());
     }
 
     @Test
@@ -140,10 +141,10 @@ class ProjectServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "john", "user");
 
-        List<ProjectSummary> result = projectService.getSummaryList(query);
+        PageResponse<ProjectSummary> result = projectService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(project.getTitle(), result.getFirst().title());
+        assertEquals(1, result.totalElements());
+        assertEquals(project.getTitle(), result.content().getFirst().title());
     }
 
     @Test

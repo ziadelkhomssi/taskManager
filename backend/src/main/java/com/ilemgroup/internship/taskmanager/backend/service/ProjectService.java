@@ -1,6 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.ProjectCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.ProjectUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.ProjectDetails;
@@ -37,7 +38,7 @@ public class ProjectService {
         return projectMapper.toDetails(project);
     }
 
-    public List<ProjectSummary> getSummaryList(PageQuery query) {
+    public PageResponse<ProjectSummary> getSummaryList(PageQuery query) {
         Pageable pageable = PageRequest.of(query.page(), query.size());
         Page<Project> page;
 
@@ -59,7 +60,13 @@ public class ProjectService {
             );
         }
 
-        return projectMapper.toSummaryList(page.getContent());
+        return new PageResponse<>(
+                query.page(),
+                query.size(),
+                page.getNumberOfElements(),
+                page.getTotalPages(),
+                projectMapper.toSummaryList(page.getContent())
+        );
     }
 
     public void createProject(ProjectCreate command) {

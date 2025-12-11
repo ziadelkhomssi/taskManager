@@ -2,6 +2,7 @@ package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.SprintDetails;
@@ -82,10 +83,10 @@ public class SprintServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "alp", "sprint");
 
-        List<SprintSummary> result = sprintService.getSummaryList(query);
+        PageResponse<SprintSummary> result = sprintService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(sprint1.getTitle(), result.getFirst().title());
+        assertEquals(1, result.totalElements());
+        assertEquals(sprint1.getTitle(), result.content().getFirst().title());
     }
 
     @Test
@@ -100,10 +101,10 @@ public class SprintServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "PLANNED", "status");
 
-        List<SprintSummary> result = sprintService.getSummaryList(query);
+        PageResponse<SprintSummary> result = sprintService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(sprint1.getStatus(), result.getFirst().status());
+        assertEquals(1, result.totalElements());
+        assertEquals(sprint1.getStatus(), result.content().getFirst().status());
     }
 
     @Test
@@ -126,10 +127,10 @@ public class SprintServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "john", "user");
 
-        List<SprintSummary> result = sprintService.getSummaryList(query);
+        PageResponse<SprintSummary> result = sprintService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(sprint.getTitle(), result.getFirst().title());
+        assertEquals(1, result.totalElements());
+        assertEquals(sprint.getTitle(), result.content().getFirst().title());
     }
 
     @Test

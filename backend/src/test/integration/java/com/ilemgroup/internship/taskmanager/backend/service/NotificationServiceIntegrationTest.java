@@ -2,6 +2,7 @@ package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.NotificationDetails;
 import com.ilemgroup.internship.taskmanager.backend.entity.*;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
@@ -62,10 +63,10 @@ public class NotificationServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, null, null);
 
-        List<NotificationDetails> result = notificationService.getDetailsList(query);
-        assertEquals(2, result.size());
-        assertEquals(notification1.getType(), result.get(0).type());
-        assertEquals(notification2.getType(), result.get(1).type());
+        PageResponse<NotificationDetails> result = notificationService.getDetailsList(query);
+        assertEquals(2, result.totalElements());
+        assertEquals(notification1.getType(), result.content().get(0).type());
+        assertEquals(notification2.getType(), result.content().get(1).type());
     }
 
     @Test

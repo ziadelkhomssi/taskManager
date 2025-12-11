@@ -2,6 +2,7 @@ package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketDetails;
@@ -86,10 +87,10 @@ public class TicketServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "101", "ticket");
 
-        List<TicketSummary> result = ticketService.getSummaryList(query);
+        PageResponse<TicketSummary> result = ticketService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(ticket1.getTitle(), result.getFirst().title());
+        assertEquals(1, result.totalElements());
+        assertEquals(ticket1.getTitle(), result.content().getFirst().title());
     }
 
     @Test
@@ -106,10 +107,10 @@ public class TicketServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "IN_PROGRESS", "status");
 
-        List<TicketSummary> result = ticketService.getSummaryList(query);
+        PageResponse<TicketSummary> result = ticketService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(ticket1.getStatus(), result.getFirst().status());
+        assertEquals(1, result.totalElements());
+        assertEquals(ticket1.getStatus(), result.content().getFirst().status());
     }
 
     @Test
@@ -130,10 +131,10 @@ public class TicketServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "john", "user");
 
-        List<TicketSummary> result = ticketService.getSummaryList(query);
+        PageResponse<TicketSummary> result = ticketService.getSummaryList(query);
 
-        assertEquals(1, result.size());
-        assertEquals(ticket.getTitle(), result.getFirst().title());
+        assertEquals(1, result.totalElements());
+        assertEquals(ticket.getTitle(), result.content().getFirst().title());
     }
 
     @Test

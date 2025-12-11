@@ -2,6 +2,7 @@ package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Project;
@@ -71,12 +72,12 @@ public class UserServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "jan", "name");
 
-        List<UserSummary> results = userService.getSummaryList(query);
-        assertEquals(2, results.size());
-        assertEquals(results.get(0).id(), user1.getAzureOid());
-        assertEquals(results.get(0).name(), user1.getName());
-        assertEquals(results.get(1).id(), user2.getAzureOid());
-        assertEquals(results.get(1).name(), user2.getName());
+        PageResponse<UserSummary> results = userService.getSummaryList(query);
+        assertEquals(2, results.totalElements());
+        assertEquals(results.content().get(0).id(), user1.getAzureOid());
+        assertEquals(results.content().get(0).name(), user1.getName());
+        assertEquals(results.content().get(1).id(), user2.getAzureOid());
+        assertEquals(results.content().get(1).name(), user2.getName());
     }
 
     @Test
@@ -96,10 +97,10 @@ public class UserServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "dev", "job");
 
-        List<UserSummary> results = userService.getSummaryList(query);
-        assertEquals(2, results.size());
-        assertEquals(results.get(0).id(), user1.getAzureOid());
-        assertEquals(results.get(1).id(), user2.getAzureOid());
+        PageResponse<UserSummary> results = userService.getSummaryList(query);
+        assertEquals(2, results.totalElements());
+        assertEquals(results.content().get(0).id(), user1.getAzureOid());
+        assertEquals(results.content().get(1).id(), user2.getAzureOid());
     }
 
     @Test
@@ -129,16 +130,16 @@ public class UserServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "jan", "name");
 
-        List<UserSummary> participants = userService.getProjectParticipants(
+        PageResponse<UserSummary> participants = userService.getProjectParticipants(
                 project1.getId(),
                 query
         );
 
-        assertEquals(2, participants.size());
-        assertEquals(participants.get(0).id(), user1.getAzureOid());
-        assertEquals(participants.get(0).name(), user1.getName());
-        assertEquals(participants.get(1).id(), user2.getAzureOid());
-        assertEquals(participants.get(1).name(), user2.getName());
+        assertEquals(2, participants.totalElements());
+        assertEquals(participants.content().get(0).id(), user1.getAzureOid());
+        assertEquals(participants.content().get(0).name(), user1.getName());
+        assertEquals(participants.content().get(1).id(), user2.getAzureOid());
+        assertEquals(participants.content().get(1).name(), user2.getName());
     }
 
     @Test
@@ -168,14 +169,14 @@ public class UserServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "dev", "job");
 
-        List<UserSummary> participants = userService.getProjectParticipants(
+        PageResponse<UserSummary> participants = userService.getProjectParticipants(
                 project1.getId(),
                 query
         );
 
-        assertEquals(2, participants.size());
-        assertEquals(participants.get(0).id(), user1.getAzureOid());
-        assertEquals(participants.get(1).id(), user2.getAzureOid());
+        assertEquals(2, participants.totalElements());
+        assertEquals(participants.content().get(0).id(), user1.getAzureOid());
+        assertEquals(participants.content().get(1).id(), user2.getAzureOid());
     }
 
     @Test
@@ -202,16 +203,16 @@ public class UserServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "jan", "name");
 
-        List<UserSummary> participants = userService.getSprintParticipants(
+        PageResponse<UserSummary> participants = userService.getSprintParticipants(
                 sprint1.getId(),
                 query
         );
 
-        assertEquals(2, participants.size());
-        assertEquals(participants.get(0).id(), user1.getAzureOid());
-        assertEquals(participants.get(0).name(), user1.getName());
-        assertEquals(participants.get(1).id(), user2.getAzureOid());
-        assertEquals(participants.get(1).name(), user2.getName());
+        assertEquals(2, participants.totalElements());
+        assertEquals(participants.content().get(0).id(), user1.getAzureOid());
+        assertEquals(participants.content().get(0).name(), user1.getName());
+        assertEquals(participants.content().get(1).id(), user2.getAzureOid());
+        assertEquals(participants.content().get(1).name(), user2.getName());
     }
 
     @Test
@@ -238,14 +239,14 @@ public class UserServiceIntegrationTest {
 
         PageQuery query = new PageQuery(0, 10, "dev", "job");
 
-        List<UserSummary> participants = userService.getSprintParticipants(
+        PageResponse<UserSummary> participants = userService.getSprintParticipants(
                 sprint1.getId(),
                 query
         );
 
-        assertEquals(2, participants.size());
-        assertEquals(participants.get(0).id(), user1.getAzureOid());
-        assertEquals(participants.get(1).id(), user2.getAzureOid());
+        assertEquals(2, participants.totalElements());
+        assertEquals(participants.content().get(0).id(), user1.getAzureOid());
+        assertEquals(participants.content().get(1).id(), user2.getAzureOid());
     }
 
     @Test

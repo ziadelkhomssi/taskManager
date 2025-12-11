@@ -1,6 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketDetails;
@@ -49,7 +50,7 @@ public class TicketService {
         return ticketMapper.toDetails(ticket);
     }
 
-    public List<TicketSummary> getSummaryList(PageQuery query) {
+    public PageResponse<TicketSummary> getSummaryList(PageQuery query) {
         Pageable pageable = PageRequest.of(query.page(), query.size());
         Page<Ticket> page;
         switch (query.filterBy()) {
@@ -68,7 +69,13 @@ public class TicketService {
             );
         }
 
-        return ticketMapper.toSummaryList(page.getContent());
+        return new PageResponse<>(
+                query.page(),
+                query.size(),
+                page.getNumberOfElements(),
+                page.getTotalPages(),
+                ticketMapper.toSummaryList(page.getContent())
+        );
     }
 
     public void createTicket(TicketCreate command) {

@@ -1,6 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
+import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.NotificationDetails;
 import com.ilemgroup.internship.taskmanager.backend.entity.Notification;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
@@ -30,11 +31,17 @@ public class NotificationService {
     @Autowired
     private NotificationMapper notificationMapper;
 
-    public List<NotificationDetails> getDetailsList(PageQuery query) throws AccessDeniedException {
+    public PageResponse<NotificationDetails> getDetailsList(PageQuery query) throws AccessDeniedException {
         String userId = AuthorizationService.getClientUserId();
         Pageable pageable = PageRequest.of(query.page(), query.size());
         Page<Notification> page = notificationRepository.findAllByUserId(userId, pageable);
-        return notificationMapper.toDetailsList(page.getContent());
+        return new PageResponse<>(
+                query.page(),
+                query.size(),
+                page.getNumberOfElements(),
+                page.getTotalPages(),
+                notificationMapper.toDetailsList(page.getContent())
+        );
     }
 
     // may want to make a batch version later, we'll see
