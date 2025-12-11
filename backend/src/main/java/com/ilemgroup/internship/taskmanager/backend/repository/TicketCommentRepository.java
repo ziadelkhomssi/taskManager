@@ -8,6 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 
 @SuppressWarnings("NullableProblems")
 public interface TicketCommentRepository extends JpaRepository<TicketComment, Long> {
-    @Query("SELECT tc FROM TicketComment tc LEFT JOIN Ticket ti ON tc.ticket.id=ti.id WHERE ti.id=?1")
+    @Query("""
+            SELECT tc FROM TicketComment tc
+            LEFT JOIN Ticket ti ON tc.ticket.id=ti.id
+            WHERE ti.id=?1
+    """)
     Page<TicketComment> findAllByTicketId(Long ticketId, Pageable pageable);
 }

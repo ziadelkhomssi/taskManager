@@ -8,6 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 
 @SuppressWarnings("NullableProblems")
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    @Query("SELECT no FROM Notification no LEFT JOIN Ticket ti ON no.ticket.id=ti.id LEFT JOIN User us ON ti.user.azureOid=us.azureOid WHERE us.azureOid=?1")
+    @Query("""
+            SELECT no FROM Notification no
+            LEFT JOIN Ticket ti ON no.ticket.id=ti.id
+            LEFT JOIN User us ON ti.user.azureOid=us.azureOid
+            WHERE us.azureOid=?1
+    """)
     Page<Notification> findAllByUserId(String userId, Pageable pageable);
 }
