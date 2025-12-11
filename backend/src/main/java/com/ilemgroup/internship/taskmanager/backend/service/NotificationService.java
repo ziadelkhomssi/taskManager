@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -54,6 +55,7 @@ public class NotificationService {
         );
 
         notification.setRead(true);
+        notification.setReadAt(LocalDateTime.now());
         notificationRepository.save(notification);
     }
 
