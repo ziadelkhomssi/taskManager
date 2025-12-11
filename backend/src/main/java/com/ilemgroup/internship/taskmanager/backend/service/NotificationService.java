@@ -4,26 +4,20 @@ import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.NotificationDetails;
 import com.ilemgroup.internship.taskmanager.backend.entity.Notification;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
-import com.ilemgroup.internship.taskmanager.backend.entity.User;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
 import com.ilemgroup.internship.taskmanager.backend.mapper.NotificationMapper;
 import com.ilemgroup.internship.taskmanager.backend.repository.NotificationRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.TicketRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -36,17 +30,10 @@ public class NotificationService {
     @Autowired
     private NotificationMapper notificationMapper;
 
-    public List<NotificationDetails> getDetailsList(PageQuery query) {
-        String userId = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-        Specification<@NonNull Notification> specification = (root, criteriaQuery, criteriaBuilder) -> {
-            Join<Notification, Ticket> ticketJoin = root.join("ticket");
-            Join<Ticket, User> userJoin = ticketJoin.join("user");
-            return criteriaBuilder.equal(userJoin.get("azureOid"), userId);
-        };
-
+    public List<NotificationDetails> getDetailsList(PageQuery query) throws AccessDeniedException {
+        String userId = AuthorizationService.getClientUserId();
         Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<@NonNull Notification> page = notificationRepository.findAll(specification, pageable);
-
+        Page<Notification> page = notificationRepository.findAllByUserId(userId, pageable);
         return notificationMapper.toDetailsList(page.getContent());
     }
 

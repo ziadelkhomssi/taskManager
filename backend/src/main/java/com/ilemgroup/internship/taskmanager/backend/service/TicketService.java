@@ -9,21 +9,16 @@ import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
-import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketStatus;
 import com.ilemgroup.internship.taskmanager.backend.mapper.TicketMapper;
 import com.ilemgroup.internship.taskmanager.backend.repository.SprintRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.TicketRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,10 +50,23 @@ public class TicketService {
     }
 
     public List<TicketSummary> getSummaryList(PageQuery query) {
-        Specification<@NonNull Ticket> specification = buildSummaryListSpecification(query);
-
         Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<@NonNull Ticket> page = ticketRepository.findAll(specification, pageable);
+        Page<Ticket> page;
+        switch (query.filterBy()) {
+            case "ticket" -> {
+                page = ticketRepository.findAllByTicketName(query.search(), pageable);
+            }
+
+            case "status" -> {
+                page = ticketRepository.findAllByTicketStatus(query.search(), pageable);
+            }
+            case "user" -> {
+                page = ticketRepository.findAllByUserName(query.search(), pageable);
+            }
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Unknown filter: " + query.filterBy()
+            );
+        }
 
         return ticketMapper.toSummaryList(page.getContent());
     }
@@ -92,49 +100,5 @@ public class TicketService {
             throw new EntityNotFoundException("Ticket not found: " + id);
         }
         ticketRepository.deleteById(id);
-    }
-
-    private Specification<@NonNull Ticket> buildSummaryListSpecification(PageQuery query) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.conjunction();
-
-            String search = query.search();
-            if (search == null || search.isBlank()) {
-                return predicate;
-            }
-
-            String like = "%" + search.toLowerCase() + "%";
-            String filter = query.filterBy().toLowerCase();
-
-            switch (filter) {
-                case "ticket" -> {
-                    predicate = criteriaBuilder.and(predicate,
-                            criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), like));
-                }
-
-                case "status" -> {
-                    try {
-                        TicketStatus status = TicketStatus.valueOf(search);
-                        predicate = criteriaBuilder.and(predicate,
-                                criteriaBuilder.equal(root.get("status"), status));
-                    } catch (IllegalArgumentException e) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "Invalid ticket status: " + search
-                        );
-                    }
-                }
-                case "user" -> {
-                    Join<Ticket, User> userJoin = root.join("user");
-
-                    predicate = criteriaBuilder.and(predicate,
-                            criteriaBuilder.like(criteriaBuilder.lower(userJoin.get("name")), like));
-                }
-                default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Unknown filter: " + query.filterBy()
-                );
-            }
-
-            return predicate;
-        };
     }
 }

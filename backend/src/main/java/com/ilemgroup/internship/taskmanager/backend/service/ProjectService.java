@@ -6,22 +6,14 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.update.ProjectUp
 import com.ilemgroup.internship.taskmanager.backend.dto.details.ProjectDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.ProjectSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Project;
-import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
-import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
-import com.ilemgroup.internship.taskmanager.backend.entity.User;
-import com.ilemgroup.internship.taskmanager.backend.entity.enums.ProjectStatus;
 import com.ilemgroup.internship.taskmanager.backend.mapper.ProjectMapper;
 import com.ilemgroup.internship.taskmanager.backend.repository.ProjectRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -46,10 +38,26 @@ public class ProjectService {
     }
 
     public List<ProjectSummary> getSummaryList(PageQuery query) {
-        Specification<@NonNull Project> specification = buildSummaryListSpecification(query);
-
         Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<@NonNull Project> page = projectRepository.findAll(specification, pageable);
+        Page<Project> page;
+
+        switch (query.filterBy()) {
+            case "project" -> {
+                page = projectRepository.findAllByProjectName(query.search(), pageable);
+            }
+            case "status" -> {
+                page = projectRepository.findAllByProjectStatus(query.search(), pageable);
+            }
+            case "sprint" -> {
+                page = projectRepository.findAllBySprintName(query.search(), pageable);
+            }
+            case "user" -> {
+                page = projectRepository.findAllByUserName(query.search(), pageable);
+            }
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Unknown filter: " + query.filterBy()
+            );
+        }
 
         return projectMapper.toSummaryList(page.getContent());
     }
@@ -73,56 +81,6 @@ public class ProjectService {
             throw new EntityNotFoundException("Project not found: " + id);
         }
         projectRepository.deleteById(id);
-    }
-
-    private Specification<@NonNull Project> buildSummaryListSpecification(PageQuery query) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.conjunction();
-
-            String search = query.search();
-            if (search == null || search.isBlank()) {
-                return predicate;
-            }
-
-            String like = "%" + search.toLowerCase() + "%";
-            String filter = query.filterBy().toLowerCase();
-
-            switch (filter) {
-                case "project" -> {
-                    predicate = criteriaBuilder.and(predicate,
-                            criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), like));
-                }
-                case "sprint" -> {
-                    Join<Project, Sprint> sprintJoin = root.join("sprints");
-                    predicate = criteriaBuilder.and(predicate,
-                            criteriaBuilder.like(criteriaBuilder.lower(sprintJoin.get("title")), like));
-                }
-                case "status" -> {
-                    try {
-                        ProjectStatus status = ProjectStatus.valueOf(search);
-                        predicate = criteriaBuilder.and(predicate,
-                                criteriaBuilder.equal(root.get("status"), status));
-                    } catch (IllegalArgumentException e) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "Invalid project status: " + search
-                        );
-                    }
-                }
-                case "user" -> {
-                    Join<Project, Sprint> sprintJoin = root.join("sprints");
-                    Join<Sprint, Ticket> ticketJoin = sprintJoin.join("tickets");
-                    Join<Ticket, User> userJoin = ticketJoin.join("user");
-
-                    predicate = criteriaBuilder.and(predicate,
-                            criteriaBuilder.like(criteriaBuilder.lower(userJoin.get("name")), like));
-                }
-                default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Unknown filter: " + query.filterBy()
-                );
-            }
-
-            return predicate;
-        };
     }
 }
 
