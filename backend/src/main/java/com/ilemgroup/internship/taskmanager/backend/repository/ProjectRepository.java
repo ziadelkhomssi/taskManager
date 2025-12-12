@@ -20,15 +20,15 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Page<Project> findAllByProjectStatus(String search, Pageable pageable);
     @Query("""
             SELECT pr FROM Project pr
-            LEFT JOIN Sprint sp ON pr.id=sp.project.id 
+            LEFT JOIN Sprint sp ON pr.id=sp.project.id
             WHERE LOWER(sp.title) LIKE LOWER(CONCAT('%', ?1, '%'))
     """)
     Page<Project> findAllBySprintName(String search, Pageable pageable);
     @Query("""
             SELECT pr FROM Project pr
-            LEFT JOIN Sprint sp ON pr.id=sp.project.id 
-            LEFT JOIN Ticket ti ON sp.id=ti.sprint.id 
-            LEFT JOIN User us ON ti.user.id=us.azureOid 
+            LEFT JOIN Sprint sp ON pr.id=sp.project.id
+            LEFT JOIN Ticket ti ON sp.id=ti.sprint.id
+            LEFT JOIN User us ON ti.user.id=us.azureOid
             WHERE LOWER(us.name) LIKE LOWER(CONCAT('%', ?1, '%'))
     """)
     Page<Project> findAllByUserName(String search, Pageable pageable);

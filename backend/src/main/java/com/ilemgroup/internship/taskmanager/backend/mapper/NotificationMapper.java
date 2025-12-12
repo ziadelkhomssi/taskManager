@@ -1,9 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.mapper;
 
 import com.ilemgroup.internship.taskmanager.backend.dto.details.NotificationDetails;
-import com.ilemgroup.internship.taskmanager.backend.dto.summary.ProjectSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Notification;
-import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

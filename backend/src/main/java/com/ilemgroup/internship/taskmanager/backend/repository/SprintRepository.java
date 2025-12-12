@@ -9,12 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 @SuppressWarnings("NullableProblems")
 public interface SprintRepository extends JpaRepository<Sprint, Long> {
     @Query("""
-            SELECT sp FROM Sprint sp 
+            SELECT sp FROM Sprint sp
             WHERE LOWER(sp.title) LIKE LOWER(CONCAT('%', ?1, '%'))
     """)
     Page<Sprint> findAllBySprintName(String search, Pageable pageable);
     @Query("""
-            SELECT sp FROM Sprint sp 
+            SELECT sp FROM Sprint sp
             WHERE LOWER(sp.status) LIKE LOWER(CONCAT('%', ?1, '%'))
     """)
     Page<Sprint> findAllBySprintStatus(String search, Pageable pageable);

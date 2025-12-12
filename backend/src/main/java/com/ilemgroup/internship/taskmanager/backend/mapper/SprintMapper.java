@@ -4,9 +4,10 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCre
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.SprintDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.SprintSummary;
-import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 

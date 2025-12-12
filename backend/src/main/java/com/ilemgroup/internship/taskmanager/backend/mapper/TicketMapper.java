@@ -4,9 +4,7 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCre
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.TicketSummary;
-import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
