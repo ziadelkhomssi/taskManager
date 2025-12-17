@@ -1,0 +1,19 @@
+table {
+  width: 100%;
+}
+
+button {
+  margin-right: 8px;
+}
+
+.entity-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.add-button {
+  white-space: nowrap;
+}
