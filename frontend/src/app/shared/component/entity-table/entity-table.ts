@@ -3,7 +3,6 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatCell, MatCellDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRowDef, MatRowDef, MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { SearchBar, SearchQuery } from '../search-bar/search-bar';
-import { PageQuery } from '../../../core/ng-openapi';
 
 export interface TableAction<T> {
 	label: string;
@@ -15,6 +14,13 @@ export interface TableColumn<T> {
 	columnDef: string;
 	header: string;
 	cell: (row: T) => string;
+}
+
+export interface PageQuery {
+	page: number,
+	size: number,
+	search: string,
+	filter: string
 }
 
 @Component({
@@ -55,23 +61,23 @@ export class EntityTable<T> {
 	onPageChange(event: PageEvent) {
 		this.pageIndex = event.pageIndex;
 		this.pageSize = event.pageSize;
-		
+
 		this.emitPageQuery({
 			page: event.pageIndex,
 			size: event.pageSize,
 			search: this.lastQuery.search,
-			filterBy: this.lastQuery.filter
+			filter: this.lastQuery.filter
 		});
 	}
 
 	onQuery(query: SearchQuery) {
 		this.lastQuery = query;
-		
+
 		this.emitPageQuery({
 			page: this.pageIndex,
 			size: this.pageSize,
 			search: query.search,
-			filterBy: query.filter
+			filter: query.filter
 		});
 	}
 

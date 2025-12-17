@@ -1,7 +1,5 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
@@ -33,80 +31,71 @@ public class UserService {
         return userMapper.toDetails(user);
     }
 
-    public PageResponse<UserSummary> getSummaryList(PageQuery query) {
-        Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<User> page;
-        switch (query.filterBy()) {
+    public Page<UserSummary> getSummaryList(
+            Pageable pageable, 
+            String search, 
+            String filter
+    ) {
+        Page<UserSummary> page;
+        switch (filter) {
             case "name" -> {
-                page = userRepository.findAllUserByName(query.search(), pageable);
+                page = userRepository.findAllUserByName(search, pageable).map(userMapper::toSummary);
             }
             case "job" -> {
 
-                page = userRepository.findAllUserByJob(query.search(), pageable);
+                page = userRepository.findAllUserByJob(search, pageable).map(userMapper::toSummary);
             }
 
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Unknown filter: " + query.filterBy()
+                    "Unknown filter: " + filter
             );
         }
 
-        return new PageResponse<>(
-                query.page(),
-                query.size(),
-                page.getNumberOfElements(),
-                page.getTotalPages(),
-                userMapper.toSummaryList(page.getContent())
-        );
+        return page;
     }
 
-    public PageResponse<UserSummary> getProjectParticipants(Long projectId, PageQuery query) {
-        Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<User> page;
-        switch (query.filterBy()) {
+    public Page<UserSummary> getProjectParticipants(Long projectId, 
+            Pageable pageable, 
+            String search, 
+            String filter
+    ) {
+        Page<UserSummary> page;
+        switch (filter) {
             case "name" -> {
-                page = userRepository.findAllProjectParticipantsByName(projectId, query.search(), pageable);
+                page = userRepository.findAllProjectParticipantsByName(projectId, search, pageable).map(userMapper::toSummary);
             }
             case "job" -> {
-                page = userRepository.findAllProjectParticipantsByJob(projectId, query.search(), pageable);
+                page = userRepository.findAllProjectParticipantsByJob(projectId, search, pageable).map(userMapper::toSummary);
             }
 
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Unknown filter: " + query.filterBy()
+                    "Unknown filter: " + filter
             );
         }
 
-        return new PageResponse<>(
-                query.page(),
-                query.size(),
-                page.getNumberOfElements(),
-                page.getTotalPages(),
-                userMapper.toSummaryList(page.getContent())
-        );
+        return page;
     }
 
-    public PageResponse<UserSummary> getSprintParticipants(Long sprintId, PageQuery query) {
-        Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<User> page;
-        switch (query.filterBy()) {
+    public Page<UserSummary> getSprintParticipants(Long sprintId, 
+            Pageable pageable, 
+            String search, 
+            String filter
+    ) {
+        Page<UserSummary> page;
+        switch (filter) {
             case "name" -> {
-                page = userRepository.findAllSprintParticipantsByName(sprintId, query.search(), pageable);
+                page = userRepository.findAllSprintParticipantsByName(sprintId, search, pageable).map(userMapper::toSummary);;
             }
             case "job" -> {
-                page = userRepository.findAllSprintParticipantsByJob(sprintId, query.search(), pageable);
+                page = userRepository.findAllSprintParticipantsByJob(sprintId, search, pageable).map(userMapper::toSummary);;
             }
 
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Unknown filter: " + query.filterBy()
+                    "Unknown filter: " + filter
             );
         }
 
-        return new PageResponse<>(
-                query.page(),
-                query.size(),
-                page.getNumberOfElements(),
-                page.getTotalPages(),
-                userMapper.toSummaryList(page.getContent())
-        );
+        return page;
     }
 
     public void createUser(User user) {

@@ -1,7 +1,5 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.ProjectCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.ProjectUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.ProjectDetails;
@@ -36,35 +34,32 @@ public class ProjectService {
         return projectMapper.toDetails(project);
     }
 
-    public PageResponse<ProjectSummary> getSummaryList(PageQuery query) {
-        Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<Project> page;
+    public Page<ProjectSummary> getSummaryList(
+            Pageable pageable, 
+            String search, 
+            String filter
+    ) {
+        Page<ProjectSummary> page;
 
-        switch (query.filterBy()) {
+        switch (filter) {
             case "project" -> {
-                page = projectRepository.findAllByProjectName(query.search(), pageable);
+                page = projectRepository.findAllByProjectName(search, pageable).map(projectMapper::toSummary);
             }
             case "status" -> {
-                page = projectRepository.findAllByProjectStatus(query.search(), pageable);
+                page = projectRepository.findAllByProjectStatus(search, pageable).map(projectMapper::toSummary);
             }
             case "sprint" -> {
-                page = projectRepository.findAllBySprintName(query.search(), pageable);
+                page = projectRepository.findAllBySprintName(search, pageable).map(projectMapper::toSummary);
             }
             case "user" -> {
-                page = projectRepository.findAllByUserName(query.search(), pageable);
+                page = projectRepository.findAllByUserName(search, pageable).map(projectMapper::toSummary);
             }
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Unknown filter: " + query.filterBy()
+                    "Unknown filter: " + filter
             );
         }
 
-        return new PageResponse<>(
-                query.page(),
-                query.size(),
-                page.getNumberOfElements(),
-                page.getTotalPages(),
-                projectMapper.toSummaryList(page.getContent())
-        );
+        return page;
     }
 
     public void createProject(ProjectCreate command) {

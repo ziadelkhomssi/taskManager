@@ -1,7 +1,5 @@
 package com.ilemgroup.internship.taskmanager.backend.controller;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketDetails;
@@ -9,8 +7,12 @@ import com.ilemgroup.internship.taskmanager.backend.dto.summary.TicketSummary;
 import com.ilemgroup.internship.taskmanager.backend.service.TicketService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/ticket")
@@ -24,8 +26,12 @@ public class TicketController {
     }
 
     @GetMapping("/summary")
-    public PageResponse<TicketSummary> getSummaryList(@RequestBody @Valid PageQuery query) {
-        return ticketService.getSummaryList(query);
+    public Page<TicketSummary> getSummaryList(
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter
+    ) {
+        return ticketService.getSummaryList(pageable, search, filter);
     }
 
     @PostMapping("/create")

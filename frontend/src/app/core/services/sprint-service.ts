@@ -1,44 +1,45 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api-service';
-import { PageQuery, PageResponseSprintSummary, SprintControllerService, SprintCreate, SprintDetails, SprintUpdate } from '../ng-openapi';
+import { PageSprintSummary, SprintCreate, SprintDetails, SprintUpdate } from '../ng-openapi';
 import { catchError, Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
+import { PageQuery } from '../../shared/component/entity-table/entity-table';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class SprintService extends BaseApiService {
+  private readonly sprintUrl = `${this.BASE_URL}/sprint`;
 
-  constructor(
-    private sprintController: SprintControllerService
-  ) {
-    super();
-  }
+  getSummaryList(query: PageQuery): Observable<PageSprintSummary> {
+    const params = new HttpParams({ fromObject: query as any });
 
-  getSummaryList(query: PageQuery): Observable<PageResponseSprintSummary> {
-    return this.sprintController
-      .getSummaryList2(query, 'body')
+    return this.http
+      .get<PageSprintSummary>(`${this.sprintUrl}/summary`, { params })
       .pipe(catchError(this.handleError));
   }
 
   getDetailsById(id: number): Observable<SprintDetails> {
-    return this.sprintController
-      .getDetailsById2(id, 'body')
+    return this.http
+      .get<SprintDetails>(`${this.sprintUrl}/details/${id}`)
       .pipe(catchError(this.handleError));
   }
 
-  create(command: SprintCreate): Observable<any> {
-    return this.sprintController
-      .createSprint(command, 'body')
+  create(command: SprintCreate): Observable<void> {
+    return this.http
+      .post<void>(`${this.sprintUrl}/create`, command)
       .pipe(catchError(this.handleError));
   }
 
-  update(command: SprintUpdate): Observable<any> {
-    return this.sprintController
-      .updateSprint(command, 'body')
+  update(command: SprintUpdate): Observable<void> {
+    return this.http
+      .put<void>(`${this.sprintUrl}/update`, command)
       .pipe(catchError(this.handleError));
   }
 
-  deleteById(id: number): Observable<any> {
-    return this.sprintController
-      .deleteSprintById(id, 'body')
+  deleteById(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.sprintUrl}/delete/${id}`)
       .pipe(catchError(this.handleError));
   }
 }

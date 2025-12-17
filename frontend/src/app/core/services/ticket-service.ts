@@ -1,44 +1,45 @@
 import { Injectable } from '@angular/core';
-import { PageQuery, PageResponseTicketSummary, TicketControllerService, TicketCreate, TicketDetails, TicketUpdate } from '../ng-openapi';
+import { PageTicketSummary, TicketCreate, TicketDetails, TicketUpdate } from '../ng-openapi';
 import { BaseApiService } from './base-api-service';
 import { catchError, Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
+import { PageQuery } from '../../shared/component/entity-table/entity-table';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class TicketService extends BaseApiService {
+  private readonly ticketUrl = `${this.BASE_URL}/ticket`;
 
-  constructor(
-    private ticketController: TicketControllerService
-  ) {
-    super();
-  }
+  getSummaryList(query: PageQuery): Observable<PageTicketSummary> {
+    const params = new HttpParams({ fromObject: query as any });
 
-  getSummaryList(query: PageQuery): Observable<PageResponseTicketSummary> {
-    return this.ticketController
-      .getSummaryList1(query, 'body')
+    return this.http
+      .get<PageTicketSummary>(`${this.ticketUrl}/summary`, { params })
       .pipe(catchError(this.handleError));
   }
 
   getDetailsById(id: number): Observable<TicketDetails> {
-    return this.ticketController
-      .getDetailsById1(id, 'body')
+    return this.http
+      .get<TicketDetails>(`${this.ticketUrl}/details/${id}`)
       .pipe(catchError(this.handleError));
   }
 
-  createTicket(command: TicketCreate): Observable<any> {
-    return this.ticketController
-      .createTicket(command, 'body')
+  create(command: TicketCreate): Observable<void> {
+    return this.http
+      .post<void>(`${this.ticketUrl}/create`, command)
       .pipe(catchError(this.handleError));
   }
 
-  updateTicket(command: TicketUpdate): Observable<any> {
-    return this.ticketController
-      .updateTicket(command, 'body')
+  update(command: TicketUpdate): Observable<void> {
+    return this.http
+      .put<void>(`${this.ticketUrl}/update`, command)
       .pipe(catchError(this.handleError));
   }
 
-  deleteById(id: number): Observable<any> {
-    return this.ticketController
-      .deleteTicketById(id, 'body')
+  deleteById(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.ticketUrl}/delete/${id}`)
       .pipe(catchError(this.handleError));
   }
 }

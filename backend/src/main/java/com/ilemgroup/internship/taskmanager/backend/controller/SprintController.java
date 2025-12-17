@@ -1,7 +1,5 @@
 package com.ilemgroup.internship.taskmanager.backend.controller;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.SprintDetails;
@@ -9,8 +7,12 @@ import com.ilemgroup.internship.taskmanager.backend.dto.summary.SprintSummary;
 import com.ilemgroup.internship.taskmanager.backend.service.SprintService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/sprint")
@@ -24,8 +26,12 @@ public class SprintController {
     }
 
     @GetMapping("/summary")
-    public PageResponse<SprintSummary> getSummaryList(@RequestBody @Valid PageQuery query) {
-        return sprintService.getSummaryList(query);
+    public Page<SprintSummary> getSummaryList(
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter
+    ) {
+        return sprintService.getSummaryList(pageable, search, filter);
     }
 
     @PostMapping("/create")

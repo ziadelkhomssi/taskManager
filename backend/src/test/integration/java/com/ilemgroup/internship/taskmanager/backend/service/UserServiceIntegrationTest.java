@@ -1,8 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Project;
@@ -17,11 +15,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserServiceIntegrationTest {
@@ -70,14 +69,16 @@ public class UserServiceIntegrationTest {
         userRepository.save(user2);
         userRepository.save(user3);
 
-        PageQuery query = new PageQuery(0, 10, "jan", "name");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<UserSummary> results = userService.getSummaryList(query);
-        assertEquals(2, results.totalElements());
-        assertEquals(results.content().get(0).id(), user1.getAzureOid());
-        assertEquals(results.content().get(0).name(), user1.getName());
-        assertEquals(results.content().get(1).id(), user2.getAzureOid());
-        assertEquals(results.content().get(1).name(), user2.getName());
+        Page<UserSummary> results =
+                userService.getSummaryList(pageable, "jan", "name");
+
+        assertEquals(2, results.getTotalElements());
+        assertEquals(user1.getAzureOid(), results.getContent().get(0).id());
+        assertEquals(user1.getName(), results.getContent().get(0).name());
+        assertEquals(user2.getAzureOid(), results.getContent().get(1).id());
+        assertEquals(user2.getName(), results.getContent().get(1).name());
     }
 
     @Test
@@ -95,12 +96,14 @@ public class UserServiceIntegrationTest {
         userRepository.save(user2);
         userRepository.save(user3);
 
-        PageQuery query = new PageQuery(0, 10, "dev", "job");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<UserSummary> results = userService.getSummaryList(query);
-        assertEquals(2, results.totalElements());
-        assertEquals(results.content().get(0).id(), user1.getAzureOid());
-        assertEquals(results.content().get(1).id(), user2.getAzureOid());
+        Page<UserSummary> results =
+                userService.getSummaryList(pageable, "dev", "job");
+
+        assertEquals(2, results.getTotalElements());
+        assertEquals(user1.getAzureOid(), results.getContent().get(0).id());
+        assertEquals(user2.getAzureOid(), results.getContent().get(1).id());
     }
 
     @Test
@@ -121,25 +124,28 @@ public class UserServiceIntegrationTest {
         Project project1 = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint1 = sprintRepository.save(TestEntityFactory.createBaseSprint(project1));
         Sprint sprint2 = sprintRepository.save(TestEntityFactory.createBaseSprint(project1));
-        Ticket ticket1 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
-        Ticket ticket2 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user2));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user2));
 
         Project project2 = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint3 = sprintRepository.save(TestEntityFactory.createBaseSprint(project2));
-        Ticket ticket3 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint3, user3));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint3, user3));
 
-        PageQuery query = new PageQuery(0, 10, "jan", "name");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<UserSummary> participants = userService.getProjectParticipants(
-                project1.getId(),
-                query
-        );
+        Page<UserSummary> participants =
+                userService.getProjectParticipants(
+                        project1.getId(),
+                        pageable,
+                        "jan",
+                        "name"
+                );
 
-        assertEquals(2, participants.totalElements());
-        assertEquals(participants.content().get(0).id(), user1.getAzureOid());
-        assertEquals(participants.content().get(0).name(), user1.getName());
-        assertEquals(participants.content().get(1).id(), user2.getAzureOid());
-        assertEquals(participants.content().get(1).name(), user2.getName());
+        assertEquals(2, participants.getTotalElements());
+        assertEquals(user1.getAzureOid(), participants.getContent().get(0).id());
+        assertEquals(user1.getName(), participants.getContent().get(0).name());
+        assertEquals(user2.getAzureOid(), participants.getContent().get(1).id());
+        assertEquals(user2.getName(), participants.getContent().get(1).name());
     }
 
     @Test
@@ -160,23 +166,26 @@ public class UserServiceIntegrationTest {
         Project project1 = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint1 = sprintRepository.save(TestEntityFactory.createBaseSprint(project1));
         Sprint sprint2 = sprintRepository.save(TestEntityFactory.createBaseSprint(project1));
-        Ticket ticket1 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
-        Ticket ticket2 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user2));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user2));
 
         Project project2 = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint3 = sprintRepository.save(TestEntityFactory.createBaseSprint(project2));
-        Ticket ticket3 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint3, user3));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint3, user3));
 
-        PageQuery query = new PageQuery(0, 10, "dev", "job");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<UserSummary> participants = userService.getProjectParticipants(
-                project1.getId(),
-                query
-        );
+        Page<UserSummary> participants =
+                userService.getProjectParticipants(
+                        project1.getId(),
+                        pageable,
+                        "dev",
+                        "job"
+                );
 
-        assertEquals(2, participants.totalElements());
-        assertEquals(participants.content().get(0).id(), user1.getAzureOid());
-        assertEquals(participants.content().get(1).id(), user2.getAzureOid());
+        assertEquals(2, participants.getTotalElements());
+        assertEquals(user1.getAzureOid(), participants.getContent().get(0).id());
+        assertEquals(user2.getAzureOid(), participants.getContent().get(1).id());
     }
 
     @Test
@@ -197,22 +206,25 @@ public class UserServiceIntegrationTest {
         Project project = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint1 = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
         Sprint sprint2 = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
-        Ticket ticket1 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
-        Ticket ticket2 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user2));
-        Ticket ticket3 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user3));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user2));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user3));
 
-        PageQuery query = new PageQuery(0, 10, "jan", "name");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<UserSummary> participants = userService.getSprintParticipants(
-                sprint1.getId(),
-                query
-        );
+        Page<UserSummary> participants =
+                userService.getSprintParticipants(
+                        sprint1.getId(),
+                        pageable,
+                        "jan",
+                        "name"
+                );
 
-        assertEquals(2, participants.totalElements());
-        assertEquals(participants.content().get(0).id(), user1.getAzureOid());
-        assertEquals(participants.content().get(0).name(), user1.getName());
-        assertEquals(participants.content().get(1).id(), user2.getAzureOid());
-        assertEquals(participants.content().get(1).name(), user2.getName());
+        assertEquals(2, participants.getTotalElements());
+        assertEquals(user1.getAzureOid(), participants.getContent().get(0).id());
+        assertEquals(user1.getName(), participants.getContent().get(0).name());
+        assertEquals(user2.getAzureOid(), participants.getContent().get(1).id());
+        assertEquals(user2.getName(), participants.getContent().get(1).name());
     }
 
     @Test
@@ -233,21 +245,55 @@ public class UserServiceIntegrationTest {
         Project project = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint1 = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
         Sprint sprint2 = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
-        Ticket ticket1 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
-        Ticket ticket2 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user2));
-        Ticket ticket3 = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user3));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user2));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user3));
 
-        PageQuery query = new PageQuery(0, 10, "dev", "job");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<UserSummary> participants = userService.getSprintParticipants(
-                sprint1.getId(),
-                query
-        );
+        Page<UserSummary> participants =
+                userService.getSprintParticipants(
+                        sprint1.getId(),
+                        pageable,
+                        "dev",
+                        "job"
+                );
 
-        assertEquals(2, participants.totalElements());
-        assertEquals(participants.content().get(0).id(), user1.getAzureOid());
-        assertEquals(participants.content().get(1).id(), user2.getAzureOid());
+        assertEquals(2, participants.getTotalElements());
+        assertEquals(user1.getAzureOid(), participants.getContent().get(0).id());
+        assertEquals(user2.getAzureOid(), participants.getContent().get(1).id());
     }
+
+    @Test
+    void testGetSummaryList_UnknownFilter() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        assertThrows(ResponseStatusException.class, () ->
+                userService.getSummaryList(pageable, "x", "unknown_filter")
+        );
+    }
+
+    @Test
+    void testGetProjectParticipants_UnknownFilter() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
+
+        assertThrows(ResponseStatusException.class, () ->
+                userService.getProjectParticipants(project.getId(), pageable, "x", "unknown_filter")
+        );
+    }
+
+    @Test
+    void testGetSprintParticipants_UnknownFilter() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
+        Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
+
+        assertThrows(ResponseStatusException.class, () ->
+                userService.getSprintParticipants(sprint.getId(), pageable, "x", "unknown_filter")
+        );
+    }
+
 
     @Test
     void testCreateUser() {

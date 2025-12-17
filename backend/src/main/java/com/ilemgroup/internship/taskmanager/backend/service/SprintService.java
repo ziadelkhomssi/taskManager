@@ -1,7 +1,5 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.SprintDetails;
@@ -40,32 +38,29 @@ public class SprintService {
         return sprintMapper.toDetails(sprint);
     }
 
-    public PageResponse<SprintSummary> getSummaryList(PageQuery query) {
-        Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<Sprint> page;
+    public Page<SprintSummary> getSummaryList(
+            Pageable pageable, 
+            String search, 
+            String filter
+    ) {
+        Page<SprintSummary> page;
 
-        switch (query.filterBy()) {
+        switch (filter) {
             case "sprint" -> {
-                page = sprintRepository.findAllBySprintName(query.search(), pageable);
+                page = sprintRepository.findAllBySprintName(search, pageable).map(sprintMapper::toSummary);
             }
             case "status" -> {
-                page = sprintRepository.findAllBySprintStatus(query.search(), pageable);
+                page = sprintRepository.findAllBySprintStatus(search, pageable).map(sprintMapper::toSummary);
             }
             case "user" -> {
-                page = sprintRepository.findAllByUserName(query.search(), pageable);
+                page = sprintRepository.findAllByUserName(search, pageable).map(sprintMapper::toSummary);
             }
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Unknown filter: " + query.filterBy()
+                    "Unknown filter: " + filter
             );
         }
 
-        return new PageResponse<>(
-                query.page(),
-                query.size(),
-                page.getNumberOfElements(),
-                page.getTotalPages(),
-                sprintMapper.toSummaryList(page.getContent())
-        );
+        return page;
     }
 
     public void createSprint(SprintCreate command) {

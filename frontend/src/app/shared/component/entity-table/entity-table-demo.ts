@@ -1,9 +1,9 @@
 import { MatTableModule } from "@angular/material/table";
-import { EntityTable, TableAction, TableColumn } from "./entity-table";
+import { EntityTable, PageQuery, TableAction, TableColumn } from "./entity-table";
 import { Component } from "@angular/core";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatButtonModule } from "@angular/material/button";
-import { PageQuery, UserSummary } from "../../../core/ng-openapi";
+import { UserSummary } from "../../../core/ng-openapi";
 
 @Component({
   standalone: true,

@@ -2,44 +2,45 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BaseApiService } from './base-api-service';
-import { PageQuery, PageResponseProjectSummary, ProjectControllerService, ProjectCreate, ProjectDetails, ProjectUpdate } from '../ng-openapi';
+import { PageProjectSummary, ProjectCreate, ProjectDetails, ProjectUpdate } from '../ng-openapi';
+import { HttpParams } from '@angular/common/http';
+import { PageQuery } from '../../shared/component/entity-table/entity-table';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class ProjectService extends BaseApiService {
+  private readonly projectUrl = `${this.BASE_URL}/project`;
 
-  constructor(
-    private projectController: ProjectControllerService
-  ) {
-    super();
-  }
+  getSummaryList(query: PageQuery): Observable<PageProjectSummary> {
+    const params = new HttpParams({ fromObject: query as any });
 
-  getSummaryList(query: PageQuery): Observable<PageResponseProjectSummary> {
-    return this.projectController
-      .getSummaryList3(query, 'body')
+    return this.http
+      .get<PageProjectSummary>(`${this.projectUrl}/summary`, { params })
       .pipe(catchError(this.handleError));
   }
 
   getDetailsById(id: number): Observable<ProjectDetails> {
-    return this.projectController
-      .getDetailsById3(id, 'body')
+    return this.http
+      .get<ProjectDetails>(`${this.projectUrl}/details/${id}`)
       .pipe(catchError(this.handleError));
   }
 
-  create(command: ProjectCreate): Observable<any> {
-    return this.projectController
-      .createProject(command, 'body')
+  create(command: ProjectCreate): Observable<void> {
+    return this.http
+      .post<void>(`${this.projectUrl}/create`, command)
       .pipe(catchError(this.handleError));
   }
 
-  update(command: ProjectUpdate): Observable<any> {
-    return this.projectController
-      .updateProject(command, 'body')
+  update(command: ProjectUpdate): Observable<void> {
+    return this.http
+      .put<void>(`${this.projectUrl}/update`, command)
       .pipe(catchError(this.handleError));
   }
 
-  deleteById(id: number): Observable<any> {
-    return this.projectController
-      .deleteProjectById(id, 'body')
+  deleteById(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.projectUrl}/delete/${id}`)
       .pipe(catchError(this.handleError));
   }
 }

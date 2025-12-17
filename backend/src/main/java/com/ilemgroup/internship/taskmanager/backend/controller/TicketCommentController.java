@@ -1,15 +1,17 @@
 package com.ilemgroup.internship.taskmanager.backend.controller;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCommentCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
 import com.ilemgroup.internship.taskmanager.backend.service.TicketCommentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.file.AccessDeniedException;
 
@@ -20,8 +22,11 @@ public class TicketCommentController {
     private TicketCommentService ticketCommentService;
 
     @GetMapping("/all/{ticketId}")
-    public PageResponse<TicketCommentDetails> getDetailsList(@PathVariable Long ticketId, @RequestBody @Valid PageQuery query) {
-        return ticketCommentService.getDetailsList(ticketId, query);
+    public Page<TicketCommentDetails> getDetailsList(
+            @PathVariable Long ticketId,
+            Pageable pageable
+    ) {
+        return ticketCommentService.getDetailsList(ticketId, pageable);
     }
 
     @PostMapping("/create")

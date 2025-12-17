@@ -1,7 +1,5 @@
 package com.ilemgroup.internship.taskmanager.backend.controller;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.ProjectCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.ProjectUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.ProjectDetails;
@@ -9,8 +7,12 @@ import com.ilemgroup.internship.taskmanager.backend.dto.summary.ProjectSummary;
 import com.ilemgroup.internship.taskmanager.backend.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/project")
@@ -24,8 +26,12 @@ public class ProjectController {
     }
 
     @GetMapping("/summary")
-    public PageResponse<ProjectSummary> getSummaryList(@RequestBody @Valid PageQuery query) {
-        return projectService.getSummaryList(query);
+    public Page<ProjectSummary> getSummaryList(
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter
+    ) {
+        return projectService.getSummaryList(pageable, search, filter);
     }
 
     @PostMapping("/create")

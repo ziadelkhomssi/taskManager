@@ -1,45 +1,50 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api-service';
-import { PageQuery, PageResponseUserSummary, UserControllerService, UserDetails } from '../ng-openapi';
+import { PageUserSummary, UserDetails } from '../ng-openapi';
 import { catchError, Observable } from 'rxjs';
+import { PageQuery } from '../../shared/component/entity-table/entity-table';
+import { HttpParams } from '@angular/common/http';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class UserService extends BaseApiService {
+  private readonly userUrl = `${this.BASE_URL}/user`;
 
-  constructor(
-    private userController: UserControllerService
-  ) {
-    super();
-  }
+  getSummaryList(query: PageQuery): Observable<PageUserSummary> {
+    const params = new HttpParams({ fromObject: query as any });
 
-  getSummaryList(query: PageQuery): Observable<PageResponseUserSummary> {
-    return this.userController
-      .getSummaryList(query, 'body')
+    return this.http
+      .get<PageUserSummary>(`${this.userUrl}/summary`, { params })
       .pipe(catchError(this.handleError));
   }
 
   getSprintParticipants(
     sprintId: number,
     query: PageQuery
-  ): Observable<PageResponseUserSummary> {
-    return this.userController
-      .getSprintParticipants(sprintId, query, 'body')
+  ): Observable<PageUserSummary> {
+    const params = new HttpParams({ fromObject: query as any });
+
+    return this.http
+      .get<PageUserSummary>(`${this.userUrl}/participants/sprint/${sprintId}`, { params })
       .pipe(catchError(this.handleError));
   }
 
   getProjectParticipants(
     projectId: number,
     query: PageQuery
-  ): Observable<PageResponseUserSummary> {
-    return this.userController
-      .getProjectParticipants(projectId, query, 'body')
+  ): Observable<PageUserSummary> {
+    const params = new HttpParams({ fromObject: query as any });
+
+    return this.http
+      .get<PageUserSummary>(`${this.userUrl}/participants/project/${projectId}`, { params })
       .pipe(catchError(this.handleError));
   }
 
   getDetailsById(id: string): Observable<UserDetails> {
-    return this.userController
-      .getDetailsById(id, 'body')
-      .pipe(catchError(this.handleError));
+    return this.http
+          .get<UserDetails>(`${this.userUrl}/details/${id}`)
+          .pipe(catchError(this.handleError));
   }
 }
 

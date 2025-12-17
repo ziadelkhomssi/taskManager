@@ -1,40 +1,27 @@
 import { Injectable } from '@angular/core';
-import { NotificationControllerService, PageQuery, PageResponseNotificationDetails } from '../ng-openapi';
+import { PageNotificationDetails } from '../ng-openapi';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { BaseApiService } from './base-api-service';
+import { PageQuery } from '../../shared/component/entity-table/entity-table';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService extends BaseApiService {
-  
-  constructor(
-    private notificationController: NotificationControllerService
-  ) {
-    super();
+  private readonly notificationUrl = `${this.BASE_URL}/project`;
+
+  getDetailsList(query: PageQuery): Observable<PageNotificationDetails> {
+    const params = new HttpParams({ fromObject: query as any });
+
+    return this.http
+      .get<PageNotificationDetails>(`${this.notificationUrl}/details`, { params })
+      .pipe(catchError(this.handleError));
   }
 
-  getDetailsList(query: PageQuery): Observable<PageResponseNotificationDetails> {
-    return this.notificationController
-      .getDetailsList1(query, "body")
-      .pipe(
-        tap(response => {
-          console.log("Notifications fetched successfully!");
-        }),
-        map(response => response),
-        catchError(this.handleError)
-      );
-  }
-
-  markAsRead(notificationId: number): Observable<any> {
-    return this.notificationController
-      .markAsRead(notificationId, "body")
-      .pipe(
-        tap(() => {
-          console.log(`Notification ${notificationId} marked as read`);
-        }),
-        catchError(this.handleError)
-      );
+  markAsRead(id: number): Observable<any> {
+    return this.http
+      .delete<void>(`${this.notificationUrl}/read/${id}`)
+      .pipe(catchError(this.handleError));
   }
 }

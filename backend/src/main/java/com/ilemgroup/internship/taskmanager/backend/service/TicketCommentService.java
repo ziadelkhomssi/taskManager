@@ -1,7 +1,5 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCommentCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
@@ -38,16 +36,12 @@ public class TicketCommentService {
     @Autowired
     private TicketCommentMapper ticketCommentMapper;
 
-    public PageResponse<TicketCommentDetails> getDetailsList(Long ticketId, PageQuery query) {
-        Pageable pageable = PageRequest.of(query.page(), query.size());
-        Page<TicketComment> page = ticketCommentRepository.findAllByTicketId(ticketId, pageable);
-        return new PageResponse<>(
-                query.page(),
-                query.size(),
-                page.getNumberOfElements(),
-                page.getTotalPages(),
-                ticketCommentMapper.toDetailsList(page.getContent())
-        );
+    public Page<TicketCommentDetails> getDetailsList(
+            Long ticketId,
+            Pageable pageable
+    ) {
+        return ticketCommentRepository.findAllByTicketId(ticketId, pageable)
+                .map(ticketCommentMapper::toDetails);
     }
 
     public void createTicketComment(TicketCommentCreate command) {

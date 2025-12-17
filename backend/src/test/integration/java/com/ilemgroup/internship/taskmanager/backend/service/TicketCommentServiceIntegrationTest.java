@@ -1,8 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCommentCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
@@ -15,6 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.nio.file.AccessDeniedException;
@@ -61,12 +62,13 @@ public class TicketCommentServiceIntegrationTest {
         ticketComment1 = ticketCommentRepository.save(ticketComment1);
         ticketComment2 = ticketCommentRepository.save(ticketComment2);
 
-        PageQuery query = new PageQuery(0, 10, null, null);
-        PageResponse<TicketCommentDetails> result = ticketCommentService.getDetailsList(ticket.getId(), query);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<TicketCommentDetails> result =
+                ticketCommentService.getDetailsList(ticket.getId(), pageable);
 
-        assertEquals(2, result.totalElements());
-        assertEquals(ticketComment1.getComment(), result.content().get(0).comment());
-        assertEquals(ticketComment2.getParentComment().getId(), result.content().get(1).parentCommentId());
+        assertEquals(2, result.getTotalElements());
+        assertEquals(ticketComment1.getComment(), result.getContent().get(0).comment());
+        assertEquals(ticketComment2.getParentComment().getId(), result.getContent().get(1).parentCommentId());
     }
 
     @Test

@@ -1,8 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.ProjectCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.ProjectUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.ProjectDetails;
@@ -23,6 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -80,12 +81,13 @@ class ProjectServiceIntegrationTest {
         projectRepository.save(project1);
         projectRepository.save(project2);
 
-        PageQuery query = new PageQuery(0, 10, "alp", "project");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<ProjectSummary> result = projectService.getSummaryList(query);
+        Page<ProjectSummary> result =
+                projectService.getSummaryList(pageable, "alp", "project");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(project1.getTitle(), result.content().getFirst().title());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(project1.getTitle(), result.getContent().getFirst().title());
     }
 
     @Test
@@ -97,54 +99,69 @@ class ProjectServiceIntegrationTest {
         projectRepository.save(project1);
         projectRepository.save(project2);
 
-        PageQuery query = new PageQuery(0, 10, "arc", "status");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<ProjectSummary> result = projectService.getSummaryList(query);
+        Page<ProjectSummary> result =
+                projectService.getSummaryList(pageable, "arc", "status");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(project1.getStatus(), result.content().getFirst().status());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(project1.getStatus(), result.getContent().getFirst().status());
     }
-
-    @Test
-    void testGetSummaryList_UnknownFilter() {
-        PageQuery query = new PageQuery(0, 10, "x", "unknown_filter");
-
-        assertThrows(ResponseStatusException.class, () -> projectService.getSummaryList(query));
-    }
-
 
     @Test
     void testGetSummaryList_FilterBySprint() {
-        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
+        Project project = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
+
         Sprint sprint = TestEntityFactory.createBaseSprint(project);
         sprint.setTitle("I AM THE ALPHA!!! RAWR");
         sprintRepository.save(sprint);
 
-        PageQuery query = new PageQuery(0, 10, "alpha", "sprint");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<ProjectSummary> result = projectService.getSummaryList(query);
+        Page<ProjectSummary> result =
+                projectService.getSummaryList(pageable, "alpha", "sprint");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(project.getTitle(), result.content().getFirst().title());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(project.getTitle(), result.getContent().getFirst().title());
     }
 
     @Test
     void testGetSummaryList_FilterByUser() {
-        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
-        Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
+        Project project = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
+
+        Sprint sprint = sprintRepository.save(
+                TestEntityFactory.createBaseSprint(project)
+        );
 
         User user = TestEntityFactory.createBaseUser();
         user.setName("John Developer");
         userRepository.save(user);
 
-        Ticket ticket = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint, user));
+        ticketRepository.save(
+                TestEntityFactory.createBaseTicket(sprint, user)
+        );
 
-        PageQuery query = new PageQuery(0, 10, "john", "user");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<ProjectSummary> result = projectService.getSummaryList(query);
+        Page<ProjectSummary> result =
+                projectService.getSummaryList(pageable, "john", "user");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(project.getTitle(), result.content().getFirst().title());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(project.getTitle(), result.getContent().getFirst().title());
+    }
+
+    @Test
+    void testGetSummaryList_UnknownFilter() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        assertThrows(
+                ResponseStatusException.class,
+                () -> projectService.getSummaryList(pageable, "x", "unknown_filter")
+        );
     }
 
     @Test

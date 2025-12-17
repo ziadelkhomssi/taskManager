@@ -1,8 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.NotificationDetails;
 import com.ilemgroup.internship.taskmanager.backend.entity.*;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
@@ -12,10 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.nio.file.AccessDeniedException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,12 +61,12 @@ public class NotificationServiceIntegrationTest {
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
-        PageQuery query = new PageQuery(0, 10, null, null);
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<NotificationDetails> result = notificationService.getDetailsList(query);
-        assertEquals(2, result.totalElements());
-        assertEquals(notification1.getType(), result.content().get(0).type());
-        assertEquals(notification2.getType(), result.content().get(1).type());
+        Page<NotificationDetails> result = notificationService.getDetailsList(pageable);
+        assertEquals(2, result.getTotalElements());
+        assertEquals(notification1.getType(), result.getContent().get(0).type());
+        assertEquals(notification2.getType(), result.getContent().get(1).type());
     }
 
     @Test

@@ -1,8 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.SprintDetails;
@@ -23,6 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -72,8 +73,11 @@ public class SprintServiceIntegrationTest {
     }
 
     @Test
-    void testGetSummaryList_FilterBySprint() {
-        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
+    void testGetSprintSummaryList_FilterBySprint() {
+        Project project = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
+
         Sprint sprint1 = TestEntityFactory.createBaseSprint(project);
         Sprint sprint2 = TestEntityFactory.createBaseSprint(project);
         sprint1.setTitle("Alpha");
@@ -81,17 +85,21 @@ public class SprintServiceIntegrationTest {
         sprintRepository.save(sprint1);
         sprintRepository.save(sprint2);
 
-        PageQuery query = new PageQuery(0, 10, "alp", "sprint");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<SprintSummary> result = sprintService.getSummaryList(query);
+        Page<SprintSummary> result =
+                sprintService.getSummaryList(pageable, "alp", "sprint");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(sprint1.getTitle(), result.content().getFirst().title());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(sprint1.getTitle(), result.getContent().getFirst().title());
     }
 
     @Test
-    void testGetSummaryList_FilterByStatus() {
-        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
+    void testGetSprintSummaryList_FilterByStatus() {
+        Project project = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
+
         Sprint sprint1 = TestEntityFactory.createBaseSprint(project);
         Sprint sprint2 = TestEntityFactory.createBaseSprint(project);
         sprint1.setStatus(SprintStatus.PLANNED);
@@ -99,19 +107,13 @@ public class SprintServiceIntegrationTest {
         sprintRepository.save(sprint1);
         sprintRepository.save(sprint2);
 
-        PageQuery query = new PageQuery(0, 10, "PLANNED", "status");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<SprintSummary> result = sprintService.getSummaryList(query);
+        Page<SprintSummary> result =
+                sprintService.getSummaryList(pageable, "plan", "status");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(sprint1.getStatus(), result.content().getFirst().status());
-    }
-
-    @Test
-    void testGetSummaryList_UnknownFilter() {
-        PageQuery query = new PageQuery(0, 10, "x", "unknown_filter");
-
-        assertThrows(ResponseStatusException.class, () -> sprintService.getSummaryList(query));
+        assertEquals(1, result.getTotalElements());
+        assertEquals(sprint1.getStatus(), result.getContent().getFirst().status());
     }
 
     @Test
@@ -125,12 +127,23 @@ public class SprintServiceIntegrationTest {
 
         Ticket ticket = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint, user));
 
-        PageQuery query = new PageQuery(0, 10, "john", "user");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<SprintSummary> result = sprintService.getSummaryList(query);
+        Page<SprintSummary> result =
+                sprintService.getSummaryList(pageable, "john", "user");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(sprint.getTitle(), result.content().getFirst().title());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(sprint.getTitle(), result.getContent().getFirst().title());
+    }
+
+    @Test
+    void testGetSprintSummaryList_UnknownFilter() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        assertThrows(
+                ResponseStatusException.class,
+                () -> sprintService.getSummaryList(pageable, "x", "unknown_filter")
+        );
     }
 
     @Test

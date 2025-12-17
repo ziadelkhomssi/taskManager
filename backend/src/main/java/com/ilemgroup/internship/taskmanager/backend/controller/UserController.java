@@ -1,13 +1,15 @@
 package com.ilemgroup.internship.taskmanager.backend.controller;
 
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/user")
@@ -21,17 +23,31 @@ public class UserController {
     }
 
     @GetMapping("/summary")
-    public PageResponse<UserSummary> getSummaryList(@RequestBody @Valid PageQuery query) {
-        return userService.getSummaryList(query);
+    public Page<UserSummary> getSummaryList(
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter)
+    {
+        return userService.getSummaryList(pageable, search, filter);
     }
 
     @GetMapping("/participants/project/{projectId}")
-    public PageResponse<UserSummary> getProjectParticipants(@PathVariable Long projectId, @RequestBody @Valid PageQuery query) {
-        return userService.getProjectParticipants(projectId, query);
+    public Page<UserSummary> getProjectParticipants(
+            @PathVariable Long projectId, 
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter)
+    {
+        return userService.getProjectParticipants(projectId, pageable, search, filter);
     }
 
     @GetMapping("/participants/sprint/{sprintId}")
-    public PageResponse<UserSummary> getSprintParticipants(@PathVariable Long sprintId, @RequestBody @Valid PageQuery query) {
-        return userService.getSprintParticipants(sprintId, query);
+    public Page<UserSummary> getSprintParticipants(
+            @PathVariable Long sprintId, 
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter)
+    {
+        return userService.getSprintParticipants(sprintId, pageable, search, filter);
     }
 }

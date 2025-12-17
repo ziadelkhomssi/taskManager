@@ -70,19 +70,39 @@ export interface ProjectCreate {
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'ARCHIVED';
 }
 
-export interface PageQuery {
-    page: number;
-    size: number;
-    search?: string;
-    filterBy?: string;
+export interface Pageable {
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
 }
 
-export interface PageResponseUserSummary {
-    currentPage: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    content: Array<UserSummary>;
+export interface PageUserSummary {
+    totalElements?: number;
+    totalPages?: number;
+    size?: number;
+    content?: Array<UserSummary>;
+    number?: number;
+    pageable?: PageableObject;
+    sort?: SortObject;
+    first?: boolean;
+    last?: boolean;
+    numberOfElements?: number;
+    empty?: boolean;
+}
+
+export interface PageableObject {
+    offset?: number;
+    paged?: boolean;
+    pageNumber?: number;
+    pageSize?: number;
+    sort?: SortObject;
+    unpaged?: boolean;
+}
+
+export interface SortObject {
+    empty?: boolean;
+    sorted?: boolean;
+    unsorted?: boolean;
 }
 
 export interface UserSummary {
@@ -98,12 +118,18 @@ export interface UserDetails {
     profilePicture?: string;
 }
 
-export interface PageResponseTicketCommentDetails {
-    currentPage: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    content: Array<TicketCommentDetails>;
+export interface PageTicketCommentDetails {
+    totalElements?: number;
+    totalPages?: number;
+    size?: number;
+    content?: Array<TicketCommentDetails>;
+    number?: number;
+    pageable?: PageableObject;
+    sort?: SortObject;
+    first?: boolean;
+    last?: boolean;
+    numberOfElements?: number;
+    empty?: boolean;
 }
 
 export interface TicketCommentDetails {
@@ -115,12 +141,18 @@ export interface TicketCommentDetails {
     updatedAt?: Date;
 }
 
-export interface PageResponseTicketSummary {
-    currentPage: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    content: Array<TicketSummary>;
+export interface PageTicketSummary {
+    totalElements?: number;
+    totalPages?: number;
+    size?: number;
+    content?: Array<TicketSummary>;
+    number?: number;
+    pageable?: PageableObject;
+    sort?: SortObject;
+    first?: boolean;
+    last?: boolean;
+    numberOfElements?: number;
+    empty?: boolean;
 }
 
 export interface TicketSummary {
@@ -140,12 +172,18 @@ export interface TicketDetails {
     closedAt?: Date;
 }
 
-export interface PageResponseSprintSummary {
-    currentPage: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    content: Array<SprintSummary>;
+export interface PageSprintSummary {
+    totalElements?: number;
+    totalPages?: number;
+    size?: number;
+    content?: Array<SprintSummary>;
+    number?: number;
+    pageable?: PageableObject;
+    sort?: SortObject;
+    first?: boolean;
+    last?: boolean;
+    numberOfElements?: number;
+    empty?: boolean;
 }
 
 export interface SprintSummary {
@@ -166,12 +204,18 @@ export interface SprintDetails {
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'PAUSED';
 }
 
-export interface PageResponseProjectSummary {
-    currentPage: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    content: Array<ProjectSummary>;
+export interface PageProjectSummary {
+    totalElements?: number;
+    totalPages?: number;
+    size?: number;
+    content?: Array<ProjectSummary>;
+    number?: number;
+    pageable?: PageableObject;
+    sort?: SortObject;
+    first?: boolean;
+    last?: boolean;
+    numberOfElements?: number;
+    empty?: boolean;
 }
 
 export interface ProjectSummary {
@@ -196,12 +240,18 @@ export interface NotificationDetails {
     readAt: Date;
 }
 
-export interface PageResponseNotificationDetails {
-    currentPage: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    content: Array<NotificationDetails>;
+export interface PageNotificationDetails {
+    totalElements?: number;
+    totalPages?: number;
+    size?: number;
+    content?: Array<NotificationDetails>;
+    number?: number;
+    pageable?: PageableObject;
+    sort?: SortObject;
+    first?: boolean;
+    last?: boolean;
+    numberOfElements?: number;
+    empty?: boolean;
 }
 
 /** Request Options for Angular HttpClient requests */

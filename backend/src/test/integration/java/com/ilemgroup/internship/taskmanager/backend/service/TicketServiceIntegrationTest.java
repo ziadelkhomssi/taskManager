@@ -1,8 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageQuery;
-import com.ilemgroup.internship.taskmanager.backend.dto.PageResponse;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketDetails;
@@ -24,6 +22,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -74,10 +75,19 @@ public class TicketServiceIntegrationTest {
     }
 
     @Test
-    void testGetSummaryList_FilterByTicket() {
-        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
-        Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
-        User user = userRepository.save(TestEntityFactory.createBaseUser());
+    void testGetTicketSummaryList_FilterByTicket() {
+        Project project = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
+
+        Sprint sprint = sprintRepository.save(
+                TestEntityFactory.createBaseSprint(project)
+        );
+
+        User user = userRepository.save(
+                TestEntityFactory.createBaseUser()
+        );
+
         Ticket ticket1 = TestEntityFactory.createBaseTicket(sprint, user);
         Ticket ticket2 = TestEntityFactory.createBaseTicket(sprint, user);
         ticket1.setTitle("Bug 101");
@@ -85,19 +95,29 @@ public class TicketServiceIntegrationTest {
         ticketRepository.save(ticket1);
         ticketRepository.save(ticket2);
 
-        PageQuery query = new PageQuery(0, 10, "101", "ticket");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<TicketSummary> result = ticketService.getSummaryList(query);
+        Page<TicketSummary> result =
+                ticketService.getSummaryList(pageable, "101", "ticket");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(ticket1.getTitle(), result.content().getFirst().title());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(ticket1.getTitle(), result.getContent().getFirst().title());
     }
 
     @Test
-    void testGetSummaryList_FilterByStatus() {
-        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
-        Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
-        User user = userRepository.save(TestEntityFactory.createBaseUser());
+    void testGetTicketSummaryList_FilterByStatus() {
+        Project project = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
+
+        Sprint sprint = sprintRepository.save(
+                TestEntityFactory.createBaseSprint(project)
+        );
+
+        User user = userRepository.save(
+                TestEntityFactory.createBaseUser()
+        );
+
         Ticket ticket1 = TestEntityFactory.createBaseTicket(sprint, user);
         Ticket ticket2 = TestEntityFactory.createBaseTicket(sprint, user);
         ticket1.setStatus(TicketStatus.IN_PROGRESS);
@@ -105,19 +125,13 @@ public class TicketServiceIntegrationTest {
         ticketRepository.save(ticket1);
         ticketRepository.save(ticket2);
 
-        PageQuery query = new PageQuery(0, 10, "IN_PROGRESS", "status");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<TicketSummary> result = ticketService.getSummaryList(query);
+        Page<TicketSummary> result =
+                ticketService.getSummaryList(pageable, "IN_PROGRESS", "status");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(ticket1.getStatus(), result.content().getFirst().status());
-    }
-
-    @Test
-    void testGetSummaryList_UnknownFilter() {
-        PageQuery query = new PageQuery(0, 10, "x", "unknown_filter");
-
-        assertThrows(ResponseStatusException.class, () -> ticketService.getSummaryList(query));
+        assertEquals(1, result.getTotalElements());
+        assertEquals(ticket1.getStatus(), result.getContent().getFirst().status());
     }
 
     @Test
@@ -129,12 +143,23 @@ public class TicketServiceIntegrationTest {
         userRepository.save(user);
         Ticket ticket = ticketRepository.save(TestEntityFactory.createBaseTicket(sprint, user));
 
-        PageQuery query = new PageQuery(0, 10, "john", "user");
+        Pageable pageable = PageRequest.of(0, 10);
 
-        PageResponse<TicketSummary> result = ticketService.getSummaryList(query);
+        Page<TicketSummary> result =
+                ticketService.getSummaryList(pageable, "john", "user");
 
-        assertEquals(1, result.totalElements());
-        assertEquals(ticket.getTitle(), result.content().getFirst().title());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(ticket.getTitle(), result.getContent().getFirst().title());
+    }
+
+    @Test
+    void testGetTicketSummaryList_UnknownFilter() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        assertThrows(
+                ResponseStatusException.class,
+                () -> ticketService.getSummaryList(pageable, "x", "unknown_filter")
+        );
     }
 
     @Test
