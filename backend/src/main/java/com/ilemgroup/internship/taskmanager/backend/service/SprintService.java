@@ -43,9 +43,13 @@ public class SprintService {
             String search, 
             String filter
     ) {
+        if (search == null || search.isBlank()) {
+            return sprintRepository.findAll(pageable).map(sprintMapper::toSummary);
+        }
+
         Page<SprintSummary> page;
 
-        switch (filter) {
+        switch (filter.toLowerCase()) {
             case "sprint" -> {
                 page = sprintRepository.findAllBySprintName(search, pageable).map(sprintMapper::toSummary);
             }

@@ -39,9 +39,13 @@ public class ProjectService {
             String search, 
             String filter
     ) {
+        if (search == null || search.isBlank()) {
+            return projectRepository.findAll(pageable).map(projectMapper::toSummary);
+        }
+
         Page<ProjectSummary> page;
 
-        switch (filter) {
+        switch (filter.toLowerCase()) {
             case "project" -> {
                 page = projectRepository.findAllByProjectName(search, pageable).map(projectMapper::toSummary);
             }
