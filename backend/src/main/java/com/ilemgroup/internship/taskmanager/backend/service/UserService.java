@@ -9,11 +9,12 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.function.Supplier;
 
 @Service
 @Transactional
@@ -32,26 +33,42 @@ public class UserService {
     }
 
     public Page<UserSummary> getSummaryList(
-            Pageable pageable, 
-            String search, 
-            String filter
+            Pageable pageable,
+            String search,
+            String filter,
+            Supplier<Page<User>> findByName,
+            Supplier<Page<User>> findByJob
     ) {
-        Page<UserSummary> page;
-        switch (filter) {
+        if (search == null || search.isBlank()) {
+            return userRepository.findAll(pageable).map(userMapper::toSummary);
+        }
+
+        switch (filter.toLowerCase()) {
             case "name" -> {
-                page = userRepository.findAllUserByName(search, pageable).map(userMapper::toSummary);
+                return findByName.get().map(userMapper::toSummary);
             }
             case "job" -> {
-
-                page = userRepository.findAllUserByJob(search, pageable).map(userMapper::toSummary);
+                return findByJob.get().map(userMapper::toSummary);
             }
 
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Unknown filter: " + filter
             );
         }
+    }
 
-        return page;
+    public Page<UserSummary> getAllUsers(
+            Pageable pageable,
+            String search,
+            String filter
+    ) {
+        return getSummaryList(
+                pageable,
+                search,
+                filter,
+                () -> userRepository.findAllUserByName(search, pageable),
+                () -> userRepository.findAllUserByJob(search, pageable)
+        );
     }
 
     public Page<UserSummary> getProjectParticipants(Long projectId, 
@@ -59,21 +76,13 @@ public class UserService {
             String search, 
             String filter
     ) {
-        Page<UserSummary> page;
-        switch (filter) {
-            case "name" -> {
-                page = userRepository.findAllProjectParticipantsByName(projectId, search, pageable).map(userMapper::toSummary);
-            }
-            case "job" -> {
-                page = userRepository.findAllProjectParticipantsByJob(projectId, search, pageable).map(userMapper::toSummary);
-            }
-
-            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Unknown filter: " + filter
-            );
-        }
-
-        return page;
+        return getSummaryList(
+                pageable,
+                search,
+                filter,
+                () -> userRepository.findAllProjectParticipantsByName(projectId, search, pageable),
+                () -> userRepository.findAllProjectParticipantsByJob(projectId, search, pageable)
+        );
     }
 
     public Page<UserSummary> getSprintParticipants(Long sprintId, 
@@ -81,21 +90,13 @@ public class UserService {
             String search, 
             String filter
     ) {
-        Page<UserSummary> page;
-        switch (filter) {
-            case "name" -> {
-                page = userRepository.findAllSprintParticipantsByName(sprintId, search, pageable).map(userMapper::toSummary);;
-            }
-            case "job" -> {
-                page = userRepository.findAllSprintParticipantsByJob(sprintId, search, pageable).map(userMapper::toSummary);;
-            }
-
-            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Unknown filter: " + filter
-            );
-        }
-
-        return page;
+        return getSummaryList(
+                pageable,
+                search,
+                filter,
+                () -> userRepository.findAllSprintParticipantsByName(sprintId, search, pageable),
+                () -> userRepository.findAllSprintParticipantsByJob(sprintId, search, pageable)
+        );
     }
 
     public void createUser(User user) {

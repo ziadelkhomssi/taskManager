@@ -6,12 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.*;
-import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -49,7 +47,7 @@ public class UserControllerIntegrationTest {
                 1
         );
 
-        when(userService.getSummaryList(
+        when(userService.getAllUsers(
                 any(Pageable.class),
                 any(),
                 any()

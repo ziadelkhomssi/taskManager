@@ -5,7 +5,6 @@ import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
-import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
 import com.ilemgroup.internship.taskmanager.backend.repository.ProjectRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.SprintRepository;
@@ -72,7 +71,7 @@ public class UserServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<UserSummary> results =
-                userService.getSummaryList(pageable, "jan", "name");
+                userService.getAllUsers(pageable, "jan", "name");
 
         assertEquals(2, results.getTotalElements());
         assertEquals(user1.getAzureOid(), results.getContent().get(0).id());
@@ -99,7 +98,7 @@ public class UserServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<UserSummary> results =
-                userService.getSummaryList(pageable, "dev", "job");
+                userService.getAllUsers(pageable, "dev", "job");
 
         assertEquals(2, results.getTotalElements());
         assertEquals(user1.getAzureOid(), results.getContent().get(0).id());
@@ -269,7 +268,7 @@ public class UserServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         assertThrows(ResponseStatusException.class, () ->
-                userService.getSummaryList(pageable, "x", "unknown_filter")
+                userService.getAllUsers(pageable, "x", "unknown_filter")
         );
     }
 

@@ -28,7 +28,7 @@ public class UserController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String filter)
     {
-        return userService.getSummaryList(pageable, search, filter);
+        return userService.getAllUsers(pageable, search, filter);
     }
 
     @GetMapping("/participants/project/{projectId}")
