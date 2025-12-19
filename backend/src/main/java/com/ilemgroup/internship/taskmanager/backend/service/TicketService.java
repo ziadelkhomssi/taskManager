@@ -51,8 +51,13 @@ public class TicketService {
             String search, 
             String filter
     ) {
+        if (search == null || search.isBlank()) {
+            return ticketRepository.findAll(pageable).map(ticketMapper::toSummary);
+        }
+
         Page<TicketSummary> page;
-        switch (filter) {
+
+        switch (filter.toLowerCase()) {
             case "ticket" -> {
                 page = ticketRepository.findAllByTicketName(search, pageable).map(ticketMapper::toSummary);
             }

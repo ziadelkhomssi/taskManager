@@ -54,7 +54,30 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    void testGetSummaryList_FilterByName() {
+    void testGetAllUsers_BlankSearch() {
+        User user1 = TestEntityFactory.createBaseUser();
+        User user2 = TestEntityFactory.createBaseUser();
+        User user3 = TestEntityFactory.createBaseUser();
+        user1.setAzureOid("abc123");
+        user2.setAzureOid("def456");
+        user3.setAzureOid("ghi789");
+        user1.setName("Jane Developer");
+        user2.setName("Janice Developer");
+        user3.setName("John Developer");
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<UserSummary> results =
+                userService.getAllUsers(pageable, "", "name");
+
+        assertEquals(3, results.getTotalElements());
+    }
+
+    @Test
+    void testGetAllUsers_FilterByName() {
         User user1 = TestEntityFactory.createBaseUser();
         User user2 = TestEntityFactory.createBaseUser();
         User user3 = TestEntityFactory.createBaseUser();
@@ -81,7 +104,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    void testGetSummaryList_FilterByJob() {
+    void testGetAllUsers_FilterByJob() {
         User user1 = TestEntityFactory.createBaseUser();
         User user2 = TestEntityFactory.createBaseUser();
         User user3 = TestEntityFactory.createBaseUser();
@@ -103,6 +126,44 @@ public class UserServiceIntegrationTest {
         assertEquals(2, results.getTotalElements());
         assertEquals(user1.getAzureOid(), results.getContent().get(0).id());
         assertEquals(user2.getAzureOid(), results.getContent().get(1).id());
+    }
+
+    @Test
+    void testGetProjectParticipants_BlankSearch() {
+        User user1 = TestEntityFactory.createBaseUser();
+        User user2 = TestEntityFactory.createBaseUser();
+        User user3 = TestEntityFactory.createBaseUser();
+        user1.setAzureOid("abc123");
+        user2.setAzureOid("def456");
+        user3.setAzureOid("ghi789");
+        user1.setName("Jane Developer");
+        user2.setName("Janice Developer");
+        user3.setName("John Developer");
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+
+        Project project1 = projectRepository.save(TestEntityFactory.createBaseProject());
+        Sprint sprint1 = sprintRepository.save(TestEntityFactory.createBaseSprint(project1));
+        Sprint sprint2 = sprintRepository.save(TestEntityFactory.createBaseSprint(project1));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user2));
+
+        Project project2 = projectRepository.save(TestEntityFactory.createBaseProject());
+        Sprint sprint3 = sprintRepository.save(TestEntityFactory.createBaseSprint(project2));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint3, user3));
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<UserSummary> participants =
+                userService.getProjectParticipants(
+                        project1.getId(),
+                        pageable,
+                        "",
+                        "name"
+                );
+
+        assertEquals(3, participants.getTotalElements());
     }
 
     @Test
@@ -188,6 +249,41 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
+    void testGetSprintParticipants_BlankSearch() {
+        User user1 = TestEntityFactory.createBaseUser();
+        User user2 = TestEntityFactory.createBaseUser();
+        User user3 = TestEntityFactory.createBaseUser();
+        user1.setAzureOid("abc123");
+        user2.setAzureOid("def456");
+        user3.setAzureOid("ghi789");
+        user1.setName("Jane Developer");
+        user2.setName("Janice Developer");
+        user3.setName("John Developer");
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+
+        Project project = projectRepository.save(TestEntityFactory.createBaseProject());
+        Sprint sprint1 = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
+        Sprint sprint2 = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user1));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint1, user2));
+        ticketRepository.save(TestEntityFactory.createBaseTicket(sprint2, user3));
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<UserSummary> participants =
+                userService.getSprintParticipants(
+                        sprint1.getId(),
+                        pageable,
+                        "",
+                        "name"
+                );
+
+        assertEquals(3, participants.getTotalElements());
+    }
+
+    @Test
     void testGetSprintParticipants_FilterByName() {
         User user1 = TestEntityFactory.createBaseUser();
         User user2 = TestEntityFactory.createBaseUser();
@@ -264,7 +360,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    void testGetSummaryList_UnknownFilter() {
+    void testGetAllUsers_UnknownFilter() {
         Pageable pageable = PageRequest.of(0, 10);
 
         assertThrows(ResponseStatusException.class, () ->

@@ -73,6 +73,23 @@ class ProjectServiceIntegrationTest {
     }
 
     @Test
+    void testGetSummaryList_BlankSearch() {
+        Project project1 = TestEntityFactory.createBaseProject();
+        Project project2 = TestEntityFactory.createBaseProject();
+        project1.setTitle("Alpha");
+        project2.setTitle("Beta");
+        projectRepository.save(project1);
+        projectRepository.save(project2);
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<ProjectSummary> result =
+                projectService.getSummaryList(pageable, "", "project");
+
+        assertEquals(2, result.getTotalElements());
+    }
+
+    @Test
     void testGetSummaryList_FilterByProject() {
         Project project1 = TestEntityFactory.createBaseProject();
         Project project2 = TestEntityFactory.createBaseProject();

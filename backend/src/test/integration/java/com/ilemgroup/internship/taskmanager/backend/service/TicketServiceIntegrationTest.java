@@ -75,6 +75,35 @@ public class TicketServiceIntegrationTest {
     }
 
     @Test
+    void testGetTicketSummaryList_BlankSearch() {
+        Project project = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
+
+        Sprint sprint = sprintRepository.save(
+                TestEntityFactory.createBaseSprint(project)
+        );
+
+        User user = userRepository.save(
+                TestEntityFactory.createBaseUser()
+        );
+
+        Ticket ticket1 = TestEntityFactory.createBaseTicket(sprint, user);
+        Ticket ticket2 = TestEntityFactory.createBaseTicket(sprint, user);
+        ticket1.setTitle("Bug 101");
+        ticket2.setTitle("Bug 102 :O");
+        ticketRepository.save(ticket1);
+        ticketRepository.save(ticket2);
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<TicketSummary> result =
+                ticketService.getSummaryList(pageable, "", "ticket");
+
+        assertEquals(2, result.getTotalElements());
+    }
+
+    @Test
     void testGetTicketSummaryList_FilterByTicket() {
         Project project = projectRepository.save(
                 TestEntityFactory.createBaseProject()

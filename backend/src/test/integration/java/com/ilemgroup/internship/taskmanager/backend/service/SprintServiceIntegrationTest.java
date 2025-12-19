@@ -73,6 +73,27 @@ public class SprintServiceIntegrationTest {
     }
 
     @Test
+    void testGetSprintSummaryList_BlankSearch() {
+        Project project = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
+
+        Sprint sprint1 = TestEntityFactory.createBaseSprint(project);
+        Sprint sprint2 = TestEntityFactory.createBaseSprint(project);
+        sprint1.setTitle("Alpha");
+        sprint2.setTitle("Beta");
+        sprintRepository.save(sprint1);
+        sprintRepository.save(sprint2);
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<SprintSummary> result =
+                sprintService.getSummaryList(pageable, "", "sprint");
+
+        assertEquals(2, result.getTotalElements());
+    }
+
+    @Test
     void testGetSprintSummaryList_FilterBySprint() {
         Project project = projectRepository.save(
                 TestEntityFactory.createBaseProject()
