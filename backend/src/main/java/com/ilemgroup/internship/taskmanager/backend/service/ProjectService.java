@@ -11,15 +11,21 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+
 @Service
 @Transactional
 public class ProjectService {
+    private enum Filters {
+        PROJECT,
+        STATUS,
+        SPRINT,
+        USER
+    }
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -43,27 +49,19 @@ public class ProjectService {
             return projectRepository.findAll(pageable).map(projectMapper::toSummary);
         }
 
-        Page<ProjectSummary> page;
-
-        switch (filter.toLowerCase()) {
-            case "project" -> {
-                page = projectRepository.findAllByProjectName(search, pageable).map(projectMapper::toSummary);
-            }
-            case "status" -> {
-                page = projectRepository.findAllByProjectStatus(search, pageable).map(projectMapper::toSummary);
-            }
-            case "sprint" -> {
-                page = projectRepository.findAllBySprintName(search, pageable).map(projectMapper::toSummary);
-            }
-            case "user" -> {
-                page = projectRepository.findAllByUserName(search, pageable).map(projectMapper::toSummary);
-            }
-            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        try {
+            Filters.valueOf(filter.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Unknown filter: " + filter
             );
         }
 
-        return page;
+        return projectRepository.findAllWithFilter(
+                search,
+                filter.toUpperCase(),
+                pageable
+        ).map(projectMapper::toSummary);
     }
 
     public void createProject(ProjectCreate command) {

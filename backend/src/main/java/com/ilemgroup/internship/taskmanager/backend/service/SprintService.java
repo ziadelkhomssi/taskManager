@@ -22,6 +22,12 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @Transactional
 public class SprintService {
+    private enum Filters {
+        SPRINT,
+        STATUS,
+        TICKET,
+        USER
+    }
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -47,24 +53,19 @@ public class SprintService {
             return sprintRepository.findAll(pageable).map(sprintMapper::toSummary);
         }
 
-        Page<SprintSummary> page;
-
-        switch (filter.toLowerCase()) {
-            case "sprint" -> {
-                page = sprintRepository.findAllBySprintName(search, pageable).map(sprintMapper::toSummary);
-            }
-            case "status" -> {
-                page = sprintRepository.findAllBySprintStatus(search, pageable).map(sprintMapper::toSummary);
-            }
-            case "user" -> {
-                page = sprintRepository.findAllByUserName(search, pageable).map(sprintMapper::toSummary);
-            }
-            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        try {
+            Filters.valueOf(filter.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Unknown filter: " + filter
             );
         }
 
-        return page;
+        return sprintRepository.findAllWithFilter(
+                search,
+                filter.toUpperCase(),
+                pageable
+        ).map(sprintMapper::toSummary);
     }
 
     public void createSprint(SprintCreate command) {

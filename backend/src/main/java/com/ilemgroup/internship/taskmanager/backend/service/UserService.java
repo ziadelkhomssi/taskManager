@@ -19,6 +19,11 @@ import java.util.function.Supplier;
 @Service
 @Transactional
 public class UserService {
+    private enum Filters {
+        NAME,
+        JOB
+    }
+
     @Autowired
     private UserRepository userRepository;
 
@@ -36,25 +41,28 @@ public class UserService {
             Pageable pageable,
             String search,
             String filter,
-            Supplier<Page<User>> findByName,
-            Supplier<Page<User>> findByJob
+            Long projectId,
+            Long sprintId
     ) {
         if (search == null || search.isBlank()) {
             return userRepository.findAll(pageable).map(userMapper::toSummary);
         }
 
-        switch (filter.toLowerCase()) {
-            case "name" -> {
-                return findByName.get().map(userMapper::toSummary);
-            }
-            case "job" -> {
-                return findByJob.get().map(userMapper::toSummary);
-            }
-
-            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        try {
+            Filters.valueOf(filter.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Unknown filter: " + filter
             );
         }
+
+        return userRepository.findAllWithFilter(
+                search,
+                filter.toUpperCase(),
+                projectId,
+                sprintId,
+                pageable
+        ).map(userMapper::toSummary);
     }
 
     public Page<UserSummary> getAllUsers(
@@ -66,12 +74,13 @@ public class UserService {
                 pageable,
                 search,
                 filter,
-                () -> userRepository.findAllUserByName(search, pageable),
-                () -> userRepository.findAllUserByJob(search, pageable)
+                null,
+                null
         );
     }
 
-    public Page<UserSummary> getProjectParticipants(Long projectId, 
+    public Page<UserSummary> getProjectParticipants(
+            Long projectId,
             Pageable pageable, 
             String search, 
             String filter
@@ -80,12 +89,13 @@ public class UserService {
                 pageable,
                 search,
                 filter,
-                () -> userRepository.findAllProjectParticipantsByName(projectId, search, pageable),
-                () -> userRepository.findAllProjectParticipantsByJob(projectId, search, pageable)
+                projectId,
+                null
         );
     }
 
-    public Page<UserSummary> getSprintParticipants(Long sprintId, 
+    public Page<UserSummary> getSprintParticipants(
+            Long sprintId,
             Pageable pageable, 
             String search, 
             String filter
@@ -94,8 +104,8 @@ public class UserService {
                 pageable,
                 search,
                 filter,
-                () -> userRepository.findAllSprintParticipantsByName(sprintId, search, pageable),
-                () -> userRepository.findAllSprintParticipantsByJob(sprintId, search, pageable)
+                null,
+                sprintId
         );
     }
 

@@ -10,18 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("""
             SELECT ti FROM Ticket ti
-            WHERE LOWER(ti.title) LIKE LOWER(CONCAT('%', ?1, '%'))
-    """)
-    Page<Ticket> findAllByTicketName(String search, Pageable pageable);
-    @Query("""
-            SELECT ti FROM Ticket ti
-            WHERE LOWER(ti.status) LIKE LOWER(CONCAT('%', ?1, '%'))
-    """)
-    Page<Ticket> findAllByTicketStatus(String search, Pageable pageable);
-    @Query("""
-            SELECT ti FROM Ticket ti
             LEFT JOIN User us ON ti.user.azureOid=us.azureOid
-            WHERE LOWER(us.name) LIKE LOWER(CONCAT('%', ?1, '%'))
+            WHERE
+            (?2 = 'TICKET' AND LOWER(ti.title) LIKE LOWER(CONCAT('%', ?1, '%')))
+            OR (?2 = 'STATUS' AND LOWER(ti.status) LIKE LOWER(CONCAT('%', ?1, '%')))
+            OR (?2 = 'USER' AND LOWER(us.name) LIKE LOWER(CONCAT('%', ?1, '%')))
     """)
-    Page<Ticket> findAllByUserName(String search, Pageable pageable);
+    Page<Ticket> findAllWithFilter(String search, String filter, Pageable pageable);
 }

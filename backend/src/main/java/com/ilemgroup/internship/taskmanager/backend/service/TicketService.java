@@ -16,7 +16,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,11 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @Transactional
 public class TicketService {
+    private enum Filters {
+        TICKET,
+        STATUS,
+        USER
+    }
 
     @Autowired
     private NotificationService notificationService;
@@ -55,25 +59,19 @@ public class TicketService {
             return ticketRepository.findAll(pageable).map(ticketMapper::toSummary);
         }
 
-        Page<TicketSummary> page;
-
-        switch (filter.toLowerCase()) {
-            case "ticket" -> {
-                page = ticketRepository.findAllByTicketName(search, pageable).map(ticketMapper::toSummary);
-            }
-
-            case "status" -> {
-                page = ticketRepository.findAllByTicketStatus(search, pageable).map(ticketMapper::toSummary);
-            }
-            case "user" -> {
-                page = ticketRepository.findAllByUserName(search, pageable).map(ticketMapper::toSummary);
-            }
-            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        try {
+            Filters.valueOf(filter.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Unknown filter: " + filter
             );
         }
 
-        return page;
+        return ticketRepository.findAllWithFilter(
+                search,
+                filter.toUpperCase(),
+                pageable
+        ).map(ticketMapper::toSummary);
     }
 
     public void createTicket(TicketCreate command) {
@@ -97,7 +95,7 @@ public class TicketService {
         Ticket updated = ticketMapper.updateEntity(command, old);
 
         updated = ticketRepository.save(updated);
-        notificationService.createNotification(updated.getId(), NotificationType.TICKET_ASSIGNED);
+        notificationService.createNotification(updated.getId(), NotificationType.TICKET_STATUS_CHANGED);
     }
 
     public void deleteTicketById(Long id) {
