@@ -19,28 +19,6 @@ export class UserService extends BaseApiService {
       .pipe(catchError(this.handleError));
   }
 
-  getSprintParticipants(
-    sprintId: number,
-    query: PageQuery
-  ): Observable<PageUserSummary> {
-    const params = new HttpParams({ fromObject: query as any });
-
-    return this.http
-      .get<PageUserSummary>(`${this.userUrl}/participants/sprint/${sprintId}`, { params })
-      .pipe(catchError(this.handleError));
-  }
-
-  getProjectParticipants(
-    projectId: number,
-    query: PageQuery
-  ): Observable<PageUserSummary> {
-    const params = new HttpParams({ fromObject: query as any });
-
-    return this.http
-      .get<PageUserSummary>(`${this.userUrl}/participants/project/${projectId}`, { params })
-      .pipe(catchError(this.handleError));
-  }
-
   getDetailsById(id: string): Observable<UserDetails> {
     return this.http
           .get<UserDetails>(`${this.userUrl}/details/${id}`)

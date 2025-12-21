@@ -98,7 +98,12 @@ public class TicketServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<TicketSummary> result =
-                ticketService.getSummaryList(pageable, "", "ticket");
+                ticketService.getSummaryList(
+                        sprint.getId(),
+                        pageable,
+                        "",
+                        "ticket"
+                );
 
         assertEquals(2, result.getTotalElements());
     }
@@ -127,7 +132,12 @@ public class TicketServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<TicketSummary> result =
-                ticketService.getSummaryList(pageable, "101", "ticket");
+                ticketService.getSummaryList(
+                        sprint.getId(),
+                        pageable,
+                        "101",
+                        "ticket"
+                );
 
         assertEquals(1, result.getTotalElements());
         assertEquals(ticket1.getTitle(), result.getContent().getFirst().title());
@@ -157,7 +167,12 @@ public class TicketServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<TicketSummary> result =
-                ticketService.getSummaryList(pageable, "IN_PROGRESS", "status");
+                ticketService.getSummaryList(
+                        sprint.getId(),
+                        pageable,
+                        "IN_PROGRESS",
+                        "status"
+                );
 
         assertEquals(1, result.getTotalElements());
         assertEquals(ticket1.getStatus(), result.getContent().getFirst().status());
@@ -175,7 +190,12 @@ public class TicketServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<TicketSummary> result =
-                ticketService.getSummaryList(pageable, "john", "user");
+                ticketService.getSummaryList(
+                        sprint.getId(),
+                        pageable,
+                        "john",
+                        "user"
+                );
 
         assertEquals(1, result.getTotalElements());
         assertEquals(ticket.getTitle(), result.getContent().getFirst().title());
@@ -187,7 +207,12 @@ public class TicketServiceIntegrationTest {
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> ticketService.getSummaryList(pageable, "x", "unknown_filter")
+                () -> ticketService.getSummaryList(
+                        1L,
+                        pageable,
+                        "x",
+                        "unknown_filter"
+                )
         );
     }
 

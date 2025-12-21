@@ -11,7 +11,7 @@ import { PageQuery } from '../../shared/component/entity-table/entity-table';
 export class NotificationService extends BaseApiService {
   private readonly notificationUrl = `${this.BASE_URL}/project`;
 
-  getDetailsList(query: PageQuery): Observable<PageNotificationDetails> {
+  getAllForClient(query: PageQuery): Observable<PageNotificationDetails> {
     const params = new HttpParams({ fromObject: query as any });
 
     return this.http

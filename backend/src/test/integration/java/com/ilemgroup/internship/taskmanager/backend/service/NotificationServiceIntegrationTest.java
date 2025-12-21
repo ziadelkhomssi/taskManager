@@ -63,7 +63,7 @@ public class NotificationServiceIntegrationTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<NotificationDetails> result = notificationService.getDetailsList(pageable);
+        Page<NotificationDetails> result = notificationService.getAllForClient(pageable);
         assertEquals(2, result.getTotalElements());
         assertEquals(notification1.getType(), result.getContent().get(0).type());
         assertEquals(notification2.getType(), result.getContent().get(1).type());

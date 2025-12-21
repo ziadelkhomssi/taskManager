@@ -13,7 +13,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -45,8 +44,9 @@ public class SprintService {
     }
 
     public Page<SprintSummary> getSummaryList(
-            Pageable pageable, 
-            String search, 
+            Long projectId,
+            Pageable pageable,
+            String search,
             String filter
     ) {
         if (search == null || search.isBlank()) {
@@ -62,6 +62,7 @@ public class SprintService {
         }
 
         return sprintRepository.findAllWithFilter(
+                projectId,
                 search,
                 filter.toUpperCase(),
                 pageable

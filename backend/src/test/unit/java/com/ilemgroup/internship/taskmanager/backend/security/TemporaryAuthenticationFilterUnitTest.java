@@ -43,8 +43,7 @@ public class TemporaryAuthenticationFilterUnitTest {
 
     @Test
     void anonymousAuthentication_shouldReturnOk() throws Exception {
-        mockMvc.perform(get("/secure")
-                .with(SecurityMockMvcRequestPostProcessors.anonymous()))
+        mockMvc.perform(get("/secure"))
                 .andExpect(status().isOk());
     }
 

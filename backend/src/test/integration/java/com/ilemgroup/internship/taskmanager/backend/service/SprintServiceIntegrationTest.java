@@ -88,7 +88,12 @@ public class SprintServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<SprintSummary> result =
-                sprintService.getSummaryList(pageable, "", "sprint");
+                sprintService.getSummaryList(
+                        project.getId(),
+                        pageable,
+                        "",
+                        "sprint"
+                );
 
         assertEquals(2, result.getTotalElements());
     }
@@ -109,7 +114,12 @@ public class SprintServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<SprintSummary> result =
-                sprintService.getSummaryList(pageable, "alp", "sprint");
+                sprintService.getSummaryList(
+                        project.getId(),
+                        pageable,
+                        "alp",
+                        "sprint"
+                );
 
         assertEquals(1, result.getTotalElements());
         assertEquals(sprint1.getTitle(), result.getContent().getFirst().title());
@@ -131,7 +141,12 @@ public class SprintServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<SprintSummary> result =
-                sprintService.getSummaryList(pageable, "plan", "status");
+                sprintService.getSummaryList(
+                        project.getId(),
+                        pageable,
+                        "plan",
+                        "status"
+                );
 
         assertEquals(1, result.getTotalElements());
         assertEquals(sprint1.getStatus(), result.getContent().getFirst().status());
@@ -151,7 +166,12 @@ public class SprintServiceIntegrationTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<SprintSummary> result =
-                sprintService.getSummaryList(pageable, "john", "user");
+                sprintService.getSummaryList(
+                        project.getId(),
+                        pageable,
+                        "john",
+                        "user"
+                );
 
         assertEquals(1, result.getTotalElements());
         assertEquals(sprint.getTitle(), result.getContent().getFirst().title());
@@ -163,7 +183,7 @@ public class SprintServiceIntegrationTest {
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> sprintService.getSummaryList(pageable, "x", "unknown_filter")
+                () -> sprintService.getSummaryList(1L, pageable, "x", "unknown_filter")
         );
     }
 

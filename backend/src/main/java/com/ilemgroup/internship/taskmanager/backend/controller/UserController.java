@@ -23,31 +23,11 @@ public class UserController {
     }
 
     @GetMapping("/summary")
-    public Page<UserSummary> getSummaryList(
+    public Page<UserSummary> getAllUsers(
             Pageable pageable,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String filter)
     {
         return userService.getAllUsers(pageable, search, filter);
-    }
-
-    @GetMapping("/participants/project/{projectId}")
-    public Page<UserSummary> getProjectParticipants(
-            @PathVariable Long projectId, 
-            Pageable pageable,
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String filter)
-    {
-        return userService.getProjectParticipants(projectId, pageable, search, filter);
-    }
-
-    @GetMapping("/participants/sprint/{sprintId}")
-    public Page<UserSummary> getSprintParticipants(
-            @PathVariable Long sprintId, 
-            Pageable pageable,
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String filter)
-    {
-        return userService.getSprintParticipants(sprintId, pageable, search, filter);
     }
 }

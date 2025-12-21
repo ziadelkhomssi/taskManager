@@ -3,8 +3,14 @@ package com.ilemgroup.internship.taskmanager.backend.controller;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCreate;
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.SprintSummary;
+import com.ilemgroup.internship.taskmanager.backend.dto.summary.TicketSummary;
+import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.SprintStatus;
+import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketPriority;
+import com.ilemgroup.internship.taskmanager.backend.entity.enums.TicketStatus;
 import com.ilemgroup.internship.taskmanager.backend.service.SprintService;
+import com.ilemgroup.internship.taskmanager.backend.service.TicketService;
+import com.ilemgroup.internship.taskmanager.backend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -37,34 +43,38 @@ public class SprintControllerIntegrationTest {
 
     @MockitoBean
     private SprintService sprintService;
-
+    @MockitoBean
+    private TicketService ticketService;
+    @MockitoBean
+    private UserService userService;
+    
     @Test
-    void getSprintSummaryList_validQuery_returnsPage() throws Exception {
+    void getTicketSummaryList_validQuery_returnsPage() throws Exception {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("title"));
 
-        Page<SprintSummary> page = new PageImpl<>(
+        Page<TicketSummary> page = new PageImpl<>(
                 List.of(
-                        new SprintSummary(
+                        new TicketSummary(
                                 1L,
-                                "Sprint",
-                                LocalDate.now(),
-                                LocalDate.now().plusDays(7),
-                                SprintStatus.ACTIVE
+                                "Ticket",
+                                TicketPriority.MEDIUM,
+                                TicketStatus.IN_TESTING
                         )
                 ),
                 pageable,
                 1
         );
 
-        when(sprintService.getSummaryList(
+        when(ticketService.getSummaryList(
+                any(Long.class),
                 any(Pageable.class),
                 any(),
                 any()
         )).thenReturn(page);
 
-        mockMvc.perform(get("/sprint/summary")
+        mockMvc.perform(get("/sprint/1/ticket/summary")
                         .with(csrf())
-                        .with(user("project_manager").roles("PROJECT_MANAGER"))
+                        .with(user("manager").roles("PROJECT_MANAGER"))
                         .param("page", "0")
                         .param("size", "10")
                         .param("sort", "title")
@@ -76,10 +86,59 @@ public class SprintControllerIntegrationTest {
     }
 
     /*@Test
-    void getSprintSummaryList_invalidQuery_throwsException() throws Exception {
-        mockMvc.perform(get("/sprint/summary")
+    void getTicketSummaryList_invalidQuery_throwsException() throws Exception {
+
+        mockMvc.perform(get("/ticket/summary")
                         .with(csrf())
-                        .with(user("project_manager").roles("PROJECT_MANAGER"))
+                        .with(user("manager").roles("PROJECT_MANAGER"))
+                        .param("page", "-1")
+                        .param("size", "-10"))
+                .andExpect(status().isBadRequest());
+    }*/
+
+
+
+    @Test
+    void getUserSummaryList_validQuery_returnsPage() throws Exception {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("user"));
+
+        Page<UserSummary> page = new PageImpl<>(
+                List.of(
+                        new UserSummary(
+                                "abc123",
+                                "John Developer",
+                                "profilePicture.png"
+                        )
+                ),
+                pageable,
+                1
+        );
+
+        when(userService.getSprintParticipants(
+                any(Long.class),
+                any(Pageable.class),
+                any(),
+                any()
+        )).thenReturn(page);
+
+        mockMvc.perform(get("/sprint/1/participant/summary")
+                        .with(csrf())
+                        .with(user("manager").roles("PROJECT_MANAGER"))
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("sort", "user")
+                        .param("search", "")
+                        .param("filter", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(1));
+    }
+
+    /*@Test
+    void getUserSummaryList_invalidQuery_throwsException() throws Exception {
+        mockMvc.perform(get("/user/participants/sprint/1")
+                        .with(csrf())
+                        .with(user("manager").roles("PROJECT_MANAGER"))
                         .param("page", "-1")
                         .param("size", "-10"))
                 .andExpect(status().isBadRequest());

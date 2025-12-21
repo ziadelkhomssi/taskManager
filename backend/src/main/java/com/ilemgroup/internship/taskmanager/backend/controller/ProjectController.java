@@ -4,7 +4,11 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.create.ProjectCr
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.ProjectUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.ProjectDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.ProjectSummary;
+import com.ilemgroup.internship.taskmanager.backend.dto.summary.SprintSummary;
+import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.service.ProjectService;
+import com.ilemgroup.internship.taskmanager.backend.service.SprintService;
+import com.ilemgroup.internship.taskmanager.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +23,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private SprintService sprintService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/details/{id}")
     public ProjectDetails getDetailsById(@PathVariable Long id) {
@@ -32,6 +40,26 @@ public class ProjectController {
             @RequestParam(required = false) String filter
     ) {
         return projectService.getSummaryList(pageable, search, filter);
+    }
+
+    @GetMapping("/{projectId}/sprint/summary")
+    public Page<SprintSummary> getSprintSummaryList(
+            @PathVariable Long projectId,
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter
+    ) {
+        return sprintService.getSummaryList(projectId, pageable, search, filter);
+    }
+
+    @GetMapping("/{projectId}/participant/summary")
+    public Page<UserSummary> getUserSummaryList(
+            @PathVariable Long projectId,
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter)
+    {
+        return userService.getProjectParticipants(projectId, pageable, search, filter);
     }
 
     @PostMapping("/create")

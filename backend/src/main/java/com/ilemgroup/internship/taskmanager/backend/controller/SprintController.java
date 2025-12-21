@@ -4,7 +4,11 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.create.SprintCre
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.SprintUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.SprintDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.SprintSummary;
+import com.ilemgroup.internship.taskmanager.backend.dto.summary.TicketSummary;
+import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.service.SprintService;
+import com.ilemgroup.internship.taskmanager.backend.service.TicketService;
+import com.ilemgroup.internship.taskmanager.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,19 +23,34 @@ import org.springframework.web.server.ResponseStatusException;
 public class SprintController {
     @Autowired
     private SprintService sprintService;
+    @Autowired
+    private TicketService ticketService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/details/{id}")
     public SprintDetails getDetailsById(@PathVariable Long id) {
         return sprintService.getDetailsById(id);
     }
 
-    @GetMapping("/summary")
-    public Page<SprintSummary> getSummaryList(
+    @GetMapping("/{sprintId}/ticket/summary")
+    public Page<TicketSummary> getTicketSummaryList(
+            @PathVariable Long sprintId,
             Pageable pageable,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String filter
     ) {
-        return sprintService.getSummaryList(pageable, search, filter);
+        return ticketService.getSummaryList(sprintId, pageable, search, filter);
+    }
+
+    @GetMapping("/{sprintId}/participant/summary")
+    public Page<UserSummary> getUserSummaryList(
+            @PathVariable Long sprintId,
+            Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String filter)
+    {
+        return userService.getSprintParticipants(sprintId, pageable, search, filter);
     }
 
     @PostMapping("/create")

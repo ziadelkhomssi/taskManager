@@ -38,53 +38,6 @@ public class TicketControllerIntegrationTest {
     private TicketService ticketService;
 
     @Test
-    void getTicketSummaryList_validQuery_returnsPage() throws Exception {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("title"));
-
-        Page<TicketSummary> page = new PageImpl<>(
-                List.of(
-                        new TicketSummary(
-                                1L,
-                                "Ticket",
-                                TicketPriority.MEDIUM,
-                                TicketStatus.IN_TESTING
-                        )
-                ),
-                pageable,
-                1
-        );
-
-        when(ticketService.getSummaryList(
-                any(Pageable.class),
-                any(),
-                any()
-        )).thenReturn(page);
-
-        mockMvc.perform(get("/ticket/summary")
-                        .with(csrf())
-                        .with(user("manager").roles("PROJECT_MANAGER"))
-                        .param("page", "0")
-                        .param("size", "10")
-                        .param("sort", "title")
-                        .param("search", "")
-                        .param("filter", ""))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").value(1));
-    }
-
-    /*@Test
-    void getTicketSummaryList_invalidQuery_throwsException() throws Exception {
-
-        mockMvc.perform(get("/ticket/summary")
-                        .with(csrf())
-                        .with(user("manager").roles("PROJECT_MANAGER"))
-                        .param("page", "-1")
-                        .param("size", "-10"))
-                .andExpect(status().isBadRequest());
-    }*/
-
-    @Test
     void createTicket_userHasValidRole_success() throws Exception {
         TicketCreate validCommand = new TicketCreate(
                 "Ticket",

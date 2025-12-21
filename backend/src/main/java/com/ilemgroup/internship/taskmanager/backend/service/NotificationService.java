@@ -29,7 +29,7 @@ public class NotificationService {
     @Autowired
     private NotificationMapper notificationMapper;
 
-    public Page<NotificationDetails> getDetailsList(
+    public Page<NotificationDetails> getAllForClient(
             Pageable pageable
     ) throws AccessDeniedException {
         String userId = AuthorizationService.getClientUserId();

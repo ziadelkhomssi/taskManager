@@ -19,11 +19,11 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    @GetMapping("/all")
-    public Page<NotificationDetails> getDetailsList(
+    @GetMapping("/details")
+    public Page<NotificationDetails> getAllForClient(
             Pageable pageable
     ) throws AccessDeniedException {
-        return notificationService.getDetailsList(pageable);
+        return notificationService.getAllForClient(pageable);
     }
 
     @PostMapping("/read/{id}")

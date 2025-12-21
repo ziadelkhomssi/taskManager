@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BaseApiService } from './base-api-service';
-import { PageProjectSummary, ProjectCreate, ProjectDetails, ProjectUpdate } from '../ng-openapi';
+import { PageProjectSummary, PageSprintSummary, PageUserSummary, ProjectCreate, ProjectDetails, ProjectUpdate } from '../ng-openapi';
 import { HttpParams } from '@angular/common/http';
 import { PageQuery } from '../../shared/component/entity-table/entity-table';
 
@@ -17,6 +17,28 @@ export class ProjectService extends BaseApiService {
 
     return this.http
       .get<PageProjectSummary>(`${this.projectUrl}/summary`, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  getSprintSummaryList(
+    projectId: number,
+    query: PageQuery
+  ): Observable<PageSprintSummary> {
+    const params = new HttpParams({ fromObject: query as any });
+  
+    return this.http
+      .get<PageSprintSummary>(`${this.projectUrl}/${projectId}/sprint/summary`, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  getUserSummaryList(
+    projectId: number,
+    query: PageQuery
+  ): Observable<PageUserSummary> {
+    const params = new HttpParams({ fromObject: query as any });
+
+    return this.http
+      .get<PageUserSummary>(`${this.projectUrl}${projectId}/participant/summary`, { params })
       .pipe(catchError(this.handleError));
   }
 

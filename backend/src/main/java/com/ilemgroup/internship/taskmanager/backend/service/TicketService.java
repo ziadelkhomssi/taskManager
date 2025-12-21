@@ -51,8 +51,9 @@ public class TicketService {
     }
 
     public Page<TicketSummary> getSummaryList(
-            Pageable pageable, 
-            String search, 
+            Long sprintId,
+            Pageable pageable,
+            String search,
             String filter
     ) {
         if (search == null || search.isBlank()) {
@@ -68,6 +69,7 @@ public class TicketService {
         }
 
         return ticketRepository.findAllWithFilter(
+                sprintId,
                 search,
                 filter.toUpperCase(),
                 pageable

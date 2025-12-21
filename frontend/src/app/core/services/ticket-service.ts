@@ -11,14 +11,6 @@ import { PageQuery } from '../../shared/component/entity-table/entity-table';
 export class TicketService extends BaseApiService {
   private readonly ticketUrl = `${this.BASE_URL}/ticket`;
 
-  getSummaryList(query: PageQuery): Observable<PageTicketSummary> {
-    const params = new HttpParams({ fromObject: query as any });
-
-    return this.http
-      .get<PageTicketSummary>(`${this.ticketUrl}/summary`, { params })
-      .pipe(catchError(this.handleError));
-  }
-
   getDetailsById(id: number): Observable<TicketDetails> {
     return this.http
       .get<TicketDetails>(`${this.ticketUrl}/details/${id}`)

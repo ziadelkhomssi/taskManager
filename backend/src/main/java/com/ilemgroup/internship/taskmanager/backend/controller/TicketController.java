@@ -25,15 +25,6 @@ public class TicketController {
         return ticketService.getDetailsById(id);
     }
 
-    @GetMapping("/summary")
-    public Page<TicketSummary> getSummaryList(
-            Pageable pageable,
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String filter
-    ) {
-        return ticketService.getSummaryList(pageable, search, filter);
-    }
-
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER', 'TEAM_MEMBER')")
     public void createTicket(@RequestBody @Valid TicketCreate command) {

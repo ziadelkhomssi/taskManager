@@ -10,13 +10,15 @@ import org.springframework.data.jpa.repository.Query;
 public interface SprintRepository extends JpaRepository<Sprint, Long> {
     @Query("""
             SELECT DISTINCT sp FROM Sprint sp
+            LEFT JOIN Project pr ON pr.id=sp.project.id
             LEFT JOIN Ticket ti ON sp.id=ti.sprint.id
             LEFT JOIN User us ON ti.user.id=us.azureOid
             WHERE
-            (?2 = 'SPRINT' AND LOWER(sp.title) LIKE LOWER(CONCAT('%', ?1, '%')))
-            OR (?2 = 'STATUS' AND LOWER(sp.status) LIKE LOWER(CONCAT('%', ?1, '%')))
-            OR (?2 = 'TICKET' AND LOWER(ti.title) LIKE LOWER(CONCAT('%', ?1, '%')))
-            OR (?2 = 'USER' AND LOWER(us.name) LIKE LOWER(CONCAT('%', ?1, '%')))
+            pr.id = ?1 AND
+            ((?3 = 'SPRINT' AND LOWER(sp.title) LIKE LOWER(CONCAT('%', ?2, '%')))
+            OR (?3 = 'STATUS' AND LOWER(sp.status) LIKE LOWER(CONCAT('%', ?2, '%')))
+            OR (?3 = 'TICKET' AND LOWER(ti.title) LIKE LOWER(CONCAT('%', ?2, '%')))
+            OR (?3 = 'USER' AND LOWER(us.name) LIKE LOWER(CONCAT('%', ?2, '%'))))
     """)
-    Page<Sprint> findAllWithFilter(String search, String filter, Pageable pageable);
+    Page<Sprint> findAllWithFilter(Long projectId, String search, String filter, Pageable pageable);
 }

@@ -58,10 +58,10 @@ public class NotificationControllerIntegrationTest {
                 1
         );
 
-        when(notificationService.getDetailsList(any(Pageable.class)))
+        when(notificationService.getAllForClient(any(Pageable.class)))
                 .thenReturn(page);
 
-        mockMvc.perform(get("/notification/all")
+        mockMvc.perform(get("/notification/details")
                         .with(csrf())
                         .with(user("project_manager").roles("PROJECT_MANAGER"))
                         .param("page", "0")
