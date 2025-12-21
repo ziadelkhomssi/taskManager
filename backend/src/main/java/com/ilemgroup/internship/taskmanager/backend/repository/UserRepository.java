@@ -1,6 +1,5 @@
 package com.ilemgroup.internship.taskmanager.backend.repository;
 
-import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 @SuppressWarnings("NullableProblems")
 public interface UserRepository extends JpaRepository<User, String> {
     @Query("""
-            SELECT us FROM User us
+            SELECT DISTINCT us FROM User us
             LEFT JOIN Ticket ti ON ti.user.azureOid=us.azureOid
             LEFT JOIN Sprint sp ON sp.id=ti.sprint.id
             LEFT JOIN Project pr ON pr.id=sp.project.id

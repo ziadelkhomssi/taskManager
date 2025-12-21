@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 @SuppressWarnings("NullableProblems")
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("""
-            SELECT ti FROM Ticket ti
+            SELECT DISTINCT ti FROM Ticket ti
             LEFT JOIN User us ON ti.user.azureOid=us.azureOid
             WHERE
             (?2 = 'TICKET' AND LOWER(ti.title) LIKE LOWER(CONCAT('%', ?1, '%')))
