@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManageSprintPage } from './manage-sprint-page';
+import { ProjectForm } from './project-form';
 
-describe('ManageSprintPage', () => {
-  let component: ManageSprintPage;
-  let fixture: ComponentFixture<ManageSprintPage>;
+describe('ProjectForm', () => {
+  let component: ProjectForm;
+  let fixture: ComponentFixture<ProjectForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ManageSprintPage]
+      imports: [ProjectForm]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ManageSprintPage);
+    fixture = TestBed.createComponent(ProjectForm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
