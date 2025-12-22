@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.nio.file.AccessDeniedException;
 import java.util.function.Supplier;
 
 @Service
@@ -35,6 +36,14 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
 
         return userMapper.toDetails(user);
+    }
+
+    public UserSummary getClientSummary() throws AccessDeniedException {
+        String clientUserId = AuthorizationService.getClientUserId();
+        User user = userRepository.findById(clientUserId)
+                .orElseThrow(() -> new EntityNotFoundException("Client user not found: " + clientUserId));
+
+        return userMapper.toSummary(user);
     }
 
     public Page<UserSummary> getSummaryList(

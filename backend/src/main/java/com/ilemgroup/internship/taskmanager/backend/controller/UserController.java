@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.nio.file.AccessDeniedException;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -20,6 +22,11 @@ public class UserController {
     @GetMapping("/details/{id}")
     public UserDetails getDetailsById(@PathVariable String id) {
         return userService.getDetailsById(id);
+    }
+
+    @GetMapping("/summary/client")
+    public UserSummary getClientSummary() throws AccessDeniedException {
+        return userService.getClientSummary();
     }
 
     @GetMapping("/summary")

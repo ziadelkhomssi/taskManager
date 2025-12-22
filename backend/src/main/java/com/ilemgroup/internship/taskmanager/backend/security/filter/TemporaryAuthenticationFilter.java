@@ -24,7 +24,7 @@ public class TemporaryAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        CustomUserDetails userDetails = new CustomUserDetails("admin", "ADMIN");
+        CustomUserDetails userDetails = new CustomUserDetails("def456", "ADMIN");
         Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(newAuthentication);

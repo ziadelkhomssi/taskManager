@@ -24,5 +24,11 @@ export class UserService extends BaseApiService {
           .get<UserDetails>(`${this.userUrl}/details/${id}`)
           .pipe(catchError(this.handleError));
   }
+
+  getClientSummary():  Observable<UserDetails> {
+    return this.http
+          .get<UserDetails>(`${this.userUrl}/summary/client`)
+          .pipe(catchError(this.handleError));
+  }
 }
 
