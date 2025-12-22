@@ -3,7 +3,7 @@ import { PageNotificationDetails } from '../ng-openapi';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { BaseApiService } from './base-api-service';
-import { PageQuery } from '../../shared/component/entity-table/entity-table';
+import { PageQuery } from '../../shared/types/types';
 
 @Injectable({
   providedIn: 'root',

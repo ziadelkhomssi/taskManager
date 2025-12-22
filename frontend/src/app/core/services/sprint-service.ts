@@ -3,7 +3,7 @@ import { BaseApiService } from './base-api-service';
 import { PageSprintSummary, PageTicketSummary, PageUserSummary, SprintCreate, SprintDetails, SprintUpdate } from '../ng-openapi';
 import { catchError, Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
-import { PageQuery } from '../../shared/component/entity-table/entity-table';
+import { PageQuery } from '../../shared/types/types';
 
 @Injectable({
   providedIn: 'root',

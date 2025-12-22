@@ -3,7 +3,6 @@ import { PageTicketSummary, TicketCreate, TicketDetails, TicketUpdate } from '..
 import { BaseApiService } from './base-api-service';
 import { catchError, Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
-import { PageQuery } from '../../shared/component/entity-table/entity-table';
 
 @Injectable({
   providedIn: 'root',

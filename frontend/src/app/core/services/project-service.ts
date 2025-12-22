@@ -4,7 +4,7 @@ import { catchError } from 'rxjs/operators';
 import { BaseApiService } from './base-api-service';
 import { PageProjectSummary, PageSprintSummary, PageUserSummary, ProjectCreate, ProjectDetails, ProjectUpdate } from '../ng-openapi';
 import { HttpParams } from '@angular/common/http';
-import { PageQuery } from '../../shared/component/entity-table/entity-table';
+import { PageQuery } from '../../shared/types/types';
 
 @Injectable({
   providedIn: 'root',
