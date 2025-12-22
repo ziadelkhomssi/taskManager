@@ -10,6 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 public interface SprintRepository extends JpaRepository<Sprint, Long> {
     @Query("""
             SELECT DISTINCT sp FROM Sprint sp
+            WHERE sp.project.id = ?1
+            """)
+    Page<Sprint> findAllByProjectId(Long projectId, Pageable pageable);
+    @Query("""
+            SELECT DISTINCT sp FROM Sprint sp
             LEFT JOIN Project pr ON pr.id=sp.project.id
             LEFT JOIN Ticket ti ON sp.id=ti.sprint.id
             LEFT JOIN User us ON ti.user.id=us.azureOid

@@ -57,7 +57,7 @@ public class TicketService {
             String filter
     ) {
         if (search == null || search.isBlank()) {
-            return ticketRepository.findAll(pageable).map(ticketMapper::toSummary);
+            return ticketRepository.findAllBySprintId(sprintId, pageable).map(ticketMapper::toSummary);
         }
 
         try {

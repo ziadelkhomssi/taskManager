@@ -50,7 +50,7 @@ public class SprintService {
             String filter
     ) {
         if (search == null || search.isBlank()) {
-            return sprintRepository.findAll(pageable).map(sprintMapper::toSummary);
+            return sprintRepository.findAllByProjectId(projectId, pageable).map(sprintMapper::toSummary);
         }
 
         try {
