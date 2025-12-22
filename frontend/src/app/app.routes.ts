@@ -9,6 +9,7 @@ import { UserProfile } from './features/user/user-profile/user-profile';
 import { ManageSprintPage } from './features/sprint/manage-sprint-page/manage-sprint-page';
 import { NotificationPage } from './features/notification/notification-page/notification-page';
 import { ManageTicketPage } from './features/ticket/manage-ticket-page/manage-ticket-page';
+import { TicketPage } from './features/ticket/ticket-page/ticket-page';
 
 export const routes: Routes = [
     { path: "", component: Dashboard },
@@ -25,7 +26,7 @@ export const routes: Routes = [
     { path: "ticket", children: [
       { path: "create", component: ManageTicketPage },
       { path: "update/:id", component: ManageTicketPage },
-      { path: ":id", component: SprintPage },
+      { path: ":id", component: TicketPage },
     ] },
     { path: "user/:id", component: UserProfile },
     { path: "notifications", component: NotificationPage },
