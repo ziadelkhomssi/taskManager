@@ -38,7 +38,7 @@ export class ProjectService extends BaseApiService {
     const params = new HttpParams({ fromObject: query as any });
 
     return this.http
-      .get<PageUserSummary>(`${this.projectUrl}${projectId}/participant/summary`, { params })
+      .get<PageUserSummary>(`${this.projectUrl}/${projectId}/participant/summary`, { params })
       .pipe(catchError(this.handleError));
   }
 
