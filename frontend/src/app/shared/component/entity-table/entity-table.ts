@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCell, MatCellDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRowDef, MatRowDef, MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { SearchBar, SearchQuery } from '../search-bar/search-bar';
+import { PageQuery } from '../../types/types';
 
 export interface TableAction<T> {
 	label: string;
@@ -14,13 +15,6 @@ export interface TableColumn<T> {
 	columnDef: string;
 	header: string;
 	cell: (row: T) => string;
-}
-
-export interface PageQuery {
-	page: number,
-	size: number,
-	search: string,
-	filter: string
 }
 
 @Component({
@@ -37,16 +31,16 @@ export interface PageQuery {
 export class EntityTable<T> {
 	@Input() rows: T[] = [];
 
+	@Input() columns: TableColumn<T>[] = [];
+	@Input() actions: TableAction<T>[] = [];
+	@Input() filters: string[] = [];
+	@Input() showAddButton = false;
+	@Input() addLabel = 'Add';
+
 	@Input() pageIndex = 0;
 	@Input() pageSize = 10;
 	@Input() totalElements = 0;
 	@Input() pageSizeOptions: number[] = [5, 10, 20];
-
-	@Input() columns: TableColumn<T>[] = [];
-	@Input() actions: TableAction<T>[] = [];
-	@Input() showAddButton = false;
-	@Input() addLabel = 'Add';
-	@Input() filters: string[] = [];
 
 	@Output() addClick = new EventEmitter<void>();
 	@Output() rowClick = new EventEmitter<T>();

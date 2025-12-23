@@ -1,5 +1,4 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
@@ -30,7 +29,7 @@ export interface SearchQuery {
 	styleUrl: './search-bar.css',
 })
 
-export class SearchBar implements OnInit, OnDestroy {
+export class SearchBar implements OnDestroy {
   @Input() filters: string[] = [];
   @Output() readonly queryEvent = new EventEmitter<SearchQuery>();
 
