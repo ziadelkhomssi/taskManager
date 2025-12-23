@@ -1,0 +1,36 @@
+.profile-container {
+    padding: 1rem;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: #1976d2;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.profile-card {
+    display: flex;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar-large {
+    margin-right: 3rem;
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-text {
+    flex: 1;
+}
+
+.job-title {
+    color: #666;
+}

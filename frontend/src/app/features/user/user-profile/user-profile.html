@@ -1,1 +1,15 @@
-<p>user-profile works!</p>
+<div class="profile-container">
+  <button class="back-button" (click)="goBack()">← Back</button>
+
+  <div class="profile-card">
+    <img
+    [src]="userDetails.profilePicture"
+    class="profile-avatar-large"
+    />
+
+    <div class="profile-text">
+        <h2>{{ userDetails.name }}</h2>
+        <p class="job-title">{{ userDetails.job }}</p>
+    </div>
+  </div>
+</div>

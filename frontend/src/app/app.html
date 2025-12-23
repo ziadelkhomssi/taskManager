@@ -2,18 +2,17 @@
 
   <mat-sidenav #drawer class="sidenav" mode="side">
     <div class="sidebar-content">
-      <button mat-button class="sidebar-button" routerLink="/dashboard">
+      <button mat-button class="sidebar-button" routerLink="/">
         <span>Dashboard</span>
       </button>
       
       <div class="sidebar-spacer"></div>
       
-      <button mat-button class="profile-button" routerLink="/profile">
-        <img src="profilePicture.png" alt="Profile picture" class="profile-avatar"/>
+      <button mat-button class="profile-button" [routerLink]="['/user', clientUserSummary.id]">
+        <img src="{{clientUserSummary.profilePicture}}" alt="Profile picture" class="profile-avatar"/>
         
         <div class="profile-info">
-          <div class="profile-name">Jane Developer</div>
-          <div class="profile-job">Developer</div>
+          <div class="profile-name">{{clientUserSummary.name}}</div>
         </div>
       </button>
       
