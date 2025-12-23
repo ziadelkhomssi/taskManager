@@ -28,6 +28,7 @@ export interface SprintUpdate {
     description: string;
     startDate: Date;
     dueDate: Date;
+    endDate?: Date;
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'PAUSED';
 }
 
@@ -35,7 +36,6 @@ export interface ProjectUpdate {
     id: number;
     title: string;
     description: string;
-    profilePicture?: string;
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'ARCHIVED';
 }
 
@@ -59,6 +59,7 @@ export interface SprintCreate {
     description: string;
     startDate: Date;
     dueDate: Date;
+    endDate?: Date;
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'PAUSED';
     projectId: number;
 }
@@ -66,7 +67,6 @@ export interface SprintCreate {
 export interface ProjectCreate {
     title: string;
     description: string;
-    profilePicture?: string;
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'ARCHIVED';
 }
 
@@ -108,14 +108,14 @@ export interface SortObject {
 export interface UserSummary {
     id: string;
     name: string;
-    profilePicture?: string;
+    profilePictureUrl?: string;
 }
 
 export interface UserDetails {
     id: string;
     name: string;
     job: string;
-    profilePicture?: string;
+    profilePictureUrl?: string;
 }
 
 export interface PageTicketCommentDetails {
@@ -141,6 +141,16 @@ export interface TicketCommentDetails {
     updatedAt?: Date;
 }
 
+export interface TicketDetails {
+    id: number;
+    title: string;
+    description: string;
+    userSummary: UserSummary;
+    priority: 'LOW' | 'MEDIUM' | 'HIGH';
+    status: 'BACKLOG' | 'IN_PROGRESS' | 'IN_TESTING' | 'COMPLETED';
+    closedAt?: Date;
+}
+
 export interface PageTicketSummary {
     totalElements?: number;
     totalPages?: number;
@@ -162,14 +172,14 @@ export interface TicketSummary {
     status: 'BACKLOG' | 'IN_PROGRESS' | 'IN_TESTING' | 'COMPLETED';
 }
 
-export interface TicketDetails {
+export interface SprintDetails {
     id: number;
     title: string;
     description: string;
-    userSummary: UserSummary;
-    priority: 'LOW' | 'MEDIUM' | 'HIGH';
-    status: 'BACKLOG' | 'IN_PROGRESS' | 'IN_TESTING' | 'COMPLETED';
-    closedAt?: Date;
+    startDate: Date;
+    dueDate: Date;
+    endDate?: Date;
+    status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'PAUSED';
 }
 
 export interface PageSprintSummary {
@@ -194,16 +204,6 @@ export interface SprintSummary {
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'PAUSED';
 }
 
-export interface SprintDetails {
-    id: number;
-    title: string;
-    description: string;
-    startDate: Date;
-    dueDate: Date;
-    endDate?: Date;
-    status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'PAUSED';
-}
-
 export interface PageProjectSummary {
     totalElements?: number;
     totalPages?: number;
@@ -221,7 +221,7 @@ export interface PageProjectSummary {
 export interface ProjectSummary {
     id: number;
     title: string;
-    profilePicture?: string;
+    profilePictureUrl?: string;
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'ARCHIVED';
 }
 
@@ -229,7 +229,7 @@ export interface ProjectDetails {
     id: number;
     title: string;
     description: string;
-    profilePicture?: string;
+    profilePictureUrl?: string;
     status: 'PLANNED' | 'ACTIVE' | 'DONE' | 'ARCHIVED';
 }
 

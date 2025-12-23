@@ -8,14 +8,16 @@ import com.ilemgroup.internship.taskmanager.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.nio.file.AccessDeniedException;
-import java.util.function.Supplier;
 
 @Service
 @Transactional
@@ -35,7 +37,12 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
 
-        return userMapper.toDetails(user);
+
+        String baseUrl = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .build()
+                .toUriString();
+        return userMapper.toDetails(user, baseUrl);
     }
 
     public UserSummary getClientSummary() throws AccessDeniedException {
@@ -43,7 +50,11 @@ public class UserService {
         User user = userRepository.findById(clientUserId)
                 .orElseThrow(() -> new EntityNotFoundException("Client user not found: " + clientUserId));
 
-        return userMapper.toSummary(user);
+        String baseUrl = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .build()
+                .toUriString();
+        return userMapper.toSummary(user, baseUrl);
     }
 
     public Page<UserSummary> getSummaryList(
@@ -53,13 +64,23 @@ public class UserService {
             Long projectId,
             Long sprintId
     ) {
+        String baseUrl = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .build()
+                .toUriString();
         if (search == null || search.isBlank()) {
             if (projectId != null) {
-                return userRepository.findAllInProject(projectId, pageable).map(userMapper::toSummary);
+                return userRepository.findAllInProject(projectId, pageable).map(
+                        user -> userMapper.toSummary(user, baseUrl)
+                );
             } else if (sprintId != null) {
-                return userRepository.findAllInSprint(sprintId, pageable).map(userMapper::toSummary);
+                return userRepository.findAllInSprint(sprintId, pageable).map(
+                        user -> userMapper.toSummary(user, baseUrl)
+                );
             }
-            return userRepository.findAll(pageable).map(userMapper::toSummary);
+            return userRepository.findAll(pageable).map(
+                    user -> userMapper.toSummary(user, baseUrl)
+            );
         }
 
         try {
@@ -76,7 +97,7 @@ public class UserService {
                 projectId,
                 sprintId,
                 pageable
-        ).map(userMapper::toSummary);
+        ).map(user -> userMapper.toSummary(user, baseUrl));
     }
 
     public Page<UserSummary> getAllUsers(
@@ -121,6 +142,13 @@ public class UserService {
                 null,
                 sprintId
         );
+    }
+
+    public Resource getProfilePicture(String id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
+
+        return new ClassPathResource(user.getProfilePicturePath());
     }
 
     public void createUser(User user) {

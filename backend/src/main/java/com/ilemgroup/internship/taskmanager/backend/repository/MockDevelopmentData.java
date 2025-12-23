@@ -40,7 +40,7 @@ public class MockDevelopmentData implements CommandLineRunner {
                 "John Developer",
                 "johndo@company.com",
                 "Backend Developer",
-                "profilePictureJohn.png",
+                "static/image/user/mock/user_john_profile_picture.png",
                 null,
                 null
         );
@@ -50,7 +50,7 @@ public class MockDevelopmentData implements CommandLineRunner {
                 "Jane Developer",
                 "janedo@company.com",
                 "Frontend Developer",
-                "profilePictureJane.png",
+                "static/image/user/mock/user_jane_profile_picture.png",
                 null,
                 null
         );

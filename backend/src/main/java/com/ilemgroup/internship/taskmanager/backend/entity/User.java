@@ -23,7 +23,7 @@ public class User {
     private String email;
 
     private String job;
-    private String profilePicture;
+    private String profilePicturePath;
 
     @OneToMany(mappedBy = "user")
     private List<Ticket> tickets;

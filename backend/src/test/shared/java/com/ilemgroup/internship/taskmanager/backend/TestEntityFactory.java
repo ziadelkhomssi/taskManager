@@ -13,7 +13,7 @@ public class TestEntityFactory {
         Project project = new Project();
         project.setTitle("Project");
         project.setDescription("Description");
-        project.setProfilePicture("profilePicture.png");
+        project.setProfilePicturePath("profilePicture.png");
         project.setStatus(ProjectStatus.ACTIVE);
         return project;
     }
@@ -54,7 +54,6 @@ public class TestEntityFactory {
         user.setName("John Developer");
         user.setEmail("johndo@email.com");
         user.setJob("Engineer");
-        user.setProfilePicture("profilePicture.png");
         return user;
     }
 

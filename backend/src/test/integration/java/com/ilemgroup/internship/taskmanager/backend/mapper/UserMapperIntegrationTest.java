@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class UserMapperIntegrationTest {
 
+    private static final String BASE_URL = "http://localhost:8080";
+
     @Autowired
     private UserMapper mapper;
 
@@ -20,32 +22,22 @@ public class UserMapperIntegrationTest {
     void testToSummary() {
         User user = TestEntityFactory.createBaseUser();
 
-        UserSummary dto = mapper.toSummary(user);
-
-        assertEquals(user.getAzureOid(), dto.id());
-        assertEquals(user.getName(), dto.name());
-        assertEquals(user.getProfilePicture(), dto.profilePicture());
-    }
-
-    @Test
-    void testToSummaryList() {
-        User user = TestEntityFactory.createBaseUser();
-
-        UserSummary summary = mapper.toSummary(user);
+        UserSummary summary = mapper.toSummary(user, BASE_URL);
 
         assertEquals(user.getAzureOid(), summary.id());
         assertEquals(user.getName(), summary.name());
-        assertEquals(user.getProfilePicture(), summary.profilePicture());
+        assertEquals(BASE_URL + "/user/profile-picture/" + user.getAzureOid(), summary.profilePictureUrl());
     }
 
     @Test
     void testToDetails() {
         User user = TestEntityFactory.createBaseUser();
 
-        UserDetails dto = mapper.toDetails(user);
+        UserDetails details = mapper.toDetails(user, BASE_URL);
 
-        assertEquals(user.getAzureOid(), dto.id());
-        assertEquals(user.getName(), dto.name());
-        assertEquals(user.getJob(), dto.job());
+        assertEquals(user.getAzureOid(), details.id());
+        assertEquals(user.getName(), details.name());
+        assertEquals(user.getJob(), details.job());
+        assertEquals(BASE_URL + "/user/profile-picture/" + user.getAzureOid(), details.profilePictureUrl());
     }
 }

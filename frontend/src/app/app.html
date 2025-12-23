@@ -9,7 +9,7 @@
       <div class="sidebar-spacer"></div>
       
       <button mat-button class="profile-button" [routerLink]="['/user', clientUserSummary.id]">
-        <img src="{{clientUserSummary.profilePicture}}" alt="Profile picture" class="profile-avatar"/>
+        <img src="{{clientUserSummary.profilePictureUrl}}" alt="Profile picture" class="profile-avatar"/>
         
         <div class="profile-info">
           <div class="profile-name">{{clientUserSummary.name}}</div>

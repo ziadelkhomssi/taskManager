@@ -36,12 +36,12 @@ export class EntityTableDemo {
     pageSize = 10;
     
     rows: UserSummary[] = [
-        { id: "abc1", name: "John", profilePicture: "profilePictureJohn.png" },
-        { id: "def2", name: "Jane", profilePicture: "profilePictureJane.png" },
-        { id: "ghi3", name: "Steve", profilePicture: "profilePictureJohn.png" },
-        { id: "jkl4", name: "Alex", profilePicture: "profilePictureJane.png" },
-        { id: "mno5", name: "Sonic", profilePicture: "profilePictureJohn.png" },
-        { id: "pqr6", name: "Tails", profilePicture: "profilePictureJane.png" },
+        { id: "abc1", name: "John", profilePictureUrl: "profilePictureJohn.png" },
+        { id: "def2", name: "Jane", profilePictureUrl: "profilePictureJane.png" },
+        { id: "ghi3", name: "Steve", profilePictureUrl: "profilePictureJohn.png" },
+        { id: "jkl4", name: "Alex", profilePictureUrl: "profilePictureJane.png" },
+        { id: "mno5", name: "Sonic", profilePictureUrl: "profilePictureJohn.png" },
+        { id: "pqr6", name: "Tails", profilePictureUrl: "profilePictureJane.png" },
     ];
 
     columns: TableColumn<UserSummary>[] = [
@@ -58,7 +58,7 @@ export class EntityTableDemo {
         {
             columnDef: "profilePicture",
             header: "Profile Picture",
-            cell: (row: UserSummary) => row.profilePicture ?? "",
+            cell: (row: UserSummary) => row.profilePictureUrl ?? "",
         },
     ];
     

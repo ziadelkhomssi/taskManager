@@ -18,8 +18,8 @@ public record UserDetails(
         @JsonProperty("job")
         String job,
 
-        @JsonProperty("profilePicture")
-        String profilePicture
+        @JsonProperty("profilePictureUrl")
+        String profilePictureUrl
 
 ) {}
 

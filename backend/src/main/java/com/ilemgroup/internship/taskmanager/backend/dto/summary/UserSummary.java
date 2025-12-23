@@ -13,8 +13,8 @@ public record UserSummary(
         @JsonProperty("name")
         String name,
 
-        @JsonProperty("profilePicture")
-        String profilePicture
+        @JsonProperty("profilePictureUrl")
+        String profilePictureUrl
 
 ) {}
 
