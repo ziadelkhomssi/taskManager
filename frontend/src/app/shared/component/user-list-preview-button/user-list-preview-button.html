@@ -1,0 +1,20 @@
+<button class="user-preview-button" (click)="onClicked()">
+  <div class="avatars">
+    @for (user of previewUsers; track user.id) {
+        <ng-container>
+            @if (user) {
+                <img
+                    [src]="user.profilePicture"
+                    [style.width.px]="avatarSize"
+                    [style.height.px]="avatarSize"
+                    class="avatar"
+                />
+            }
+        </ng-container>
+    }
+    
+    @if (totalUsers > previewUsers.length) {
+        <span class="more">+{{ totalUsers - previewUsers.length }}</span>
+    }
+    </div>
+</button>

@@ -1,0 +1,60 @@
+<div mat-dialog-title class="dialog-header">
+  <div class="dialog-header-text">
+    <h2 class="dialog-title">Users</h2>
+    <p class="dialog-description">{{ description }}</p>
+  </div>
+
+  <button
+    mat-icon-button
+    aria-label="Close dialog"
+    (click)="close()"
+    class="dialog-close">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="dialog-content">
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  <table class="user-table" aria-label="Users list">
+    <tbody>
+      @for (user of users; track user.id) {
+        <tr
+          tabindex="0"
+          class="user-row"
+          (click)="onRowClick(user)"
+          (keydown.enter)="onRowClick(user)">
+          
+          <td class="avatar-cell">
+            <img
+              [src]="user.profilePicture"
+              alt="{{ user.name }} profile picture"
+              class="profile-avatar" />
+          </td>
+
+          <td class="name-cell">
+            {{ user.name }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <app-search-bar
+    [filters]="filters"
+    (queryEvent)="onQuery($event)">
+  </app-search-bar>
+
+  <mat-paginator
+    [length]="totalElements"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    aria-label="User pagination"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</mat-dialog-actions>

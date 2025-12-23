@@ -7,3 +7,5 @@ export interface PageQuery {
 	search: string,
 	filter: string
 }
+
+export type UserFetcher = (query: PageQuery) => Observable<PageUserSummary>;

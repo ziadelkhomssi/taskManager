@@ -1,0 +1,75 @@
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem 1.5rem 1rem;
+  background: var(--mat-sys-surface);
+}
+
+.dialog-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+
+.dialog-description {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.dialog-close {
+  margin-left: auto;
+}
+
+.dialog-content {
+  padding-top: 0;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.avatar-cell {
+  width: 2.5rem;
+  padding: 0.25rem;
+}
+
+.name-cell {
+  padding: 0.25rem;
+  font-weight: 500;
+}
+
+.profile-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
