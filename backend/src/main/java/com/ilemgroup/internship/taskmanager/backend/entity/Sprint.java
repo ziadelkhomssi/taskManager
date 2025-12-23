@@ -2,9 +2,12 @@ package com.ilemgroup.internship.taskmanager.backend.entity;
 
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.SprintStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -22,9 +25,9 @@ public class Sprint {
     private String title;
     private String description;
 
-    private LocalDate startDate;
-    private LocalDate dueDate;
-    private LocalDate endDate;
+    private Instant startDate;
+    private Instant dueDate;
+    private Instant endDate;
 
     @Enumerated(EnumType.STRING)
     private SprintStatus status;

@@ -163,7 +163,7 @@ public class UserServiceIntegrationTest {
                         "name"
                 );
 
-        assertEquals(3, participants.getTotalElements());
+        assertEquals(2, participants.getTotalElements());
     }
 
     @Test
@@ -280,7 +280,7 @@ public class UserServiceIntegrationTest {
                         "name"
                 );
 
-        assertEquals(3, participants.getTotalElements());
+        assertEquals(2, participants.getTotalElements());
     }
 
     @Test

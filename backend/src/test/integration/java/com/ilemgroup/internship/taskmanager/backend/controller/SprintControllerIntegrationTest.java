@@ -22,7 +22,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -149,8 +151,9 @@ public class SprintControllerIntegrationTest {
         SprintCreate validCommand = new SprintCreate(
                 "Sprint",
                 "Description",
-                LocalDate.now(),
-                LocalDate.now().plusDays(7),
+                Instant.now(),
+                Instant.now().plus(7, ChronoUnit.DAYS),
+                null,
                 SprintStatus.ACTIVE,
                 1L
         );
@@ -168,8 +171,7 @@ public class SprintControllerIntegrationTest {
         SprintCreate validCommand = new SprintCreate(
                 "Sprint",
                 "Description",
-                LocalDate.now(),
-                LocalDate.now().plusDays(7),
+                Instant.now(), Instant.now().plus(7, ChronoUnit.DAYS), null,
                 SprintStatus.ACTIVE,
                 1L
         );
@@ -187,8 +189,9 @@ public class SprintControllerIntegrationTest {
         SprintCreate validCommand = new SprintCreate(
                 "Sprint",
                 "Description",
-                LocalDate.now(),
-                LocalDate.now().plusDays(7),
+                Instant.now(),
+                Instant.now().plus(7, ChronoUnit.DAYS),
+                null,
                 SprintStatus.ACTIVE,
                 1L
         );
@@ -207,7 +210,8 @@ public class SprintControllerIntegrationTest {
                 "",
                 "",
                 null,
-                LocalDate.now().plusDays(7),
+                Instant.now().plus(7, ChronoUnit.DAYS),
+                null,
                 SprintStatus.ACTIVE,
                 1L
         );
@@ -226,8 +230,9 @@ public class SprintControllerIntegrationTest {
                 1L,
                 "Sprint",
                 "Description",
-                LocalDate.now(),
-                LocalDate.now().plusDays(7),
+                Instant.now(),
+                Instant.now().plus(7, ChronoUnit.DAYS),
+                null,
                 SprintStatus.ACTIVE
         );
 
@@ -245,8 +250,9 @@ public class SprintControllerIntegrationTest {
                 null,
                 "",
                 "Description",
-                LocalDate.now(),
-                LocalDate.now().plusDays(7),
+                Instant.now(),
+                Instant.now().plus(7, ChronoUnit.DAYS),
+                null,
                 SprintStatus.ACTIVE
         );
 
@@ -264,8 +270,9 @@ public class SprintControllerIntegrationTest {
                 1L,
                 "Sprint",
                 "Description",
-                LocalDate.now(),
-                LocalDate.now().plusDays(7),
+                Instant.now(),
+                Instant.now().plus(7, ChronoUnit.DAYS),
+                null,
                 SprintStatus.ACTIVE
         );
 
@@ -284,8 +291,9 @@ public class SprintControllerIntegrationTest {
                 1L,
                 "Sprint",
                 "Description",
-                LocalDate.now(),
-                LocalDate.now().plusDays(7),
+                Instant.now(),
+                Instant.now().plus(7, ChronoUnit.DAYS),
+                null,
                 SprintStatus.ACTIVE
         );
 

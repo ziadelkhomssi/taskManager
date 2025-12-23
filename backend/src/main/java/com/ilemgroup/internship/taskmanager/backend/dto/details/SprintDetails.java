@@ -5,7 +5,7 @@ import com.ilemgroup.internship.taskmanager.backend.entity.enums.SprintStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record SprintDetails(
 
@@ -23,14 +23,14 @@ public record SprintDetails(
 
         @NotNull
         @JsonProperty("startDate")
-        LocalDateTime startDate,
+        Instant startDate,
 
         @NotNull
         @JsonProperty("dueDate")
-        LocalDateTime dueDate,
+        Instant dueDate,
 
         @JsonProperty("endDate")
-        LocalDateTime endDate,
+        Instant endDate,
 
         @NotNull
         @JsonProperty("status")

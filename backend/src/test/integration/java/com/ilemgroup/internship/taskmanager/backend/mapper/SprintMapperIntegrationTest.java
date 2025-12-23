@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -36,7 +37,9 @@ class SprintMapperIntegrationTest {
     void testCreateToEntity() {
         SprintCreate command = new SprintCreate(
                 "Sprint!", "Description",
-                LocalDate.now(), LocalDate.now().plusDays(1),
+                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant(),
+                LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant(),
+                null,
                 SprintStatus.ACTIVE, 1L
         );
 
@@ -49,16 +52,16 @@ class SprintMapperIntegrationTest {
     @Test
     void testUpdateEntity() {
         Sprint old = TestEntityFactory.createBaseSprint(null);
-        old.setStartDate(LocalDate.now());
+        old.setStartDate(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 
         SprintUpdate command = new SprintUpdate(
                 1L, "New Title", "New Description",
-                null, null, SprintStatus.DONE
+                null, null, null, SprintStatus.DONE
         );
 
         Sprint updated = mapper.updateEntity(command, old);
 
         assertEquals(command.title(), updated.getTitle());
-        assertEquals(LocalDate.now(), updated.getStartDate());
+        assertEquals(old.getStartDate(), updated.getStartDate());
     }
 }

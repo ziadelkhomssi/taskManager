@@ -4,6 +4,8 @@ import com.ilemgroup.internship.taskmanager.backend.entity.*;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class TestEntityFactory {
     static public Project createBaseProject(
@@ -21,8 +23,8 @@ public class TestEntityFactory {
         sprint.setTitle("Sprint");
         sprint.setDescription("Description");
         sprint.setStatus(SprintStatus.ACTIVE);
-        sprint.setStartDate(LocalDate.now());
-        sprint.setDueDate(LocalDate.now().plusDays(7));
+        sprint.setStartDate(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        sprint.setDueDate(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).toInstant());
         sprint.setProject(parentProject);
         return sprint;
     }

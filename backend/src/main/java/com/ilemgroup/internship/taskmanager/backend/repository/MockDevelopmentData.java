@@ -8,14 +8,12 @@ import com.ilemgroup.internship.taskmanager.backend.entity.*;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
+import java.time.ZoneId;
 import java.util.List;
 
 @Configuration
@@ -87,9 +85,9 @@ public class MockDevelopmentData implements CommandLineRunner {
                 null,
                 "Week 1",
                 "First week sprint",
-                LocalDate.of(2025, Month.DECEMBER, 2),
-                LocalDate.of(2025, Month.DECEMBER, 2).plusDays(7),
-                LocalDate.of(2025, Month.DECEMBER, 2).plusDays(7),
+                LocalDateTime.of(2025, Month.DECEMBER, 2, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant(),
+                LocalDateTime.of(2025, Month.DECEMBER, 2, 0, 0, 0).plusDays(7).atZone(ZoneId.systemDefault()).toInstant(),
+                LocalDateTime.of(2025, Month.DECEMBER, 2, 0, 0, 0).plusDays(7).atZone(ZoneId.systemDefault()).toInstant(),
                 SprintStatus.DONE,
                 project1,
                 null
@@ -98,9 +96,9 @@ public class MockDevelopmentData implements CommandLineRunner {
                 null,
                 "Week 2",
                 "Second week sprint",
-                LocalDate.of(2025, Month.DECEMBER, 9),
-                LocalDate.of(2025, Month.DECEMBER, 9).plusDays(7),
-                LocalDate.of(2025, Month.DECEMBER, 9).plusDays(7),
+                LocalDateTime.of(2025, Month.DECEMBER, 9, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant(),
+                LocalDateTime.of(2025, Month.DECEMBER, 9, 0, 0, 0).plusDays(7).atZone(ZoneId.systemDefault()).toInstant(),
+                LocalDateTime.of(2025, Month.DECEMBER, 9, 0, 0, 0).plusDays(7).atZone(ZoneId.systemDefault()).toInstant(),
                 SprintStatus.DONE,
                 project1,
                 null
@@ -109,9 +107,9 @@ public class MockDevelopmentData implements CommandLineRunner {
                 null,
                 "Week 3",
                 "Third week sprint",
-                LocalDate.of(2025, Month.DECEMBER, 16),
-                LocalDate.of(2025, Month.DECEMBER, 16).plusDays(7),
-                LocalDate.of(2025, Month.DECEMBER, 16).plusDays(7),
+                LocalDateTime.of(2025, Month.DECEMBER, 16, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant(),
+                LocalDateTime.of(2025, Month.DECEMBER, 16, 0, 0, 0).plusDays(7).atZone(ZoneId.systemDefault()).toInstant(),
+                null,
                 SprintStatus.ACTIVE,
                 project1,
                 null
@@ -120,9 +118,9 @@ public class MockDevelopmentData implements CommandLineRunner {
                 null,
                 "Week 4",
                 "Fourth week sprint",
-                LocalDate.of(2025, Month.DECEMBER, 23),
-                LocalDate.of(2025, Month.DECEMBER, 23).plusDays(7),
-                LocalDate.of(2025, Month.DECEMBER, 23).plusDays(7),
+                LocalDateTime.of(2025, Month.DECEMBER, 23, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant(),
+                LocalDateTime.of(2025, Month.DECEMBER, 23, 0, 0, 0).plusDays(7).atZone(ZoneId.systemDefault()).toInstant(),
+                null,
                 SprintStatus.PLANNED,
                 project1,
                 null

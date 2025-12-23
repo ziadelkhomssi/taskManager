@@ -26,7 +26,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -192,8 +195,8 @@ public class SprintServiceIntegrationTest {
         Project project = projectRepository.save(TestEntityFactory.createBaseProject());
 
         SprintCreate command = new SprintCreate(
-                "New Sprint", "Description", 
-                LocalDate.now(), LocalDate.now().plusDays(7),
+                "New Sprint", "Description",
+                Instant.now(), Instant.now().plus(7, ChronoUnit.DAYS), null,
                 SprintStatus.ACTIVE, project.getId()
         );
 
@@ -213,7 +216,7 @@ public class SprintServiceIntegrationTest {
                 old.getId(),
                 "Updated Name", 
                 "New Description",
-                LocalDate.now(), LocalDate.now().plusDays(7),
+                Instant.now(), Instant.now().plus(7, ChronoUnit.DAYS), null,
                 SprintStatus.PLANNED
         );
 
@@ -230,7 +233,7 @@ public class SprintServiceIntegrationTest {
     void testUpdateSprint_NotFound() {
         SprintUpdate command = new SprintUpdate(
                 999L, "X", "Y",
-                LocalDate.now(), LocalDate.now().plusDays(7),
+                Instant.now(), Instant.now().plus(7, ChronoUnit.DAYS), null,
                 SprintStatus.PLANNED
         );
 

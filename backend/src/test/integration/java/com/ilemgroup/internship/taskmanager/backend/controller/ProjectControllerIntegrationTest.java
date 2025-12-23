@@ -21,7 +21,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -101,8 +103,8 @@ public class ProjectControllerIntegrationTest {
                         new SprintSummary(
                                 1L,
                                 "Sprint",
-                                LocalDate.now(),
-                                LocalDate.now().plusDays(7),
+                                Instant.now(),
+                                Instant.now().plus(7, ChronoUnit.DAYS),
                                 SprintStatus.ACTIVE
                         )
                 ),
