@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record SprintSummary(
 
@@ -21,11 +21,11 @@ public record SprintSummary(
 
         @NotNull
         @JsonProperty("startDate")
-        LocalDate startDate,
+        LocalDateTime startDate,
 
         @NotNull
         @JsonProperty("dueDate")
-        LocalDate dueDate,
+        LocalDateTime dueDate,
 
         @NotNull
         @JsonProperty("status")

@@ -1,12 +1,11 @@
 package com.ilemgroup.internship.taskmanager.backend.dto.command.create;
 
-import com.ilemgroup.internship.taskmanager.backend.entity.enums.SprintStatus;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ilemgroup.internship.taskmanager.backend.entity.enums.SprintStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record SprintCreate(
 
@@ -20,11 +19,14 @@ public record SprintCreate(
 
         @NotNull
         @JsonProperty("startDate")
-        LocalDate startDate,
+        LocalDateTime startDate,
 
         @NotNull
         @JsonProperty("dueDate")
-        LocalDate dueDate,
+        LocalDateTime dueDate,
+
+        @JsonProperty("endDate")
+        LocalDateTime endDate,
 
         @NotNull
         @JsonProperty("status")
