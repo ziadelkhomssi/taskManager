@@ -41,4 +41,20 @@ public interface UserRepository extends JpaRepository<User, String> {
             @Param("sprintId") Long sprintId,
             Pageable pageable
     );
+
+    @Query("""
+            SELECT DISTINCT us FROM User us
+            LEFT JOIN Ticket ti ON ti.user.azureOid=us.azureOid
+            LEFT JOIN Sprint sp ON sp.id=ti.sprint.id
+            LEFT JOIN Project pr ON pr.id=sp.project.id
+            WHERE pr.id = ?1
+    """)
+    Page<User> findAllInProject(Long projectId, Pageable pageable);
+    @Query("""
+            SELECT DISTINCT us FROM User us
+            LEFT JOIN Ticket ti ON ti.user.azureOid=us.azureOid
+            LEFT JOIN Sprint sp ON sp.id=ti.sprint.id
+            WHERE sp.id = ?1
+    """)
+    Page<User> findAllInSprint(Long sprintId, Pageable pageable);
 }

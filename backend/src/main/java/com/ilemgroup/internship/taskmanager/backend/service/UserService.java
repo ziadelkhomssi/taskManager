@@ -54,6 +54,11 @@ public class UserService {
             Long sprintId
     ) {
         if (search == null || search.isBlank()) {
+            if (projectId != null) {
+                return userRepository.findAllInProject(projectId, pageable).map(userMapper::toSummary);
+            } else if (sprintId != null) {
+                return userRepository.findAllInSprint(sprintId, pageable).map(userMapper::toSummary);
+            }
             return userRepository.findAll(pageable).map(userMapper::toSummary);
         }
 
