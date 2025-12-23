@@ -10,6 +10,7 @@ import com.ilemgroup.internship.taskmanager.backend.repository.ProjectRepository
 import com.ilemgroup.internship.taskmanager.backend.repository.SprintRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.TicketRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.nio.file.AccessDeniedException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -386,6 +390,44 @@ public class UserServiceIntegrationTest {
 
         assertThrows(ResponseStatusException.class, () ->
                 userService.getSprintParticipants(sprint.getId(), pageable, "x", "unknown_filter")
+        );
+    }
+
+    @Test
+    @WithMockUser(username = "abc123", password = "mypasswordwoah", roles = {"TEAM_MEMBER"})
+    void getClientSummary_authenticatedAndUserExists_success() throws AccessDeniedException {
+        User user = TestEntityFactory.createBaseUser();
+        user.setAzureOid("abc123");
+        userRepository.save(user);
+
+        UserSummary clientSummary = userService.getClientSummary();
+        assertEquals(user.getAzureOid(), clientSummary.id());
+        assertEquals(user.getName(), clientSummary.name());
+    }
+
+    @Test
+    void getClientSummary_notAuthenticatedAndUserExists_throwsException() throws AccessDeniedException {
+        User user = TestEntityFactory.createBaseUser();
+        user.setAzureOid("abc123");
+        userRepository.save(user);
+
+        assertThrows(AccessDeniedException.class, () ->
+                userService.getClientSummary()
+        );
+    }
+
+    @Test
+    @WithMockUser(username = "abc123", password = "mypasswordwoah", roles = {"TEAM_MEMBER"})
+    void getClientSummary_authenticatedAndNotUserExists_throwsException() throws AccessDeniedException {
+        assertThrows(EntityNotFoundException.class, () ->
+                userService.getClientSummary()
+        );
+    }
+
+    @Test
+    void getClientSummary_notAuthenticatedAndNotUserExists_throwsException() throws AccessDeniedException {
+        assertThrows(AccessDeniedException.class, () ->
+                userService.getClientSummary()
         );
     }
 
