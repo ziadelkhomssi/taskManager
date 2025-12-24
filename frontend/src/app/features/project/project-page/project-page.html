@@ -32,7 +32,7 @@
       <img
         mat-card-image
         class="profile-picture"
-        [src]="projectDetails.profilePictureUrl"
+        [src]="projectDetails.profilePictureUrl+'?cacheBuster='+cacheBuster"
         alt="Project profile picture"
       />
     </div>

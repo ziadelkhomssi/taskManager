@@ -84,6 +84,8 @@ export class ProjectPage {
   pageSize = 10;
   totalElements = 0;
 
+  cacheBuster = Date.now().toString();
+
   projectUserFetcher = (query: PageQuery) => 
     this.projectService.getUserSummaryList(
       this.projectDetails.id, query
@@ -100,6 +102,7 @@ export class ProjectPage {
   ) { }
 
   ngOnInit() {
+    this.cacheBuster = Date.now().toString();
     this.route.params.subscribe(params => {
       this.loadProjectDetails(params["id"])
     });
