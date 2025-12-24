@@ -1,0 +1,114 @@
+.project-details-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.project-details {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+.project-text {
+  flex: 1;
+}
+
+.project-title h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.section-label {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.project-description {
+  margin-top: 1.5rem;
+}
+
+.project-description h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.project-description p {
+  margin: 0;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.project-status {
+  margin-top: 1.5rem;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background-color: #e3f2fd;
+  color: #1e88e5;
+}
+
+.status-done {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-planned {
+  background-color: #fff8e1;
+  color: #f9a825;
+}
+
+.status-archived {
+  background-color: #fdecea;
+  color: #312929;
+}
+
+.project-participants {
+    margin-top: 1.5rem;
+}
+
+.profile-picture {
+  width: 9rem;
+  height: 9rem;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.project-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.project-actions button[color="warn"] {
+  min-width: 96px;
+}
+
+.project-actions button {
+  text-transform: uppercase;
+  font-weight: 500;
+}

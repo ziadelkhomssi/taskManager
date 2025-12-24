@@ -1,1 +1,71 @@
-<h1>Project</h1>
+<mat-card class="project-details-card">
+  <mat-card-content>
+    <div class="project-details">
+      <div class="project-text">
+        <div class="project-title">
+          <h4 class="section-label">Project</h4>
+          <h1>{{ projectDetails.title }}</h1>
+        </div>
+
+        <div class="project-description">
+          <h2>Description</h2>
+          <p>{{ projectDetails.description }}</p>
+        </div>
+
+        <div class="project-status">
+          <span
+            class="status-chip status-{{ projectDetails.status.toLowerCase() }}"
+          >
+            {{ projectDetails.status }}
+          </span>
+        </div>
+
+        <div class="project-participants">
+          <app-user-list-preview-button
+            [previewUsers]="previewParticipants"
+            [avatarSize]="30"
+            (clicked)="onOpenParticipantList()"
+          />
+        </div>
+      </div>
+
+      <img
+        mat-card-image
+        class="profile-picture"
+        [src]="projectDetails.profilePictureUrl"
+        alt="Project profile picture"
+      />
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end" class="project-actions">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="updateProject()">
+      Update
+    </button>
+
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="deleteProject()">
+      Delete
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<app-entity-table
+  [rows]="sprints"
+  [columns]="columns"
+  [actions]="actions"
+  [showAddButton]="true"
+  [filters]="filters"
+  [totalElements]="totalElements"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  (pageQueryEvent)="onPageQuery($event)"
+  (rowClick)="onRowClick($event)"
+  (addClick)="createSprint()">
+</app-entity-table>
+
