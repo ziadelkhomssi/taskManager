@@ -62,7 +62,7 @@ public class MockDevelopmentData implements CommandLineRunner {
                 null,
                 "Task Manager",
                 "Spring boot / Angular application to manage task assignement inside a company",
-                "profilePicture.png",
+                null,
                 ProjectStatus.ACTIVE,
                 null
         );
@@ -70,7 +70,7 @@ public class MockDevelopmentData implements CommandLineRunner {
                 null,
                 "Not Task Manager",
                 "Literally not Task Manager",
-                "profilePicture.png",
+                null,
                 ProjectStatus.ARCHIVED,
                 null
         );

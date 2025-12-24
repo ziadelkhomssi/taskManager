@@ -20,8 +20,8 @@ public record ProjectDetails(
         @JsonProperty("description")
         String description,
 
-        @JsonProperty("profilePicture")
-        String profilePicture,
+        @JsonProperty("profilePictureUrl")
+        String profilePictureUrl,
 
         @NotNull
         @JsonProperty("status")

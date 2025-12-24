@@ -21,7 +21,7 @@ public class Project {
 
     private String title;
     private String description;
-    private String profilePicture;
+    private String profilePicturePath;
 
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;

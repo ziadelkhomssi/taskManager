@@ -15,8 +15,8 @@ public record ProjectSummary(
         @JsonProperty("title")
         String title,
 
-        @JsonProperty("profilePicture")
-        String profilePicture,
+        @JsonProperty("profilePictureUrl")
+        String profilePictureUrl,
 
         @NotNull
         @JsonProperty("status")

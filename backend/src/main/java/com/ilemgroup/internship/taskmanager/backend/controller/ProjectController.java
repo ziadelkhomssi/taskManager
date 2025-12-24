@@ -11,12 +11,19 @@ import com.ilemgroup.internship.taskmanager.backend.service.SprintService;
 import com.ilemgroup.internship.taskmanager.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/project")
@@ -62,22 +69,34 @@ public class ProjectController {
         return userService.getProjectParticipants(projectId, pageable, search, filter);
     }
 
-    @PostMapping("/create")
+    @PostMapping(path = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
-    public void createProject(@RequestBody @Valid ProjectCreate command) {
-        projectService.createProject(command);
+    public void createProject(
+            @RequestPart("command") @Valid ProjectCreate command,
+            @RequestPart("profilePicture") MultipartFile profilePicture
+    ) {
+        projectService.createProject(command, profilePicture);
     }
 
     // should i make this have pathvariable project id? (need to edit ProjectUpdate for that...)
-    @PutMapping("/update")
+    @PutMapping(path = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
-    public void updateProject(@RequestBody @Valid ProjectUpdate command) {
-        projectService.updateProject(command);
+    public void updateProject(
+            @RequestPart("command") @Valid ProjectUpdate command,
+            @RequestPart("profilePicture") MultipartFile profilePicture) {
+        projectService.updateProject(command, profilePicture);
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
     public void deleteProjectById(@PathVariable Long id) {
         projectService.deleteProjectById(id);
+    }
+
+    @GetMapping("/profile-picture/{id}")
+    public ResponseEntity<Resource> getProfilePicture(@PathVariable Long id) throws IOException {
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(new InputStreamResource(projectService.getProfilePicture(id).getInputStream()));
     }
 }

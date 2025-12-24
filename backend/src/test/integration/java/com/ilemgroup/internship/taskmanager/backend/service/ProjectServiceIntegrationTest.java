@@ -7,7 +7,6 @@ import com.ilemgroup.internship.taskmanager.backend.dto.details.ProjectDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.ProjectSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Project;
 import com.ilemgroup.internship.taskmanager.backend.entity.Sprint;
-import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.ProjectStatus;
 import com.ilemgroup.internship.taskmanager.backend.repository.ProjectRepository;
@@ -19,20 +18,29 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestPropertySource(properties = "project.image.base-path=${java.io.tmpdir}/project-images")
 class ProjectServiceIntegrationTest {
+    @Value("${project.image.base-path}")
+    private String PROJECT_PROFILE_PICTURE_BASE_PATH;
 
     @Autowired
     private ProjectService projectService;
@@ -45,6 +53,15 @@ class ProjectServiceIntegrationTest {
     private TicketRepository ticketRepository;
     @Autowired
     private UserRepository userRepository;
+
+    private MockMultipartFile imagePart() {
+        return new MockMultipartFile(
+                "profilePicture",
+                "profilePicture.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "look-at-this-content!!!".getBytes()
+        );
+    }
 
     @BeforeEach
     void cleanDatabase() {
@@ -182,48 +199,71 @@ class ProjectServiceIntegrationTest {
     }
 
     @Test
-    void testCreateProject() {
+    void testCreateProject() throws Exception {
         ProjectCreate command = new ProjectCreate(
-                "New Project", "desc",
-                null,
+                "New Project",
+                "desc",
                 ProjectStatus.ACTIVE
         );
 
-        projectService.createProject(command);
+        MockMultipartFile profilePicture = imagePart();
+        projectService.createProject(command, profilePicture);
 
         List<Project> all = projectRepository.findAll();
         assertEquals(1, all.size());
         assertEquals(command.title(), all.getFirst().getTitle());
+
+        Path expectedImagePath = Path.of(PROJECT_PROFILE_PICTURE_BASE_PATH)
+                .resolve(all.getFirst().getId().toString())
+                .resolve("profile_picture.png");
+
+        assertTrue(Files.exists(expectedImagePath), "Profile picture should be stored!");
     }
 
     @Test
-    void testUpdateProject() {
-        Project old = projectRepository.save(TestEntityFactory.createBaseProject());
+    void testUpdateProject() throws Exception {
+        Project old = projectRepository.save(
+                TestEntityFactory.createBaseProject()
+        );
 
         ProjectUpdate command = new ProjectUpdate(
-                old.getId(), "Updated Name", "New Description",
-                null,
+                old.getId(),
+                "Updated Name",
+                "New Description",
                 ProjectStatus.ARCHIVED
         );
 
-        projectService.updateProject(command);
+        MockMultipartFile profilePicture = imagePart();
+        projectService.updateProject(command, profilePicture);
 
         Project updated = projectRepository.findById(old.getId()).orElseThrow();
 
         assertEquals(command.title(), updated.getTitle());
         assertEquals(command.description(), updated.getDescription());
         assertEquals(command.status(), updated.getStatus());
+
+        Path expectedImagePath = Path.of(PROJECT_PROFILE_PICTURE_BASE_PATH)
+                .resolve(old.getId().toString())
+                .resolve("profile_picture.png");
+
+        assertTrue(Files.exists(expectedImagePath), "Updated profile picture should exist");
     }
 
     @Test
     void testUpdateProject_NotFound() {
         ProjectUpdate command = new ProjectUpdate(
-                999L, "X", "Y",
-                null,
+                999L,
+                "X",
+                "Y",
                 ProjectStatus.ACTIVE
         );
 
-        assertThrows(EntityNotFoundException.class, () -> projectService.updateProject(command));
+        MockMultipartFile profilePicture = imagePart();
+
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> projectService.updateProject(command, profilePicture)
+        );
     }
 
     @Test

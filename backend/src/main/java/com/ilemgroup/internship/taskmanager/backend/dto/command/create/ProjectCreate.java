@@ -16,9 +16,6 @@ public record ProjectCreate(
         @JsonProperty("description")
         String description,
 
-        @JsonProperty("profilePicture")
-        String profilePicture,
-
         @NotNull
         @JsonProperty("status")
         ProjectStatus status

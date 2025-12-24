@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { BaseApiService } from './base-api-service';
 import { PageProjectSummary, PageSprintSummary, PageUserSummary, ProjectCreate, ProjectDetails, ProjectUpdate } from '../ng-openapi';
 import { HttpParams } from '@angular/common/http';
@@ -48,21 +48,42 @@ export class ProjectService extends BaseApiService {
       .pipe(catchError(this.handleError));
   }
 
-  create(command: ProjectCreate): Observable<void> {
+  create(formData: FormData): Observable<void> {
     return this.http
-      .post<void>(`${this.projectUrl}/create`, command)
+      .post<void>(`${this.projectUrl}/create`, formData)
       .pipe(catchError(this.handleError));
   }
 
-  update(command: ProjectUpdate): Observable<void> {
+  update(formData: FormData): Observable<void> {
     return this.http
-      .put<void>(`${this.projectUrl}/update`, command)
+      .put<void>(`${this.projectUrl}/update`, formData)
       .pipe(catchError(this.handleError));
   }
 
   deleteById(id: number): Observable<void> {
     return this.http
       .delete<void>(`${this.projectUrl}/delete/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getProfilePicture(id: number): Observable<File | null> {
+    return this.http
+      .get(`${this.projectUrl}/profile-picture/${id}`, 
+        { 
+          responseType: "blob",
+          observe: 'body'
+        })
+      .pipe(
+        map((blob: Blob) => {
+          console.log(blob)
+          if (blob.size === 0) {
+            return null;
+          }
+          const mimeType = blob.type || "image/png";
+          const extension = mimeType.split("/");
+          const fileName = `profilePicture.${extension[extension.length - 1]}`;
+          return new File([blob], fileName, { type: mimeType });
+      }))
       .pipe(catchError(this.handleError));
   }
 }

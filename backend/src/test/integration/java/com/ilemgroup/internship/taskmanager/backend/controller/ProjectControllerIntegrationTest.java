@@ -13,8 +13,12 @@ import com.ilemgroup.internship.taskmanager.backend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -47,6 +51,24 @@ public class ProjectControllerIntegrationTest {
     private SprintService sprintService;
     @MockitoBean
     private UserService userService;
+
+    private MockMultipartFile commandJsonPart(Object value) throws Exception {
+        return new MockMultipartFile(
+                "command",
+                "command.json",
+                MediaType.APPLICATION_JSON_VALUE,
+                new ObjectMapper().writeValueAsBytes(value)
+        );
+    }
+
+    private MockMultipartFile imagePart() {
+        return new MockMultipartFile(
+                "profilePicture",
+                "profilePicture.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "look-at-this-content!!!".getBytes()
+        );
+    }
 
     @Test
     void getSummaryList_validQuery_returnsPage() throws Exception {
@@ -194,15 +216,18 @@ public class ProjectControllerIntegrationTest {
         ProjectCreate validCommand = new ProjectCreate(
                 "Project",
                 "Description",
-                "profilePicture.png",
                 ProjectStatus.ACTIVE
         );
 
-        mockMvc.perform(post("/project/create")
+        when(projectService.getProfilePicture(
+                any(Long.class)
+        )).thenReturn(imagePart().getResource());
+
+        mockMvc.perform(multipart("/project/create")
+                        .file(commandJsonPart(validCommand))
+                        .file(imagePart())
                         .with(csrf())
-                        .with(user("project_manager").roles("PROJECT_MANAGER"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(validCommand)))
+                        .with(user("project_manager").roles("PROJECT_MANAGER")))
                 .andExpect(status().isOk());
     }
 
@@ -211,33 +236,15 @@ public class ProjectControllerIntegrationTest {
         ProjectCreate validCommand = new ProjectCreate(
                 "Project",
                 "Description",
-                "profilePicture.png",
                 ProjectStatus.ACTIVE
         );
 
-        mockMvc.perform(post("/project/create")
+        mockMvc.perform(multipart("/project/create")
+                        .file(commandJsonPart(validCommand))
+                        .file(imagePart())
                         .with(csrf())
-                        .with(user("some_guy"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(validCommand)))
+                        .with(user("some_guy")))
                 .andExpect(status().isForbidden());
-    }
-
-    @Test
-    void createProject_validCommand_success() throws Exception {
-        ProjectCreate validCommand = new ProjectCreate(
-                "Project",
-                "Description",
-                "profilePicture.png",
-                ProjectStatus.ACTIVE
-        );
-
-        mockMvc.perform(post("/project/create")
-                        .with(csrf())
-                        .with(user("project_manager").roles("PROJECT_MANAGER"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(validCommand)))
-                .andExpect(status().isOk());
     }
 
     @Test
@@ -245,15 +252,14 @@ public class ProjectControllerIntegrationTest {
         ProjectCreate invalidCommand = new ProjectCreate(
                 "",
                 "",
-                null,
                 ProjectStatus.ACTIVE
         );
 
-        mockMvc.perform(post("/project/create")
+        mockMvc.perform(multipart("/project/create")
+                        .file(commandJsonPart(invalidCommand))
+                        .file(imagePart())
                         .with(csrf())
-                        .with(user("project_manager").roles("PROJECT_MANAGER"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(invalidCommand)))
+                        .with(user("project_manager").roles("PROJECT_MANAGER")))
                 .andExpect(status().isBadRequest());
     }
 
@@ -263,15 +269,23 @@ public class ProjectControllerIntegrationTest {
                 1L,
                 "Project",
                 "Description",
-                "profilePicture.png",
                 ProjectStatus.ACTIVE
         );
 
-        mockMvc.perform(put("/project/update")
+
+        when(projectService.getProfilePicture(
+                any(Long.class)
+        )).thenReturn(imagePart().getResource());
+
+        mockMvc.perform(multipart("/project/update")
+                        .file(commandJsonPart(validCommand))
+                        .file(imagePart())
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        })
                         .with(csrf())
-                        .with(user("project_manager").roles("PROJECT_MANAGER"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(validCommand)))
+                        .with(user("project_manager").roles("PROJECT_MANAGER")))
                 .andExpect(status().isOk());
     }
 
@@ -281,35 +295,19 @@ public class ProjectControllerIntegrationTest {
                 null,
                 "",
                 "Description",
-                "profilePicture.png",
                 ProjectStatus.ACTIVE
         );
 
-        mockMvc.perform(put("/project/update")
+        mockMvc.perform(multipart("/project/update")
+                        .file(commandJsonPart(invalidCommand))
+                        .file(imagePart())
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        })
                         .with(csrf())
-                        .with(user("project_manager").roles("PROJECT_MANAGER"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(invalidCommand)))
+                        .with(user("project_manager").roles("PROJECT_MANAGER")))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void updateProject_userHasValidRole_success() throws Exception {
-        ProjectUpdate validCommand = new ProjectUpdate(
-                1L,
-                "Project",
-                "Description",
-                "profilePicture.png",
-                ProjectStatus.ACTIVE
-        );
-
-
-        mockMvc.perform(put("/project/update")
-                        .with(csrf())
-                        .with(user("project_manager").roles("PROJECT_MANAGER"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(validCommand)))
-                .andExpect(status().isOk());
     }
 
     @Test
@@ -318,15 +316,18 @@ public class ProjectControllerIntegrationTest {
                 1L,
                 "Project",
                 "Description",
-                "profilePicture.png",
                 ProjectStatus.ACTIVE
         );
 
-        mockMvc.perform(put("/project/update")
+        mockMvc.perform(multipart("/project/update")
+                        .file(commandJsonPart(validCommand))
+                        .file(imagePart())
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        })
                         .with(csrf())
-                        .with(user("some_guy"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(validCommand)))
+                        .with(user("some_guy")))
                 .andExpect(status().isForbidden());
     }
 
