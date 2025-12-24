@@ -101,11 +101,11 @@ public class ProjectService {
                 .orElseThrow(() -> new EntityNotFoundException("Project not found: " + id));
 
         Resource resource = resourceLoader.getResource("file:" + project.getProfilePicturePath());
-        if (resource.exists()) {
-            return resource;
+        if (!resource.exists()) {
+            return null;
         }
 
-        return new ByteArrayResource(new byte[0]);
+        return resource;
     }
 
     public void createProject(ProjectCreate command, MultipartFile profilePicture) {

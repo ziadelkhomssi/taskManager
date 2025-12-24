@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BaseApiService } from './base-api-service';
 import { PageProjectSummary, PageSprintSummary, PageUserSummary, ProjectCreate, ProjectDetails, ProjectUpdate } from '../ng-openapi';
@@ -68,22 +68,17 @@ export class ProjectService extends BaseApiService {
 
   getProfilePicture(id: number): Observable<File | null> {
     return this.http
-      .get(`${this.projectUrl}/profile-picture/${id}`, 
-        { 
-          responseType: "blob",
-          observe: 'body'
-        })
+      .get(`${this.projectUrl}/profile-picture/${id}?cacheBuster=${Date.now()}`, { responseType: 'blob' })
       .pipe(
-        map((blob: Blob) => {
-          console.log(blob)
-          if (blob.size === 0) {
+        map(blob => {
+          if (!blob || blob.size === 0 || blob.type.includes('html')) {
             return null;
           }
-          const mimeType = blob.type || "image/png";
-          const extension = mimeType.split("/");
-          const fileName = `profilePicture.${extension[extension.length - 1]}`;
-          return new File([blob], fileName, { type: mimeType });
-      }))
-      .pipe(catchError(this.handleError));
+          const mimeType = blob.type || 'image/png';
+          const extension = mimeType.split('/')[1];
+          return new File([blob], `profilePicture.${extension}`, { type: mimeType });
+        }),
+        catchError(err => of(null))
+      );
   }
 }

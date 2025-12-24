@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
@@ -95,8 +97,24 @@ public class ProjectController {
 
     @GetMapping("/profile-picture/{id}")
     public ResponseEntity<Resource> getProfilePicture(@PathVariable Long id) throws IOException {
+        Resource resource = projectService.getProfilePicture(id);
+
+        if (resource == null || !resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        String contentType = "image/png";
+        if (resource instanceof UrlResource) {
+            String filename = resource.getFilename();
+            if (filename != null && filename.contains(".")) {
+                String extension = filename.substring(filename.lastIndexOf(".") + 1);
+                contentType = "image/" + extension;
+            }
+        }
+
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(new InputStreamResource(projectService.getProfilePicture(id).getInputStream()));
+                .contentType(MediaType.parseMediaType(contentType))
+                .contentLength(resource.contentLength())
+                .body(resource);
     }
 }
