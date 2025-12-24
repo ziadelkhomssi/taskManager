@@ -1,1 +1,15 @@
-<p>dashboard works!</p>
+<h1>Dashboard</h1>
+
+<app-entity-table
+  [rows]="projects"
+  [columns]="columns"
+  [actions]="actions"
+  [showAddButton]="true"
+  [filters]="filters"
+  [totalElements]="totalElements"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  (pageQueryEvent)="onPageQuery($event)"
+  (rowClick)="onRowClick($event)"
+  (addClick)="createProject()">
+</app-entity-table>
