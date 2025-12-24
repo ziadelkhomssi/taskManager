@@ -1,1 +1,89 @@
-<p>sprint-page works!</p>
+<mat-card class="sprint-details-card">
+  <mat-card-content>
+    <div class="sprint-details">
+      <div class="sprint-text">
+        <div class="sprint-title">
+          <h4 class="section-label">Sprint</h4>
+          <h1>{{ sprintDetails.title }}</h1>
+        </div>
+
+        <div class="sprint-description">
+          <h2>Description</h2>
+          <p>{{ sprintDetails.description }}</p>
+        </div>
+
+        <div class="sprint-status">
+          <span
+            class="status-chip status-{{ sprintDetails.status.toLowerCase() }}"
+          >
+            {{ sprintDetails.status }}
+          </span>
+        </div>
+
+        <div class="sprint-participants">
+          <app-user-list-preview-button
+            [previewUsers]="previewParticipants"
+            [avatarSize]="30"
+            (clicked)="onOpenParticipantList()"
+          />
+        </div>
+      </div>
+
+      <div class="sprint-meta">
+        <div class="meta-item">
+          <span class="meta-label">Start Date</span>
+          <span class="meta-value">
+            {{ sprintDetails.startDate | date:'mediumDate' }}
+          </span>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Due Date</span>
+          <span class="meta-value">
+            {{ sprintDetails.dueDate | date:'mediumDate' }}
+          </span>
+        </div>
+
+        @if (sprintDetails.endDate) {
+          <div class="meta-item">
+            <span class="meta-label">End Date</span>
+            <span class="meta-value">
+              {{ sprintDetails.endDate | date:'mediumDate' }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end" class="sprint-actions">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="updateSprint()">
+      Update
+    </button>
+
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="deleteSprint()">
+      Delete
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<app-entity-table
+  [rows]="tickets"
+  [columns]="columns"
+  [actions]="actions"
+  [showAddButton]="true"
+  [filters]="filters"
+  [totalElements]="totalElements"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  (pageQueryEvent)="onPageQuery($event)"
+  (rowClick)="onRowClick($event)"
+  (addClick)="createTicket()">
+</app-entity-table>
+
