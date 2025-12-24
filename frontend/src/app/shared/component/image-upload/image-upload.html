@@ -1,0 +1,40 @@
+<div
+  class="file-upload-wrapper"
+  [class.disabled]="disabled"
+  [class.error]="errorState"
+  (drop)="onFileDrop($event)"
+  (dragover)="onDragOver($event)"
+>
+  <input
+    #fileInput
+    type="file"
+    accept="image/*"
+    hidden
+    (change)="onFileChange($event)"
+  />
+
+  <div class="file-dropper" (click)="onContainerClick()">
+    <mat-icon>upload</mat-icon>
+    <p>Drop image here or click to select</p>
+
+    @if (imagePreview) {
+      <img
+        [src]="imagePreview"
+        [alt]="imageName || 'Uploaded image preview'"
+        class="image-preview"
+      />
+
+      <p>
+        <span class="image-name">{{ imageName }}</span>
+        ({{ fileSizeKb }} KB)
+      </p>
+
+      <mat-icon
+        class="delete-icon"
+        (click)="removeImage($event)"
+      >
+        delete
+      </mat-icon>
+    }
+  </div>
+</div>
