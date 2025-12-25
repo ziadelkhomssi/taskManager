@@ -15,7 +15,6 @@ export interface ProjectStatusCellContext {
   $implicit: ProjectDetails["status"];
 }
 
-
 const DEFAULT_PROJECTS_QUERY: PageQuery = {
   page: 0,
   size: 10,
@@ -39,6 +38,16 @@ export class Dashboard {
   projectStatusTemplate!: TemplateRef<ProjectStatusCellContext>;
 
   columns!: TableColumn<ProjectSummary, ProjectStatusCellContext>[];
+  rowClass = (project: ProjectSummary) => ({
+    "row-normal":
+      project.status === "ACTIVE"
+      ,
+    "row-unimportant": 
+      project.status === "DONE"
+      || project.status === "PLANNED"
+      || project.status === "ARCHIVED"
+      ,
+  });
 
   actions = [
     {

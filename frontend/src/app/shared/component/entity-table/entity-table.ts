@@ -34,6 +34,7 @@ export interface TableColumn<T, context = any> {
 })
 export class EntityTable<T> {
 	@Input() rows: T[] = [];
+	@Input() rowClass?: (row: T) => string | string[] | Set<string> | { [klass: string]: boolean };
 
 	@Input() columns: TableColumn<T>[] = [];
 	@Input() actions: TableAction<T>[] = [];

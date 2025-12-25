@@ -66,6 +66,19 @@ export class ProjectPage {
   sprintStatusTemplate!: TemplateRef<SprintStatusCellContext>;
   
   columns!: TableColumn<SprintSummary, SprintStatusCellContext>[];
+  rowClass = (sprint: SprintSummary) => ({
+    "row-important": 
+      new Date(sprint.dueDate).getTime() < Date.now() && sprint.status == "ACTIVE"
+      ,
+    "row-normal":
+      (sprint.status === "ACTIVE" && !(new Date(sprint.dueDate).getTime() < Date.now()))
+      || sprint.status === "PAUSED"
+      ,
+    "row-unimportant": 
+      sprint.status === "DONE"
+      || sprint.status === "PLANNED"
+      ,
+  });
 
   actions = [
     {

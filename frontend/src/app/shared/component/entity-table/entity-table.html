@@ -48,8 +48,13 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClick(row)"
-        [attr.tabindex]="rowClick ? 0 : null" [attr.role]="rowClick ? 'button' : null" (keydown.enter)="onRowClick(row)"
+    <tr mat-row 
+        *matRowDef="let row; columns: displayedColumns" 
+        (click)="onRowClick(row)"
+        [ngClass]="rowClass ? rowClass(row) : null"
+        [attr.tabindex]="rowClick ? 0 : null" 
+        [attr.role]="rowClick ? 'button' : null" 
+        (keydown.enter)="onRowClick(row)"
         (keydown.space)="onRowClick(row)">
         >
     </tr>
