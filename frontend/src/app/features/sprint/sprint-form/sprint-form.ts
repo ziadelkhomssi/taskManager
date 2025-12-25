@@ -59,6 +59,30 @@ export class SprintForm {
       status: ["PLANNED", Validators.required]
     });
 
+    this.sprintForm.get("endDate")?.valueChanges.subscribe(endDate => {
+      const statusControl = this.sprintForm.get("status");
+      if (endDate) {
+        statusControl?.setValue("DONE", { emitEvent: false });
+        this.sprintForm.get("endDate")?.clearValidators();
+        this.sprintForm.get("endDate")?.updateValueAndValidity({ emitEvent: false });
+
+      } else if (statusControl?.value === "DONE") {
+        this.sprintForm.get("endDate")?.setValidators([Validators.required]);
+        this.sprintForm.get("endDate")?.updateValueAndValidity({ emitEvent: false });
+      }
+    });
+
+    this.sprintForm.get("status")?.valueChanges.subscribe(status => {
+      const endDateControl = this.sprintForm.get("endDate");
+      if (status === "DONE" && !endDateControl?.value) {
+        endDateControl?.setValidators([Validators.required]);
+        endDateControl?.updateValueAndValidity({ emitEvent: false });
+      } else if (status !== "DONE") {
+        endDateControl?.clearValidators();
+        endDateControl?.updateValueAndValidity({ emitEvent: false });
+      }
+    });
+
     this.route.params.subscribe(params => {
       this.sprintId = params["id"]
       this.isEditMode = this.sprintId ? true : false;
