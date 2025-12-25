@@ -36,12 +36,21 @@
 }
 
 .profile-button {
+  width: 100%;
+  height: fit-content;
+  padding: 0;
+  justify-content: flex-start;
+  text-transform: none;
+  margin-bottom: 1rem;
+}
+
+.profile-info {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  margin-top: 0.75rem;
   text-align: left;
+  border-radius: 8px;
 }
 
 .profile-avatar {
@@ -51,18 +60,15 @@
   object-fit: cover;
 }
 
-.profile-info {
+.profile-text {
   display: flex;
   flex-direction: column;
 }
 
 .profile-name {
   font-weight: 600;
-}
-
-.profile-job {
-  font-size: 0.75rem;
-  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.95rem;
+  line-height: 1.2;
 }
 
 .sidebar-spacer {

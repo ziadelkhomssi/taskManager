@@ -2,24 +2,24 @@ import { ChangeDetectorRef, Component, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent, MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbar } from '@angular/material/toolbar';
-import { MatIcon } from '@angular/material/icon';
+import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatNavList } from '@angular/material/list';
 import { UserDetails, UserSummary } from './core/ng-openapi';
 import { UserService } from './core/services/user-service';
 import { FallbackImage } from './shared/directive/fallback-image/fallback-image';
+import { MatButtonModule, MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    RouterLink, 
-    MatSidenavContainer, 
-    MatSidenav, 
+    RouterLink,
     MatSidenavModule,
     MatSidenavContent, 
-    MatToolbar,
-    MatIcon,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
     FallbackImage
   ],
   templateUrl: './app.html',
