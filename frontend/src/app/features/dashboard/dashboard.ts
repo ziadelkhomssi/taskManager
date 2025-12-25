@@ -9,9 +9,18 @@ import { error } from 'console';
 import { Router } from '@angular/router';
 import { PageQuery } from '../../shared/types/types';
 import { ProjectStatusChip } from "../../shared/component/status-chip/project-status-chip/project-status-chip";
+import { DialogService } from '../../core/services/dialog-service';
 
 export interface ProjectStatusCellContext {
   $implicit: ProjectDetails["status"];
+}
+
+
+const DEFAULT_PROJECTS_QUERY: PageQuery = {
+  page: 0,
+  size: 10,
+  search: "",
+  filter: ""
 }
 
 @Component({
@@ -19,7 +28,7 @@ export interface ProjectStatusCellContext {
   imports: [
     EntityTable,
     ProjectStatusChip
-],
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -28,20 +37,24 @@ export class Dashboard {
 
   @ViewChild("projectStatusTemplate", { static: true })
   projectStatusTemplate!: TemplateRef<ProjectStatusCellContext>;
-  
+
   columns!: TableColumn<ProjectSummary, ProjectStatusCellContext>[];
 
   actions = [
     {
-      label: 'Update',
+      label: "Update",
       callback: (project: ProjectSummary) => this.updateProject(project)
     },
     {
-      label: 'Delete',
+      label: "Delete",
       callback: (project: ProjectSummary) => this.deleteProject(project)
     },
   ];
 
+  pageIndex = 0;
+  pageSize = 10;
+  totalElements = 0;
+  lastQuery: PageQuery = DEFAULT_PROJECTS_QUERY;
   filters: string[] = [
     "Project",
     "Status",
@@ -49,27 +62,24 @@ export class Dashboard {
     "User"
   ];
 
-  pageIndex = 0;
-  pageSize = 10;
-  totalElements = 0;
-
   constructor(
-    private projectService: ProjectService, 
+    private projectService: ProjectService,
+    private dialogService: DialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router
   ) { }
 
   ngOnInit() {
     this.columns = [
-      { 
-        columnDef: 'id', 
-        header: 'ID', cell: 
-        project => project.id.toString() 
+      {
+        columnDef: "id",
+        header: "ID", cell:
+          project => project.id.toString()
       },
-      { 
-        columnDef: 'title', 
-        header: 'Title', 
-        cell: project => project.title 
+      {
+        columnDef: "title",
+        header: "Title",
+        cell: project => project.title
       },
       {
         columnDef: "status",
@@ -81,14 +91,7 @@ export class Dashboard {
       }
     ];
 
-    this.loadProjects(
-      {
-        page: 0,
-        size: 10,
-        search: "",
-        filter: this.filters[0]
-      }
-    );
+    this.loadProjects(DEFAULT_PROJECTS_QUERY);
   }
 
   loadProjects(pageQuery: PageQuery) {
@@ -101,7 +104,11 @@ export class Dashboard {
         this.changeDetectorRef.detectChanges();
       },
       error: (error) => {
-        console.error('Could not load projects!', error);
+        console.error("Could not load projects!", error);
+        this.dialogService.openErrorDialog(
+          "Could not load projects! Try again later!",
+          null
+        );
         this.projects = [];
         this.pageIndex = 0;
         this.pageSize = 0;
@@ -112,6 +119,7 @@ export class Dashboard {
   }
 
   onPageQuery(pageQuery: PageQuery) {
+    this.lastQuery = pageQuery;
     this.loadProjects(pageQuery);
   }
 
@@ -129,14 +137,21 @@ export class Dashboard {
     this.router.navigate(["/project/update/" + project.id])
   }
   deleteProject(project: ProjectSummary) {
-    this.projectService.deleteById(project.id).subscribe({
-      next: (response) => {
-        console.log("project deleted!")
-        //this.loadProjects();
-      },
-      error: (error) => {
-        console.log("Could not delete project!", error)
-      }
-    });
+    this.dialogService.openConfirmDialog(
+      `Delete Project ${project.title}?`, null, null, null,
+      () => {
+        this.projectService.deleteById(project.id).subscribe({
+          next: (response) => {
+            this.loadProjects(this.lastQuery);
+          },
+          error: (error) => {
+            console.error("Could not delete project!", error)
+            this.dialogService.openErrorDialog(
+              "Could not delete project! Try again later!",
+              null
+            );
+          }
+        });
+      });
   }
 }
