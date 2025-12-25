@@ -5,7 +5,7 @@ import { SprintService } from '../../../core/services/sprint-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../../../core/services/project-service';
 import { FallbackImage } from '../../../shared/directive/fallback-image/fallback-image';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { PageQuery } from '../../../shared/types/types';
@@ -131,7 +131,7 @@ export class ProjectPage {
       {
         columnDef: "dueDate",
         header: "Due Date",
-        cell: sprint => new Date(sprint.dueDate).toLocaleDateString()
+        cell: sprint => formatDate(new Date(sprint.dueDate), "yyyy-MM-dd", "en-US")
       }
     ];
 
