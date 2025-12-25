@@ -26,35 +26,46 @@ export function fileSizeValidator(maxSizeInBytes: number) {
   ],
   templateUrl: './image-upload.html',
   styleUrl: './image-upload.css',
+  host: {
+    "[attr.aria-describedby]": "describedBy"
+  }
 })
 export class ImageUpload implements MatFormFieldControl<File | null>, ControlValueAccessor {
-  
   static nextId = 0;
 
-  @ViewChild('fileInput', { static: true })
+  @ViewChild("fileInput", { static: true })
   fileInput!: ElementRef<HTMLInputElement>;
 
-  readonly stateChanges = new Subject<void>();
-  controlType = 'image-upload';
-
-  @HostBinding() id = `image-upload-${ImageUpload.nextId++}`;
-  @HostBinding('attr.aria-describedby') describedBy = '';
-  
-  @Input() placeholder = '';
+  @Input() placeholder = "";
   @Input() required = false;
   @Input() disabled = false;
+
+  value!: File | null;
+  imagePreview = "";
+  imageName = "";
+  fileSizeKb = 0;
+
+  id = "";
+  describedBy = "";
+  userAriaDescribedBy?: string | undefined;
+  controlType = "image-upload";
+
+  readonly stateChanges = new Subject<void>();
+  autofilled?: boolean | undefined;
+  disableAutomaticLabeling?: boolean | undefined;
+  describedByIds?: string[] | undefined;
 
   focused = false;
 
   get empty(): boolean {
-    return !this.selectedFile;
+    return !this.value;
   }
 
   get shouldLabelFloat(): boolean {
     return this.focused || !this.empty;
   }
 
-  @HostBinding('class.floating')
+  @HostBinding("class.floating")
   get isFloating(): boolean {
     return this.shouldLabelFloat;
   }
@@ -66,14 +77,6 @@ export class ImageUpload implements MatFormFieldControl<File | null>, ControlVal
       (this.ngControl.touched || this.ngControl.dirty)
     );
   }
-
-  selectedFile: File | null = null;
-  imagePreview = '';
-  imageName = '';
-  fileSizeKb = 0;
-
-  private onChange: (value: File | null) => void = () => {};
-  private onTouched: () => void = () => {};
 
   constructor(
     private focusMonitor: FocusMonitor,
@@ -90,14 +93,15 @@ export class ImageUpload implements MatFormFieldControl<File | null>, ControlVal
     });
   }
 
-  value!: File | null;
-  autofilled?: boolean | undefined;
-  userAriaDescribedBy?: string | undefined;
-  disableAutomaticLabeling?: boolean | undefined;
-  describedByIds?: string[] | undefined;
+  ngOnInit() {
+    this.id = `image-upload-${ImageUpload.nextId++}`;
+  }
+
+  private onChange: (value: File | null) => void = () => {};
+  private onTouched: () => void = () => {};
 
   setDescribedByIds(ids: string[]): void {
-    this.describedBy = ids.join(' ');
+    this.describedBy = ids.join(" ");
   }
 
   onContainerClick(): void {
@@ -154,7 +158,7 @@ export class ImageUpload implements MatFormFieldControl<File | null>, ControlVal
   }
 
   private handleFile(file?: File): void {
-    if (!file || !file.type.startsWith('image/')) {
+    if (!file || !file.type.startsWith("image/")) {
       return;
     }
 
@@ -164,7 +168,7 @@ export class ImageUpload implements MatFormFieldControl<File | null>, ControlVal
   }
 
   private loadFile(file: File): void {
-    this.selectedFile = file;
+    this.value = file;
     this.imageName = file.name;
     this.fileSizeKb = Math.round(file.size / 1024);
 
@@ -177,11 +181,11 @@ export class ImageUpload implements MatFormFieldControl<File | null>, ControlVal
   }
 
   private clear(): void {
-    this.selectedFile = null;
-    this.imagePreview = '';
-    this.imageName = '';
+    this.value = null;
+    this.imagePreview = "";
+    this.imageName = "";
     this.fileSizeKb = 0;
-    this.fileInput.nativeElement.value = '';
+    this.fileInput.nativeElement.value = "";
     this.stateChanges.next();
   }
 
