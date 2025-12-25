@@ -11,7 +11,7 @@ import { PageQuery } from '../../../shared/types/types';
 import { UserListPreviewButton } from "../../../shared/component/user-list-preview-button/user-list-preview-button";
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserListModal } from '../../../shared/component/user-list-modal/user-list-modal';
-import { ErrorDialog } from '../../../shared/component/error-dialog/error-dialog';
+import { ErrorDialog } from '../../../shared/component/dialog/error-dialog';
 import { DialogService } from '../../../core/services/dialog-service';
 import { SprintStatusChip } from "../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip";
 

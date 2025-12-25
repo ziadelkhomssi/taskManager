@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ConfirmDialog } from '../../shared/component/confirm-dialog/confirm-dialog';
+import { ConfirmDialog } from '../../shared/component/dialog/confirm-dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { ErrorDialog } from '../../shared/component/error-dialog/error-dialog';
+import { ErrorDialog } from '../../shared/component/dialog/error-dialog';
 import { Router } from '@angular/router';
 
 @Injectable({
