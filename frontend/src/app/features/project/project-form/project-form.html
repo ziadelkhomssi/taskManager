@@ -2,28 +2,43 @@
 
   <mat-card>
     <mat-card-title>
-      {{ isEditMode ? 'Edit Project' : 'Create Project' }}
+      {{ isEditMode ? "Edit Project" : "Create Project" }}
     </mat-card-title>
 
     <mat-card-content>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Title</mat-label>
         <input matInput formControlName="title" />
-        @if (projectForm.get('title')?.hasError('required')) {
-            <mat-error>
-                Title is required
-            </mat-error>
+        @if (projectForm.get("title")?.hasError("required")) {
+          <mat-error>
+            Title is required
+          </mat-error>
+        }
+        @if (projectForm.get("title")?.hasError("maxlength")) {
+          <mat-error>
+            Title cannot exceed 100 characters
+          </mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
         <textarea matInput rows="4" formControlName="description"></textarea>
+        @if (projectForm.get("description")?.hasError("required")) {
+          <mat-error>
+            Description is required
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width" floatLabel="always">
         <mat-label>Profile Picture</mat-label>
         <app-image-upload formControlName="profilePicture"></app-image-upload>
+        @if (projectForm.get('profilePicture')?.hasError("fileSizeExceeded")) {
+          <mat-error>
+            File size ({{ projectForm.get('profilePicture')?.getError("fileSizeExceeded").fileSize / 1024 | number : "1.0-0" }} KB) exceeds maximum allowed {{ projectForm.get('profilePicture')?.getError("fileSizeExceeded").maxFileSize / 1024 | number : "1.0-0" }} KB
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -43,8 +58,8 @@
       <button mat-button type="button" (click)="exitForm()">
         Cancel
       </button>
-      <button mat-raised-button color="primary" type="submit">
-        {{ isEditMode ? 'Save Changes' : 'Create Project' }}
+      <button mat-raised-button color="primary" type="submit" [disabled]="projectForm.invalid">
+        {{ isEditMode ? "Save Changes" : "Create Project" }}
       </button>
     </mat-card-actions>
   </mat-card>

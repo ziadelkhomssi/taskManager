@@ -77,7 +77,9 @@ export class SprintForm {
       if (status === "DONE" && !endDateControl?.value) {
         endDateControl?.setValidators([Validators.required]);
         endDateControl?.updateValueAndValidity({ emitEvent: false });
-      } else if (status !== "DONE") {
+      }
+      else if (status !== "DONE") {
+        endDateControl?.setValue("");
         endDateControl?.clearValidators();
         endDateControl?.updateValueAndValidity({ emitEvent: false });
       }

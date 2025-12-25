@@ -1,10 +1,20 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, HostBinding, Input, Optional, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, FormGroup, NgControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
+
+export function fileSizeValidator(maxSizeInBytes: number) {
+  return (control: AbstractControl) => {
+    const file = control.value as File | null;
+    if (file && file.size > maxSizeInBytes) {
+      return { fileSizeExceeded: { fileSize: file.size, maxFileSize: maxSizeInBytes } };
+    }
+    return null;
+  };
+}   
 
 @Component({
   selector: 'app-image-upload',

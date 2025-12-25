@@ -9,16 +9,26 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Title</mat-label>
         <input matInput formControlName="title" />
-        @if (sprintForm.get('title')?.hasError('required')) {
-            <mat-error>
-                Title is required
-            </mat-error>
+        @if (sprintForm.get("title")?.hasError("required")) {
+          <mat-error>
+            Title is required
+          </mat-error>
+        }
+        @if (sprintForm.get("title")?.hasError("maxlength")) {
+          <mat-error>
+            Title cannot exceed 100 characters
+          </mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
         <textarea matInput rows="4" formControlName="description"></textarea>
+        @if (sprintForm.get("description")?.hasError("required")) {
+          <mat-error>
+            Description is required
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -26,6 +36,11 @@
         <input matInput [matDatepicker]="startPicker" formControlName="startDate">
         <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
         <mat-datepicker #startPicker></mat-datepicker>
+        @if (sprintForm.get("startDate")?.hasError("required")) {
+          <mat-error>
+            Start Date is required
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -33,6 +48,11 @@
         <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
         <mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle>
         <mat-datepicker #duePicker></mat-datepicker>
+        @if (sprintForm.get("dueDate")?.hasError("required")) {
+          <mat-error>
+          Due Date is required
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -40,17 +60,29 @@
         <input matInput [matDatepicker]="endPicker" formControlName="endDate">
         <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
         <mat-datepicker #endPicker></mat-datepicker>
+        @if (sprintForm.get("endDate")?.hasError("required")) {
+          <mat-error>
+            End Date is required when status is DONE
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Status</mat-label>
         <mat-select formControlName="status">
-            @for (status of statuses; track status) {
-                <mat-option [value]="status">
-                    {{ status }}
-                </mat-option>
-            }
+          @for (status of statuses; track status) {
+            <mat-option [value]="status">
+              {{ status }}
+            </mat-option>
+          }
+          
         </mat-select>
+
+        @if (sprintForm.get("endDate")?.hasError("required")) {
+          <mat-error>
+            Status is required
+          </mat-error>
+        }
       </mat-form-field>
 
     </mat-card-content>
@@ -59,7 +91,7 @@
       <button mat-button type="button" (click)="exitForm()">
         Cancel
       </button>
-      <button mat-raised-button color="primary" type="submit">
+      <button mat-raised-button color="primary" type="submit" [disabled]="sprintForm.invalid">
         {{ isEditMode ? "Save Changes" : "Create Sprint" }}
       </button>
     </mat-card-actions>

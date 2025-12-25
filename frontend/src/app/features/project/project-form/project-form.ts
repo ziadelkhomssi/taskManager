@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Location } from '@angular/common';
+import { DecimalPipe, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectDetails } from '../../../core/ng-openapi';
@@ -11,11 +11,14 @@ import { MatCardModule } from '@angular/material/card';
 import { ProjectService } from '../../../core/services/project-service';
 import { DialogService } from '../../../core/services/dialog-service';
 import { MatIconModule } from '@angular/material/icon';
-import { ImageUpload } from "../../../shared/component/image-upload/image-upload";
+import { fileSizeValidator, ImageUpload } from "../../../shared/component/image-upload/image-upload";
+
+const MAXIMUM_IMAGE_SIZE_BYTES: number = 1024 * 1024; // 1 MB
 
 @Component({
   selector: 'app-project-form',
   imports: [
+    DecimalPipe,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -51,8 +54,8 @@ export class ProjectForm {
   ngOnInit(): void {
     this.projectForm = this.formBuilder.group({
       title: ["", [Validators.required, Validators.maxLength(100)]],
-      description: [""],
-      profilePicture: [null],
+      description: ["", [Validators.required]],
+      profilePicture: [null, [fileSizeValidator(MAXIMUM_IMAGE_SIZE_BYTES)]],
       status: ["PLANNED", Validators.required]
     });
 
