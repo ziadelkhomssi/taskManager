@@ -13,6 +13,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserListModal } from '../../../shared/component/user-list-modal/user-list-modal';
 import { ErrorDialog } from '../../../shared/component/error-dialog/error-dialog';
 import { DialogService } from '../../../core/services/dialog-service';
+import { SprintStatusChip } from "../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip";
 
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {
@@ -35,7 +36,8 @@ const DEFAULT_TICKETS_QUERY: PageQuery = {
     MatButtonModule,
     EntityTable,
     DatePipe,
-    UserListPreviewButton
+    UserListPreviewButton,
+    SprintStatusChip
 ],
   templateUrl: './sprint-page.html',
   styleUrl: './sprint-page.css',

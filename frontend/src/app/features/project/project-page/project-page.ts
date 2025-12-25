@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { ProjectDetails, SprintSummary, UserSummary } from '../../../core/ng-openapi';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ProjectDetails, SprintDetails, SprintSummary, UserSummary } from '../../../core/ng-openapi';
 import { EntityTable, TableColumn } from '../../../shared/component/entity-table/entity-table';
 import { SprintService } from '../../../core/services/sprint-service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +15,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ErrorDialog } from '../../../shared/component/error-dialog/error-dialog';
 import { ConfirmDialog } from '../../../shared/component/confirm-dialog/confirm-dialog';
 import { DialogService } from '../../../core/services/dialog-service';
+import { ProjectStatusChip } from "../../../shared/component/status-chip/project-status-chip/project-status-chip";
+import { SprintStatusChip } from '../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip';
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {
   page: 0,
@@ -30,15 +32,21 @@ const DEFAULT_SPRINTS_QUERY: PageQuery = {
   filter: ""
 }
 
+export interface SprintStatusCellContext {
+  $implicit: SprintDetails["status"];
+}
+
 @Component({
   selector: 'app-project-page',
   imports: [
     UserListPreviewButton,
     MatCardModule,
     MatButtonModule,
-    EntityTable, 
-    FallbackImage
-  ],
+    EntityTable,
+    FallbackImage,
+    ProjectStatusChip,
+    SprintStatusChip
+],
   templateUrl: './project-page.html',
   styleUrl: './project-page.css',
 })
@@ -54,12 +62,10 @@ export class ProjectPage {
 
   sprints: SprintSummary[] = [];
 
-  columns: TableColumn<SprintSummary>[] = [
-    { columnDef: "id", header: "ID", cell: sprint => sprint.id.toString() },
-    { columnDef: "title", header: "Title", cell: sprint => sprint.title },
-    { columnDef: "status", header: "Status", cell: sprint => sprint.status },
-    { columnDef: "dueDate", header: "Due Date", cell: sprint => new Date(sprint.dueDate).toUTCString() }
-  ];
+  @ViewChild("sprintStatusTemplate", { static: true })
+  sprintStatusTemplate!: TemplateRef<SprintStatusCellContext>;
+  
+  columns!: TableColumn<SprintSummary, SprintStatusCellContext>[];
 
   actions = [
     {
@@ -103,6 +109,32 @@ export class ProjectPage {
 
   ngOnInit() {
     this.cacheBuster = Date.now().toString();
+    this.columns = [
+      {
+        columnDef: "id",
+        header: "ID",
+        cell: sprint => sprint.id.toString()
+      },
+      {
+        columnDef: "title",
+        header: "Title",
+        cell: sprint => sprint.title
+      },
+      {
+        columnDef: "status",
+        header: "Status",
+        cellTemplate: this.sprintStatusTemplate,
+        cellContext: sprint => ({
+          $implicit: sprint.status
+        })
+      },
+      {
+        columnDef: "dueDate",
+        header: "Due Date",
+        cell: sprint => new Date(sprint.dueDate).toLocaleDateString()
+      }
+    ];
+
     this.route.params.subscribe(params => {
       this.loadProjectDetails(params["id"])
     });

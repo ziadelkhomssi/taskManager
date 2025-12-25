@@ -1,30 +1,35 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { EntityTable, TableColumn } from '../../shared/component/entity-table/entity-table';
-import { ProjectSummary } from '../../core/ng-openapi';
+import { ProjectDetails, ProjectSummary } from '../../core/ng-openapi';
 import { ProjectService } from '../../core/services/project-service';
 import { response } from 'express';
 import { PageEvent } from '@angular/material/paginator';
 import { error } from 'console';
 import { Router } from '@angular/router';
 import { PageQuery } from '../../shared/types/types';
+import { ProjectStatusChip } from "../../shared/component/status-chip/project-status-chip/project-status-chip";
+
+export interface ProjectStatusCellContext {
+  $implicit: ProjectDetails["status"];
+}
 
 @Component({
   selector: 'app-dashboard',
   imports: [
-    EntityTable
-  ],
+    EntityTable,
+    ProjectStatusChip
+],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
   projects: ProjectSummary[] = [];
 
-  columns: TableColumn<ProjectSummary>[] = [
-    { columnDef: 'id', header: 'ID', cell: project => project.id.toString() },
-    { columnDef: 'title', header: 'Title', cell: project => project.title },
-    { columnDef: 'status', header: 'Status', cell: project => project.status }
-  ];
+  @ViewChild("projectStatusTemplate", { static: true })
+  projectStatusTemplate!: TemplateRef<ProjectStatusCellContext>;
+  
+  columns!: TableColumn<ProjectSummary, ProjectStatusCellContext>[];
 
   actions = [
     {
@@ -55,6 +60,27 @@ export class Dashboard {
   ) { }
 
   ngOnInit() {
+    this.columns = [
+      { 
+        columnDef: 'id', 
+        header: 'ID', cell: 
+        project => project.id.toString() 
+      },
+      { 
+        columnDef: 'title', 
+        header: 'Title', 
+        cell: project => project.title 
+      },
+      {
+        columnDef: "status",
+        header: "Status",
+        cellTemplate: this.projectStatusTemplate,
+        cellContext: project => ({
+          $implicit: project.status
+        })
+      }
+    ];
+
     this.loadProjects(
       {
         page: 0,
@@ -62,7 +88,7 @@ export class Dashboard {
         search: "",
         filter: this.filters[0]
       }
-    )
+    );
   }
 
   loadProjects(pageQuery: PageQuery) {

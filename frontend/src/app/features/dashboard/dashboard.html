@@ -1,15 +1,21 @@
 <h1>Dashboard</h1>
 
-<app-entity-table
-  [rows]="projects"
-  [columns]="columns"
-  [actions]="actions"
-  [showAddButton]="true"
-  [filters]="filters"
-  [totalElements]="totalElements"
-  [pageIndex]="pageIndex"
-  [pageSize]="pageSize"
-  (pageQueryEvent)="onPageQuery($event)"
-  (rowClick)="onRowClick($event)"
-  (addClick)="createProject()">
-</app-entity-table>
+@if (columns) {
+  <app-entity-table
+    [rows]="projects"
+    [columns]="columns"
+    [actions]="actions"
+    [showAddButton]="true"
+    [filters]="filters"
+    [totalElements]="totalElements"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    (pageQueryEvent)="onPageQuery($event)"
+    (rowClick)="onRowClick($event)"
+    (addClick)="createProject()">
+  </app-entity-table>
+}
+
+<ng-template #projectStatusTemplate let-status>
+  <app-project-status-chip [status]="status"></app-project-status-chip>
+</ng-template>

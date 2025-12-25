@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCell, MatCellDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRowDef, MatRowDef, MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { SearchBar, SearchQuery } from '../search-bar/search-bar';
 import { PageQuery } from '../../types/types';
+import { CommonModule } from '@angular/common';
 
 export interface TableAction<T> {
 	label: string;
@@ -11,10 +12,12 @@ export interface TableAction<T> {
 	callback: (row: T) => void;
 }
 
-export interface TableColumn<T> {
-	columnDef: string;
-	header: string;
-	cell: (row: T) => string;
+export interface TableColumn<T, context = any> {
+  columnDef: string;
+  header: string;
+  cell?: (row: T) => string;
+  cellTemplate?: TemplateRef<context>;
+  cellContext?: (row: T) => context;
 }
 
 @Component({
@@ -24,6 +27,7 @@ export interface TableColumn<T> {
 		MatTableModule,
 		MatPaginatorModule,
 		MatButtonModule,
+		CommonModule
 	],
 	templateUrl: './entity-table.html',
 	styleUrl: './entity-table.css',
@@ -80,10 +84,12 @@ export class EntityTable<T> {
 	}
 
 	get displayedColumns(): string[] {
-		return [
-			...this.columns.map(c => c.columnDef),
-			...(this.actions.length ? ["actions"] : [])
-		];
+	const columnsGuard = this.columns ?? [];
+
+	return [
+		...columnsGuard.map(c => c.columnDef),
+		...(this.actions?.length ? ["actions"] : [])
+	];
 	}
 }
 

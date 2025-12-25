@@ -1,0 +1,29 @@
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background-color: #e3f2fd;
+  color: #1e88e5;
+}
+
+.status-done {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-planned {
+  background-color: #fff8e1;
+  color: #f9a825;
+}
+
+.status-archived {
+  background-color: #fdecea;
+  color: #312929;
+}
