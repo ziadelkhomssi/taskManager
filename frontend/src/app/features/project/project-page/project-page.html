@@ -25,12 +25,15 @@
         </div>
       </div>
 
-      <img
-        mat-card-image
-        class="profile-picture"
-        [src]="projectDetails.profilePictureUrl+'?cacheBuster='+cacheBuster"
-        alt="Project profile picture"
-      />
+      @if (projectDetails.profilePictureUrl) {
+        <img
+          mat-card-image
+          class="profile-picture"
+          [src]="projectDetails.profilePictureUrl+'?cacheBuster='+cacheBuster"
+          alt="Project profile picture"
+        />
+      }
+      
     </div>
   </mat-card-content>
 
