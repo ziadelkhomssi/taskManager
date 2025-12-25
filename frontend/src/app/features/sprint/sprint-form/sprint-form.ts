@@ -65,7 +65,7 @@ export class SprintForm {
 
       this.route.queryParams.subscribe(queryParams => {
         this.projectId = queryParams["projectId"];
-        if (!this.projectId) {
+        if (!this.projectId && !this.isEditMode) {
           this.dialogService.openErrorDialog(
             "No parent project to place sprint in! Try creating/updating sprint again!",
             () => {this.location.back();}
