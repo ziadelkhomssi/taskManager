@@ -40,12 +40,16 @@ class TicketMapperIntegrationTest {
         Ticket ticket = TestEntityFactory.createBaseTicket(null, user);
         ticket.setId(1L);
 
-        TicketDetails details = mapper.toDetails(ticket);
+        String baseUrl = "http://localhost:8080";
+        TicketDetails details = mapper.toDetails(ticket, baseUrl);
 
         assertEquals(ticket.getId(), details.id());
         assertEquals(ticket.getTitle(), details.title());
         assertEquals(ticket.getDescription(), details.description());
         assertEquals(ticket.getUser().getName(), details.userSummary().name());
+        assertEquals(baseUrl + "/user/profile-picture/" + ticket.getUser().getAzureOid(),
+                details.userSummary().profilePictureUrl()
+        );
     }
 
     @Test

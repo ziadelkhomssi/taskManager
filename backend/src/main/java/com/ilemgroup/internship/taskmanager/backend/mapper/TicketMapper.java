@@ -5,6 +5,7 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketUpd
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.TicketSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Ticket;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -23,7 +24,7 @@ public interface TicketMapper {
     List<TicketSummary> toSummaryList(List<Ticket> ticketList);
 
     @Mapping(target = "userSummary", source = "user")
-    TicketDetails toDetails(Ticket ticket);
+    TicketDetails toDetails(Ticket ticket, @Context String baseUrl);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "comments", ignore = true)
