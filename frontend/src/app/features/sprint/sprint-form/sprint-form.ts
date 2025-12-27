@@ -92,6 +92,7 @@ export class SprintForm {
       this.route.queryParams.subscribe(queryParams => {
         this.projectId = queryParams["projectId"];
         if (!this.projectId && !this.isEditMode) {
+          console.log("No parent project to place sprint in!")
           this.dialogService.openErrorDialog(
             "No parent project to place sprint in! Try creating/updating sprint again!",
             () => {this.location.back();}
@@ -144,6 +145,10 @@ export class SprintForm {
         },
         error: (error) => {
           console.error("Could not save changes!", error);
+          this.dialogService.openErrorDialog(
+            "Could not save changes! Try again later!",
+            null
+          );
         }
       });
       return;
@@ -160,6 +165,10 @@ export class SprintForm {
       },
       error: (error) => {
         console.error("Could not save changes!", error);
+        this.dialogService.openErrorDialog(
+          "Could not save changes! Try again later!",
+          null
+        );
       }
     });
   }
