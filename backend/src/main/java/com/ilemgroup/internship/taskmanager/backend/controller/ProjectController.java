@@ -75,7 +75,7 @@ public class ProjectController {
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
     public void createProject(
             @RequestPart("command") @Valid ProjectCreate command,
-            @RequestPart("profilePicture") MultipartFile profilePicture
+            @RequestPart(name = "profilePicture", required = false) MultipartFile profilePicture
     ) {
         projectService.createProject(command, profilePicture);
     }
@@ -85,7 +85,7 @@ public class ProjectController {
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
     public void updateProject(
             @RequestPart("command") @Valid ProjectUpdate command,
-            @RequestPart("profilePicture") MultipartFile profilePicture) {
+            @RequestPart(name = "profilePicture", required = false) MultipartFile profilePicture) {
         projectService.updateProject(command, profilePicture);
     }
 
