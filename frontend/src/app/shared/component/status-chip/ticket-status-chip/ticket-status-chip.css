@@ -1,0 +1,29 @@
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-in-progress {
+  background-color: #e3f2fd;
+  color: #1e88e5;
+}
+
+.status-completed {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-in-testing {
+  background-color: #eeeeee;
+  color: #f9a825;
+}
+
+.status-backlog {
+  background-color: #fff8e1;
+  color: #424242;
+}

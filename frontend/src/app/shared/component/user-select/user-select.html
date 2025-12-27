@@ -1,0 +1,9 @@
+<div class="user-select" [class.disabled]="disabled" [class.error]="errorState">
+    <div class="user-info">
+        <img [src]="value?.profilePictureUrl" alt="Profile picture" class="user-avatar" />
+
+        <div class="user-text">
+            <div class="user-name">{{value?.name}}</div>
+        </div>
+    </div>
+</div>

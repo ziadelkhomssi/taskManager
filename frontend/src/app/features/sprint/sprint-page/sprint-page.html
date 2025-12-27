@@ -84,3 +84,6 @@
   (addClick)="createTicket()">
 </app-entity-table>
 
+<ng-template #ticketStatusTemplate let-status>
+  <app-ticket-status-chip [status]="status"></app-ticket-status-chip>
+</ng-template>

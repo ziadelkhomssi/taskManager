@@ -1,1 +1,92 @@
-<p>ticket-form works!</p>
+<form [formGroup]="ticketForm" (ngSubmit)="submit()" class="ticket-form">
+
+  <mat-card>
+    <mat-card-title>
+      {{ isEditMode ? "Edit Ticket" : "Create Ticket" }}
+    </mat-card-title>
+
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" />
+        @if (ticketForm.get("title")?.hasError("required")) {
+          <mat-error>
+            Title is required
+          </mat-error>
+        }
+        @if (ticketForm.get("title")?.hasError("maxlength")) {
+          <mat-error>
+            Title cannot exceed 100 characters
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput rows="4" formControlName="description"></textarea>
+        @if (ticketForm.get("description")?.hasError("required")) {
+          <mat-error>
+            Description is required
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width" floatLabel="always">
+        <mat-label>User</mat-label>
+        <app-user-select formControlName="userSummary"/>
+
+        @if (ticketForm.get("user")?.hasError("required")) {
+          <mat-error>
+            User is required
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          @for (status of statuses; track status) {
+            <mat-option [value]="status">
+              {{ status }}
+            </mat-option>
+          }
+          
+        </mat-select>
+
+        @if (ticketForm.get("status")?.hasError("required")) {
+          <mat-error>
+            Status is required
+          </mat-error>
+        }
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Priority</mat-label>
+        <mat-select formControlName="priority">
+          @for (priority of priorities; track priority) {
+            <mat-option [value]="priority">
+              {{ priority }}
+            </mat-option>
+          }
+          
+        </mat-select>
+
+        @if (ticketForm.get("priority")?.hasError("required")) {
+          <mat-error>
+            Priority is required
+          </mat-error>
+        }
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button type="button" (click)="exitForm()">
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="ticketForm.invalid">
+        {{ isEditMode ? "Save Changes" : "Create Ticket" }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+</form>

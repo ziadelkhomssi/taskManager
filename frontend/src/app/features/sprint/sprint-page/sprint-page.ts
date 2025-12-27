@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { SprintDetails, TicketDetails, TicketSummary, UserSummary } from '../../../core/ng-openapi';
 import { EntityTable, TableColumn } from '../../../shared/component/entity-table/entity-table';
 import { TicketService } from '../../../core/services/ticket-service';
@@ -14,6 +14,7 @@ import { UserListModal } from '../../../shared/component/user-list-modal/user-li
 import { ErrorDialog } from '../../../shared/component/dialog/error-dialog';
 import { DialogService } from '../../../core/services/dialog-service';
 import { SprintStatusChip } from "../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip";
+import { TicketStatusChip } from "../../../shared/component/status-chip/ticket-status-chip/ticket-status-chip";
 
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {
@@ -29,6 +30,10 @@ const DEFAULT_TICKETS_QUERY: PageQuery = {
   filter: ""
 }
 
+export interface TicketStatusCellContext {
+  $implicit: TicketDetails["status"];
+}
+
 @Component({
   selector: 'app-sprint-page',
   imports: [
@@ -37,7 +42,8 @@ const DEFAULT_TICKETS_QUERY: PageQuery = {
     EntityTable,
     DatePipe,
     UserListPreviewButton,
-    SprintStatusChip
+    SprintStatusChip,
+    TicketStatusChip
 ],
   templateUrl: './sprint-page.html',
   styleUrl: './sprint-page.css',
@@ -56,19 +62,28 @@ export class SprintPage {
 
   tickets: TicketSummary[] = [];
 
-  columns: TableColumn<TicketSummary>[] = [
-    { columnDef: 'id', header: 'ID', cell: ticket => ticket.id.toString() },
-    { columnDef: 'title', header: 'Title', cell: ticket => ticket.title },
-    { columnDef: 'status', header: 'Status', cell: ticket => ticket.status }
-  ];
+  @ViewChild("ticketStatusTemplate", { static: true })
+  ticketStatusTemplate!: TemplateRef<TicketStatusCellContext>;
+  
+  columns!: TableColumn<TicketSummary, TicketStatusCellContext>[];
+  rowClass = (ticket: TicketSummary) => ({
+    "row-normal":
+      ticket.status === "IN_PROGRESS"
+      || ticket.status === "IN_TESTING"
+      ,
+    "row-unimportant": 
+      ticket.status === "BACKLOG"
+      || ticket.status === "COMPLETED"
+      ,
+  });
 
   actions = [
     {
-      label: 'Update',
+      label: "Update",
       callback: (ticket: TicketSummary) => this.updateTicket(ticket)
     },
     {
-      label: 'Delete',
+      label: "Delete",
       callback: (ticket: TicketSummary) => this.deleteTicket(ticket)
     },
   ];
@@ -99,6 +114,27 @@ export class SprintPage {
   ) { }
 
   ngOnInit() {
+    this.columns = [
+      { 
+        columnDef: "id", 
+        header: "ID", cell: 
+        ticket => ticket.id.toString() 
+      },
+      { 
+        columnDef: "title", 
+        header: "Title", cell: 
+        ticket => ticket.title 
+      },
+      {
+        columnDef: "status",
+        header: "Status",
+        cellTemplate: this.ticketStatusTemplate,
+        cellContext: ticket => ({
+          $implicit: ticket.status
+        })
+      },
+    ];
+
     this.route.params.subscribe(params => {
       this.loadSprintDetails(params["id"])
     });
@@ -114,7 +150,7 @@ export class SprintPage {
         this.changeDetectorRef.detectChanges();
       },
       error: (error) => {
-        console.error('Could not load sprint!', error);
+        console.error("Could not load sprint!", error);
         this.dialogService.openErrorDialog(
           "Could not load sprint!\nPlease try again later!", 
           () => {this.router.navigate(["/"])}
@@ -130,7 +166,7 @@ export class SprintPage {
         this.changeDetectorRef.detectChanges();
       },
       error: (error) => {
-        console.error('Could not load sprint participants!', error);
+        console.error("Could not load sprint participants!", error);
         this.dialogService.openErrorDialog(
           "Could not load sprint participants!\nPlease try again later!", 
           null
@@ -152,7 +188,7 @@ export class SprintPage {
         this.changeDetectorRef.detectChanges();
       },
       error: (error) => {
-        console.error('Could not load tickets!', error);
+        console.error("Could not load tickets!", error);
         this.tickets = [];
         this.pageIndex = 0;
         this.pageSize = 0;
@@ -181,8 +217,8 @@ export class SprintPage {
             this.location.back(); // i'd prefer a more specific back
           },
           error: (error) => {
-            console.error("Could not delete project!", error);
-            this.dialogService.openErrorDialog("Could not delete project!\nPlease try again later!", null);
+            console.error("Could not delete sprint!", error);
+            this.dialogService.openErrorDialog("Could not delete sprint!\nPlease try again later!", null);
           }
     });});
   }
@@ -199,7 +235,7 @@ export class SprintPage {
   onOpenParticipantList() {
     this.dialog.open(UserListModal, {
       maxWidth: "600px",
-      width: '600px',
+      width: "600px",
       data: {
         fetchUsers: this.sprintUserFetcher,
         onUserClick: (dialogRef: MatDialogRef<UserListModal>, user: UserSummary) => {
@@ -215,7 +251,7 @@ export class SprintPage {
     this.router.navigate(["/ticket/" + ticket.id]);
   }
   createTicket() {
-    this.router.navigate(["/ticket/create"]);
+    this.router.navigate(["/ticket/create"], { queryParams: { sprintId: this.sprintDetails.id } });
   }
   updateTicket(ticket: TicketSummary) {
     this.router.navigate(["/ticket/update/" + ticket.id]);
@@ -231,9 +267,9 @@ export class SprintPage {
             this.loadTickets(this.lastTicketsQuery);
           },
           error: (error) => {
-            console.error("Could not delete sprint!", error);
+            console.error("Could not delete ticket!", error);
             this.dialogService.openErrorDialog(
-              "Could not delete sprint!\nPlease try again later!", null
+              "Could not delete ticket!\nPlease try again later!", null
             );
     }});});
   }

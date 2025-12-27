@@ -1,1 +1,54 @@
-<p>ticket-page works!</p>
+<mat-card class="ticket-details-card">
+  <mat-card-content>
+    <div class="ticket-details">
+      <div class="ticket-text">
+        <div class="ticket-title">
+          <h4 class="section-label">Ticket</h4>
+          <h1>{{ ticketDetails.title }}</h1>
+        </div>
+
+        <div class="ticket-description">
+          <h2>Description</h2>
+          <p>{{ ticketDetails.description }}</p>
+        </div>
+
+        <div class="ticket-chips">
+            <app-ticket-status-chip
+                class="ticket-status"
+                [status]="ticketDetails.status"
+            />
+            <div class="ticket-priority-chip" class="priority-chip priority-{{ticketDetails.priority.toLowerCase()}}">
+                {{ticketDetails.priority}}
+            </div>
+        </div>
+
+        <div class="ticket-user" (click)="onUserClick()">
+          <img [src]="ticketDetails.userSummary.profilePictureUrl" class="profile-avatar"/>
+          <div class="profile-text">
+            <div class="profile-name">{{ticketDetails.userSummary.name}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end" class="ticket-actions">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="updateTicket()">
+        Update
+    </button>
+
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="deleteTicket()">
+        Delete
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<div class="comments">
+    <!-- for later!! -->
+</div>
