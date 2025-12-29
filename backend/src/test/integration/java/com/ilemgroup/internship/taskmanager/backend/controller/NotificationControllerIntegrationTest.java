@@ -43,6 +43,7 @@ public class NotificationControllerIntegrationTest {
         Page<NotificationDetails> page = new PageImpl<>(
                 List.of(
                         new NotificationDetails(
+                                1L,
                                 NotificationType.TICKET_ASSIGNED,
                                 new TicketSummary(
                                         1L,

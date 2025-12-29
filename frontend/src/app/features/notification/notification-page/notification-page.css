@@ -1,0 +1,44 @@
+
+table {
+  width: 100%;
+}
+
+:host ::ng-deep .mat-mdc-row {
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+:host ::ng-deep .row-unread {
+  background-color: transparent;
+}
+
+:host ::ng-deep .row-read {
+  background-color: #dddddd;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:host ::ng-deep .mat-mdc-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: #1976d2;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.read-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+.read-dot--unread {
+  background-color: #1976d2;
+}

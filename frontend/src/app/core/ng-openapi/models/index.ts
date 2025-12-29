@@ -234,6 +234,7 @@ export interface ProjectDetails {
 }
 
 export interface NotificationDetails {
+    id: number;
     type: 'TICKET_ASSIGNED' | 'TICKET_STATUS_CHANGED';
     ticketSummary: TicketSummary;
     isRead: boolean;

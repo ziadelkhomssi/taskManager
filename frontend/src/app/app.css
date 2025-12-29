@@ -10,6 +10,13 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  display: flex;
+  flex-direction: row;
+  padding-right: 3rem;
+}
+
+.notification-bell {
+  margin-left: auto;
 }
 
 .content {

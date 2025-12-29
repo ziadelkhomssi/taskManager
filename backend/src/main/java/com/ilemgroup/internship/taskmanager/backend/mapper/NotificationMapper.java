@@ -12,6 +12,7 @@ public interface NotificationMapper {
 
     @Mapping(target = "type", expression = "java(notification.getType())")
     @Mapping(target = "ticketSummary", source = "ticket")
+    @Mapping(target = "isRead", source = "read")
     NotificationDetails toDetails(Notification notification);
 
     List<NotificationDetails> toDetailsList(List<Notification> notificationList);

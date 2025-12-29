@@ -37,6 +37,10 @@ public class NotificationService {
                 .map(notificationMapper::toDetails);
     }
 
+    public boolean hasUnreadNotificationsForClient() {
+        return notificationRepository.existsByIsReadFalse();
+    }
+
     // may want to make a batch version later, we'll see
     public void markAsRead(Long notificationId) throws AccessDeniedException {
         Notification notification = notificationRepository.findById(notificationId)

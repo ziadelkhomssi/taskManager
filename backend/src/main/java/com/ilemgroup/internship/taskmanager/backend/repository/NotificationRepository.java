@@ -15,4 +15,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             WHERE us.azureOid=?1
     """)
     Page<Notification> findAllByUserId(String userId, Pageable pageable);
+
+    boolean existsByIsReadFalse();
 }

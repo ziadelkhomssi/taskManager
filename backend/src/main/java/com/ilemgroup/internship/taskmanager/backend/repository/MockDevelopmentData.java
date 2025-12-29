@@ -201,7 +201,7 @@ public class MockDevelopmentData implements CommandLineRunner {
         Notification notification = new Notification(
                 null,
                 NotificationType.TICKET_ASSIGNED,
-                ticket1,
+                ticket2,
                 false,
                 null
         );

@@ -11,6 +11,10 @@ import java.time.LocalDateTime;
 public record NotificationDetails(
 
         @NotNull
+        @JsonProperty("id")
+        Long id,
+
+        @NotNull
         @JsonProperty("type")
         NotificationType type,
 

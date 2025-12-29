@@ -21,10 +21,12 @@ class NotificationMapperIntegrationTest {
         Ticket ticket = TestEntityFactory.createBaseTicket(null, null);
         ticket.setId(1L);
         Notification notification = TestEntityFactory.createBaseNotification(ticket);
+        notification.setRead(true);
 
         NotificationDetails details = mapper.toDetails(notification);
 
         assertEquals(notification.getType(), details.type());
+        assertEquals(notification.isRead(), details.isRead());
         assertEquals(notification.getTicket().getId(), details.ticketSummary().id());
     }
 }

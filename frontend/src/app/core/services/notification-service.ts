@@ -9,7 +9,7 @@ import { PageQuery } from '../../shared/types/types';
   providedIn: 'root',
 })
 export class NotificationService extends BaseApiService {
-  private readonly notificationUrl = `${this.BASE_URL}/project`;
+  private readonly notificationUrl = `${this.BASE_URL}/notification`;
 
   getAllForClient(query: PageQuery): Observable<PageNotificationDetails> {
     const params = new HttpParams({ fromObject: query as any });
@@ -19,9 +19,15 @@ export class NotificationService extends BaseApiService {
       .pipe(catchError(this.handleError));
   }
 
+  getHasUnread(): Observable<boolean> {
+    return this.http
+      .get<boolean>(`${this.notificationUrl}/has-unread`)
+      .pipe(catchError(this.handleError));
+  }
+
   markAsRead(id: number): Observable<any> {
     return this.http
-      .delete<void>(`${this.notificationUrl}/read/${id}`)
+      .post<void>(`${this.notificationUrl}/read/${id}`, {})
       .pipe(catchError(this.handleError));
   }
 }
