@@ -1,0 +1,45 @@
+<div class="comment-thread">
+  @for (comment of childComments; track comment.id) {
+
+    @if (editingCommentId === comment.id) {
+      <app-ticket-comment-form
+        [comment]="comment"
+        [ticketId]="ticketId"
+        [isUpdate]="true"
+        submitLabel="Save"
+        (update)="onUpdate($event)"
+        (cancel)="cancel()"
+      />
+    }
+    @else {
+      <app-ticket-comment
+        [comment]="comment"
+        (edit)="startEdit($event)"
+        (reply)="startReply($event)"
+        (delete)="onDelete($event)"
+      />
+    }
+
+    @if (replyingToCommentId === comment.id) {
+      <app-ticket-comment-form
+        [ticketId]="ticketId"
+        [parentCommentId]="comment.id"
+        [isUpdate]="false"
+        submitLabel="Reply"
+        (create)="onCreate($event)"
+        (cancel)="cancel()"
+      />
+    }
+
+    <div class="replies">
+      <app-ticket-comment-thread
+        [comments]="comments"
+        [parentCommentId]="comment.id"
+        [ticketId]="ticketId"
+        (createComment)="createComment.emit($event)"
+        (updateComment)="updateComment.emit($event)"
+        (deleteComment)="deleteComment.emit($event)"
+      />
+    </div>
+  }
+</div>

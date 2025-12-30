@@ -1,0 +1,52 @@
+.comment-card {
+  margin-bottom: 1rem;
+}
+
+.comment-form-card {
+  background-color: #fafafa;
+}
+
+.comment-content {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.user-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.comment-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.comment-text-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+
+.comment-input {
+  width: 100%;
+  margin: 0;
+}
+
+.comment-form-actions {
+  padding-left: calc(3rem + 1rem);
+  gap: 0.5rem;
+}

@@ -50,5 +50,26 @@
 </mat-card>
 
 <div class="comments">
-    <!-- for later!! -->
+  <div class="comments-title">
+    <h1>Comments</h1>
+    <h4 class="section-label">{{ comments.length }} total </h4>
+  </div>
+
+  <div class="comment-add">
+    <app-ticket-comment-form
+    [isUpdate]="false"
+    [ticketId]="ticketDetails.id"
+    [hasCancel]="false"
+    submitLabel="Add Comment"
+    (create)="onCreateComment($event)"
+    />
+  </div>
+
+  <app-ticket-comment-thread
+    [comments]="comments"
+    [ticketId]="ticketDetails.id"
+    (createComment)="onCreateComment($event)"
+    (updateComment)="onUpdateComment($event)"
+    (deleteComment)="onDeleteComment($event)"
+  />
 </div>

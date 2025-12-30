@@ -4,6 +4,7 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.create.TicketCom
 import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketCommentUpdate;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketCommentDetails;
 import com.ilemgroup.internship.taskmanager.backend.entity.TicketComment;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -16,7 +17,7 @@ public interface TicketCommentMapper {
     @Mapping(target = "userSummary", source = "user")
     @Mapping(target = "parentCommentId",
             expression = "java(ticketComment.getParentComment() != null ? ticketComment.getParentComment().getId() : null)")
-    TicketCommentDetails toDetails(TicketComment ticketComment);
+    TicketCommentDetails toDetails(TicketComment ticketComment, @Context String baseUrl);
 
     List<TicketCommentDetails> toDetailsList(List<TicketComment> comments);
 

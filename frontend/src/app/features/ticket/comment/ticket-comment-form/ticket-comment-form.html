@@ -1,0 +1,47 @@
+<mat-card class="comment-card comment-form-card">
+  <mat-card-content class="comment-content">
+    <img
+      [src]="comment?.userSummary?.profilePictureUrl"
+      alt="Profile picture"
+      class="user-avatar"
+    />
+
+    <div class="comment-text">
+      <div class="comment-text-header">
+        <mat-card-title class="user-name">
+          {{ comment?.userSummary?.name ?? "You" }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ isUpdate ? "Editing comment" : "Writing a comment…" }}
+        </mat-card-subtitle>
+      </div>
+
+      <mat-form-field appearance="outline" class="comment-input">
+        <textarea
+          matInput
+          rows="4"
+          placeholder="Write a comment…"
+          class="comment-input-text-area"
+          [formControl]="commentControl"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="comment-form-actions">
+    <button
+      mat-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="commentControl.invalid"
+    >
+      {{ submitLabel }}
+    </button>
+
+    @if (hasCancel) {
+        <button mat-button type="button" (click)="cancel.emit()">
+            Cancel
+        </button>
+    }
+  </mat-card-actions>
+</mat-card>

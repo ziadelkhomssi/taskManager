@@ -36,11 +36,15 @@ class TicketCommentMapperIntegrationTest {
         comment.setComment("Hello Also!");
         comment.setParentComment(parentComment);
 
-        TicketCommentDetails details = mapper.toDetails(comment);
+        String baseUrl = "http://localhost:8080";
+        TicketCommentDetails details = mapper.toDetails(comment, baseUrl);
 
         assertEquals(comment.getId(), details.id());
         assertEquals(comment.getComment(), details.comment());
         assertEquals(comment.getParentComment().getId(), details.parentCommentId());
+        assertEquals(baseUrl + "/user/profile-picture/" + comment.getUser().getAzureOid(),
+                details.userSummary().profilePictureUrl()
+        );
     }
 
     @Test

@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
@@ -40,8 +41,12 @@ public class TicketCommentService {
             Long ticketId,
             Pageable pageable
     ) {
+        String baseUrl = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .build()
+                .toUriString();
         return ticketCommentRepository.findAllByTicketId(ticketId, pageable)
-                .map(ticketCommentMapper::toDetails);
+                .map((comment) -> ticketCommentMapper.toDetails(comment, baseUrl));
     }
 
     public void createTicketComment(TicketCommentCreate command) {
@@ -77,7 +82,7 @@ public class TicketCommentService {
         );
 
         TicketComment updated = ticketCommentMapper.updateEntity(command, old);
-        updated.setCreatedAt(LocalDateTime.now());
+        updated.setUpdatedAt(LocalDateTime.now());
 
         ticketCommentRepository.save(updated);
     }

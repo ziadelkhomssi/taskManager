@@ -18,7 +18,7 @@ export class TicketCommentService extends BaseApiService {
     const params = new HttpParams({ fromObject: query as any });
 
     return this.http
-      .get<PageTicketCommentDetails>(`${this.ticketCommentUrl}/details`, { params })
+      .get<PageTicketCommentDetails>(`${this.ticketCommentUrl}/all/${ticketId}`, { params })
   }
 
   create(command: TicketCommentCreate): Observable<void> {

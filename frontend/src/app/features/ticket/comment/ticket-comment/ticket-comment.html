@@ -1,0 +1,33 @@
+<mat-card class="comment-card">
+  <mat-card-content class="comment-content">
+    <img src="{{comment.userSummary.profilePictureUrl}}" alt="Profile picture" class="user-avatar"/>
+    
+    <div class="comment-text">
+      <div class="comment-text-header">
+        <mat-card-title class="user-name">{{comment.userSummary.name}}</mat-card-title>
+        <mat-card-subtitle>
+          {{ comment.createdAt | date: "yyyy-MM-dd" }}
+          @if (comment.updatedAt) {
+            <span>• edited</span>
+          }
+        </mat-card-subtitle>
+      </div>
+      <p>{{ comment.comment }}</p>
+    </div>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="comment-actions-trigger">
+      <mat-icon>more_horiz</mat-icon>
+    </button>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button color="primary" (click)="onReply()">
+      Reply
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="edit.emit(comment)">Edit</button>
+  <button mat-menu-item (click)="delete.emit(comment)">Delete</button>
+</mat-menu>
