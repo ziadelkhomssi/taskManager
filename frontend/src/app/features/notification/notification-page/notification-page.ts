@@ -109,7 +109,7 @@ export class NotificationPage {
   generateNotificationText(notification: NotificationDetails): string {
     switch(notification.type) {
       case "TICKET_ASSIGNED": return "You have been assigned this ticket."
-      case "TICKET_STATUS_CHANGED": return "This ticket has it's status changed."
+      case "TICKET_STATUS_CHANGED": return "This ticket had it's status changed."
       default: {
         console.error("Invalid notification type!");
       }
@@ -137,7 +137,6 @@ export class NotificationPage {
 
   onHoverToRead(notification: NotificationDetails) {
     if (notification.isRead) {return;}
-    console.log("read!!!");
     this.notificationService.markAsRead(notification.id).subscribe({
       next: () => {
         var localSource: NotificationDetails | undefined = this.notifications.find(

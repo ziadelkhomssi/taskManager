@@ -16,5 +16,12 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     """)
     Page<Notification> findAllByUserId(String userId, Pageable pageable);
 
-    boolean existsByIsReadFalse();
+    @Query("""
+            SELECT CASE WHEN COUNT(notif) > 0 
+            THEN true 
+            ELSE false 
+            END 
+            FROM Notification notif WHERE notif.isRead = false
+    """)
+    boolean hasUnread();
 }

@@ -77,7 +77,7 @@ export class App {
   checkNotifications() {
     this.notificationService.getHasUnread().subscribe({
       next: (response) => {
-        const hasUnread = response;
+        const hasUnread: boolean = response;
         if (hasUnread) {
           this.notificationBellIcon = "notifications_active";
           this.changeDetectorRef.detectChanges();

@@ -38,7 +38,7 @@ public class NotificationService {
     }
 
     public boolean hasUnreadNotificationsForClient() {
-        return notificationRepository.existsByIsReadFalse();
+        return notificationRepository.hasUnread();
     }
 
     // may want to make a batch version later, we'll see
