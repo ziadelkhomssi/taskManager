@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api-service';
-import { PageUserSummary, UserDetails } from '../ng-openapi';
+import { PageUserSummary, UserDetails, UserSummary } from '../ng-openapi';
 import { catchError, Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { PageQuery } from '../../shared/types/types';
@@ -25,9 +25,9 @@ export class UserService extends BaseApiService {
           .pipe(catchError(this.handleError));
   }
 
-  getClientSummary():  Observable<UserDetails> {
+  getClientSummary(): Observable<UserSummary> {
     return this.http
-          .get<UserDetails>(`${this.userUrl}/summary/client`)
+          .get<UserSummary>(`${this.userUrl}/summary/client`)
           .pipe(catchError(this.handleError));
   }
 }
