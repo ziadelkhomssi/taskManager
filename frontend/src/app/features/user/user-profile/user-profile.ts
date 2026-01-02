@@ -4,6 +4,7 @@ import { UserDetails } from '../../../core/ng-openapi';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../../core/services/user-service';
 import { FallbackImage } from '../../../shared/directive/fallback-image/fallback-image';
+import { DialogService } from '../../../core/services/dialog-service';
 
 @Component({
   selector: 'app-user-profile',
@@ -20,6 +21,7 @@ export class UserProfile {
 
   constructor(
     private userService: UserService,
+    private dialogService: DialogService,
     private location: Location,
     private changeDetectorRef: ChangeDetectorRef,
     private route: ActivatedRoute
@@ -38,7 +40,11 @@ export class UserProfile {
         this.changeDetectorRef.detectChanges();
       },
       error: (error) => {
-        console.error('Could not load user!', error);
+        console.error("Could not load user!", error);
+        this.dialogService.openErrorDialog(
+          "Could not load user!\nPlease try again later!",
+          () => {this.location.back();}
+        );
       }
     });
   }
