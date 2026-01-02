@@ -38,6 +38,7 @@ public class MockDevelopmentData implements CommandLineRunner {
         User user1 = new User(
                 "abc123",
                 "John Developer",
+                "TEAM_MEMBER", // temporarily added until real authentication is added
                 "johndo@company.com",
                 "Backend Developer",
                 "static/image/user/mock/user_john_profile_picture.png",
@@ -48,7 +49,8 @@ public class MockDevelopmentData implements CommandLineRunner {
         User user2 = new User(
                 "def456",
                 "Jane Developer",
-                "janedo@company.com",
+                "ADMIN",
+                "janedo@company.com", // temporarily added until real authentication is added
                 "Frontend Developer",
                 "static/image/user/mock/user_jane_profile_picture.png",
                 null,

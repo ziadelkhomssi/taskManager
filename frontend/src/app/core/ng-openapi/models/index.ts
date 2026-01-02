@@ -118,6 +118,19 @@ export interface UserDetails {
     profilePictureUrl?: string;
 }
 
+export interface ClientDetails {
+    userId: string;
+    name: string;
+    profilePictureUrl?: string;
+    permissions: ClientPermissions;
+}
+
+export interface ClientPermissions {
+    canManipulateProject?: boolean;
+    canManipulateSprint?: boolean;
+    canManipulateTicket?: boolean;
+}
+
 export interface PageTicketCommentDetails {
     totalElements?: number;
     totalPages?: number;

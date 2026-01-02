@@ -6,7 +6,7 @@
     [columns]="columns"
     [rowClass]="rowClass"
     [actions]="actions"
-    [showAddButton]="true"
+    [showAddButton]="clientDetails.permissions.canManipulateProject || false"
     [filters]="filters"
     [totalElements]="totalElements"
     [pageIndex]="pageIndex"

@@ -1,6 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.security;
 
 import com.ilemgroup.internship.taskmanager.backend.security.filter.TemporaryAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,9 @@ public class SecurityConfiguration {
     @Value("${allowed.origins}")
     private String[] allowedOrigins;
 
+    @Autowired
+    private TemporaryAuthenticationFilter temporaryAuthenticationFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -33,7 +37,7 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new TemporaryAuthenticationFilter(), AnonymousAuthenticationFilter.class);
+                .addFilterBefore(temporaryAuthenticationFilter, AnonymousAuthenticationFilter.class);
 
         return http.build();
     }

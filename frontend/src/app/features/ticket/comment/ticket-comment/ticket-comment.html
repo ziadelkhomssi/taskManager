@@ -15,9 +15,11 @@
       <p>{{ comment.comment }}</p>
     </div>
 
-    <button mat-icon-button [matMenuTriggerFor]="menu" class="comment-actions-trigger">
-      <mat-icon>more_horiz</mat-icon>
-    </button>
+    @if(clientDetails?.userId == comment.userSummary.id) {
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="comment-actions-trigger">
+        <mat-icon>more_horiz</mat-icon>
+      </button>
+    }
   </mat-card-content>
 
   <mat-card-actions>

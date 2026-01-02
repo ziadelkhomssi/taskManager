@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { TicketCommentCreate, TicketCommentDetails, TicketCommentUpdate, TicketDetails, UserSummary } from '../../../core/ng-openapi';
+import { ClientDetails, TicketCommentCreate, TicketCommentDetails, TicketCommentUpdate, TicketDetails, UserSummary } from '../../../core/ng-openapi';
 import { TicketStatusChip } from "../../../shared/component/status-chip/ticket-status-chip/ticket-status-chip";
 import { TicketService } from '../../../core/services/ticket-service';
 import { DialogService } from '../../../core/services/dialog-service';
@@ -35,6 +35,8 @@ const DEFAULT_TICKET_COMMENTS_QUERY: PageQuery = {
   styleUrl: './ticket-page.css',
 })
 export class TicketPage {
+  clientDetails!: ClientDetails;
+
   @ViewChild(TicketCommentForm) rootCommentForm!: TicketCommentForm;
   ticketDetails: TicketDetails = {
     id: -1,
@@ -48,6 +50,7 @@ export class TicketPage {
     status: "IN_PROGRESS",
   };
 
+  addComment!: TicketCommentDetails;
   comments: TicketCommentDetails[] = [];
 
   constructor(
@@ -61,6 +64,8 @@ export class TicketPage {
   ) {}
 
   ngOnInit() {
+    this.clientDetails = this.route.snapshot.data["clientDetails"];
+
     this.route.params.subscribe((params) => {
       const ticketId: number = params["id"];
       this.loadTicketDetails(ticketId);

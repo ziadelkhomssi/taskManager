@@ -53,28 +53,30 @@
     </div>
   </mat-card-content>
 
-  <mat-card-actions align="end" class="sprint-actions">
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="updateSprint()">
-      Update
-    </button>
+  @if(clientDetails.permissions.canManipulateSprint) {
+    <mat-card-actions align="end" class="sprint-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="updateSprint()">
+        Update
+      </button>
 
-    <button
-      mat-raised-button
-      color="warn"
-      (click)="deleteSprint()">
-      Delete
-    </button>
-  </mat-card-actions>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="deleteSprint()">
+        Delete
+      </button>
+    </mat-card-actions>
+  }
 </mat-card>
 
 <app-entity-table
   [rows]="tickets"
   [columns]="columns"
   [actions]="actions"
-  [showAddButton]="true"
+  [showAddButton]="clientDetails.permissions.canManipulateTicket || false"
   [filters]="filters"
   [totalElements]="totalElements"
   [pageIndex]="pageIndex"

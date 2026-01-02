@@ -1,5 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.controller;
 
+import com.ilemgroup.internship.taskmanager.backend.dto.details.ClientDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.service.UserService;
@@ -26,9 +27,9 @@ public class UserController {
         return userService.getDetailsById(id);
     }
 
-    @GetMapping("/summary/client")
-    public UserSummary getClientSummary() throws AccessDeniedException {
-        return userService.getClientSummary();
+    @GetMapping("/details/client")
+    public ClientDetails getClientDetails() throws AccessDeniedException {
+        return userService.getClientDetails();
     }
 
     @GetMapping("/summary")

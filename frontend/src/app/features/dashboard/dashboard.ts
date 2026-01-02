@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { EntityTable, TableColumn } from '../../shared/component/entity-table/entity-table';
-import { ProjectDetails, ProjectSummary } from '../../core/ng-openapi';
+import { ClientDetails, ProjectDetails, ProjectSummary } from '../../core/ng-openapi';
 import { ProjectService } from '../../core/services/project-service';
 import { response } from 'express';
 import { PageEvent } from '@angular/material/paginator';
 import { error } from 'console';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PageQuery } from '../../shared/types/types';
 import { ProjectStatusChip } from "../../shared/component/status-chip/project-status-chip/project-status-chip";
 import { DialogService } from '../../core/services/dialog-service';
@@ -32,6 +32,7 @@ const DEFAULT_PROJECTS_QUERY: PageQuery = {
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
+  clientDetails!: ClientDetails;
   projects: ProjectSummary[] = [];
 
   @ViewChild("projectStatusTemplate", { static: true })
@@ -75,10 +76,16 @@ export class Dashboard {
     private projectService: ProjectService,
     private dialogService: DialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    this.clientDetails = this.route.snapshot.data["clientDetails"];
+    if (!this.clientDetails.permissions.canManipulateProject) {
+      this.actions = [];
+    }
+
     this.columns = [
       {
         columnDef: "id",

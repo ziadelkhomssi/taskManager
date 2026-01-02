@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TicketComment } from "../ticket-comment/ticket-comment";
-import { TicketCommentCreate, TicketCommentDetails, TicketCommentUpdate, UserSummary } from '../../../../core/ng-openapi';
+import { ClientDetails, TicketCommentCreate, TicketCommentDetails, TicketCommentUpdate, UserSummary } from '../../../../core/ng-openapi';
 import { TicketCommentForm } from "../ticket-comment-form/ticket-comment-form";
 
 @Component({
@@ -11,6 +11,7 @@ import { TicketCommentForm } from "../ticket-comment-form/ticket-comment-form";
 })
 export class TicketCommentThread {
   @Input() comments: TicketCommentDetails[] = [];
+  @Input() clientDetails?: ClientDetails;
   @Input() parentCommentId?: number;
   @Input({ required: true }) ticketId!: number;
 

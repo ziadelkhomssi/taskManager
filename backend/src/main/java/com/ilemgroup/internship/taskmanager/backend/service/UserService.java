@@ -1,5 +1,6 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
+import com.ilemgroup.internship.taskmanager.backend.dto.details.ClientDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.User;
@@ -45,7 +46,7 @@ public class UserService {
         return userMapper.toDetails(user, baseUrl);
     }
 
-    public UserSummary getClientSummary() throws AccessDeniedException {
+    public ClientDetails getClientDetails() throws AccessDeniedException {
         String clientUserId = AuthorizationService.getClientUserId();
         User user = userRepository.findById(clientUserId)
                 .orElseThrow(() -> new EntityNotFoundException("Client user not found: " + clientUserId));
@@ -54,7 +55,7 @@ public class UserService {
                 .fromCurrentContextPath()
                 .build()
                 .toUriString();
-        return userMapper.toSummary(user, baseUrl);
+        return userMapper.toClientDetails(user, baseUrl);
     }
 
     public Page<UserSummary> getSummaryList(

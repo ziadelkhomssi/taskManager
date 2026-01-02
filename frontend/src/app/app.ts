@@ -1,20 +1,23 @@
 import { ChangeDetectorRef, Component, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatNavList } from '@angular/material/list';
-import { UserDetails, UserSummary } from './core/ng-openapi';
+import { ClientDetails, UserDetails, UserSummary } from './core/ng-openapi';
 import { UserService } from './core/services/user-service';
 import { FallbackImage } from './shared/directive/fallback-image/fallback-image';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
 import { NotificationService } from './core/services/notification-service';
 import { DialogService } from './core/services/dialog-service';
+import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   imports: [
+    AsyncPipe,
     RouterOutlet,
     RouterLink,
     MatSidenavModule,
@@ -30,10 +33,7 @@ import { DialogService } from './core/services/dialog-service';
 export class App {
   protected readonly title = signal('frontend');
 
-  clientUserSummary: UserSummary = {
-    id: "def456",
-    name: "Jane Developer",
-  }
+  clientDetails$!: Observable<ClientDetails | null>;
   notificationBellIcon: string = "notification";
   
   constructor(
@@ -41,6 +41,7 @@ export class App {
     private notificationService: NotificationService,
     private dialogService: DialogService,
     private router: Router,
+    private route: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.router.events
@@ -55,23 +56,7 @@ export class App {
   }
 
   ngOnInit() {
-    this.loadClientUserSummary();
-  }
-
-  loadClientUserSummary() {
-    this.userService.getClientSummary().subscribe({
-      next: (response) => {
-        this.clientUserSummary = response;
-        this.changeDetectorRef.detectChanges();
-      },
-      error: (error) => {
-        console.error("Could not load client user!", error);
-        this.dialogService.openErrorDialog(
-          "Could not load client user! Try again later!",
-          null
-        )
-      }
-    });
+    this.clientDetails$ = this.userService.clientDetails$
   }
 
   checkNotifications() {

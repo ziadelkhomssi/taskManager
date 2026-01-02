@@ -54,6 +54,7 @@ public class TestEntityFactory {
         user.setName("John Developer");
         user.setEmail("johndo@email.com");
         user.setJob("Engineer");
+        user.setRole("ROLE_TEAM_MEMBER");
         return user;
     }
 

@@ -1,6 +1,7 @@
 package com.ilemgroup.internship.taskmanager.backend.service;
 
 import com.ilemgroup.internship.taskmanager.backend.TestEntityFactory;
+import com.ilemgroup.internship.taskmanager.backend.dto.details.ClientDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.details.UserDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.UserSummary;
 import com.ilemgroup.internship.taskmanager.backend.entity.Project;
@@ -395,39 +396,41 @@ public class UserServiceIntegrationTest {
 
     @Test
     @WithMockUser(username = "abc123", password = "mypasswordwoah", roles = {"TEAM_MEMBER"})
-    void getClientSummary_authenticatedAndUserExists_success() throws AccessDeniedException {
+    void getClientDetails_authenticatedAndUserExists_success() throws AccessDeniedException {
         User user = TestEntityFactory.createBaseUser();
         user.setAzureOid("abc123");
+        user.setRole("TEAM_MEMBER");
         userRepository.save(user);
 
-        UserSummary clientSummary = userService.getClientSummary();
-        assertEquals(user.getAzureOid(), clientSummary.id());
+        ClientDetails clientSummary = userService.getClientDetails();
+        assertEquals(user.getAzureOid(), clientSummary.userId());
         assertEquals(user.getName(), clientSummary.name());
+        assertEquals(AuthorizationService.TEAM_MEMBER_PERMISSIONS, clientSummary.permissions());
     }
 
     @Test
-    void getClientSummary_notAuthenticatedAndUserExists_throwsException() throws AccessDeniedException {
+    void getClientDetails_notAuthenticatedAndUserExists_throwsException() throws AccessDeniedException {
         User user = TestEntityFactory.createBaseUser();
         user.setAzureOid("abc123");
         userRepository.save(user);
 
         assertThrows(AccessDeniedException.class, () ->
-                userService.getClientSummary()
+                userService.getClientDetails()
         );
     }
 
     @Test
     @WithMockUser(username = "abc123", password = "mypasswordwoah", roles = {"TEAM_MEMBER"})
-    void getClientSummary_authenticatedAndNotUserExists_throwsException() throws AccessDeniedException {
+    void getClientDetails_authenticatedAndNotUserExists_throwsException() throws AccessDeniedException {
         assertThrows(EntityNotFoundException.class, () ->
-                userService.getClientSummary()
+                userService.getClientDetails()
         );
     }
 
     @Test
-    void getClientSummary_notAuthenticatedAndNotUserExists_throwsException() throws AccessDeniedException {
+    void getClientDetails_notAuthenticatedAndNotUserExists_throwsException() throws AccessDeniedException {
         assertThrows(AccessDeniedException.class, () ->
-                userService.getClientSummary()
+                userService.getClientDetails()
         );
     }
 

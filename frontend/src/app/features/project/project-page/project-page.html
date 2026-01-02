@@ -37,21 +37,23 @@
     </div>
   </mat-card-content>
 
-  <mat-card-actions align="end" class="project-actions">
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="updateProject()">
-      Update
-    </button>
+  @if(clientDetails.permissions.canManipulateProject) {
+    <mat-card-actions align="end" class="project-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="updateProject()">
+        Update
+      </button>
 
-    <button
-      mat-raised-button
-      color="warn"
-      (click)="deleteProject()">
-      Delete
-    </button>
-  </mat-card-actions>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="deleteProject()">
+        Delete
+      </button>
+    </mat-card-actions>
+  }
 </mat-card>
 
 @if (columns) {
@@ -60,7 +62,7 @@
     [columns]="columns"
     [rowClass]="rowClass"
     [actions]="actions"
-    [showAddButton]="true"
+    [showAddButton]="clientDetails.permissions.canManipulateSprint || false"
     [filters]="filters"
     [totalElements]="totalElements"
     [pageIndex]="pageIndex"

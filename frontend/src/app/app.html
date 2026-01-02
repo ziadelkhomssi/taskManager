@@ -8,15 +8,17 @@
       
       <div class="sidebar-spacer"></div>
       
-      <button mat-raised-button class="profile-button" [routerLink]="['/user', clientUserSummary.id]">
-        <div class="profile-info">
-          <img src="{{clientUserSummary.profilePictureUrl}}" alt="Profile picture" class="profile-avatar"/>
-        
-          <div class="profile-text">
-            <div class="profile-name">{{clientUserSummary.name}}</div>
+      @if(clientDetails$ | async; as clientDetails) {
+        <button mat-raised-button class="profile-button" [routerLink]="['/user', clientDetails.userId]">
+          <div class="profile-info">
+            <img src="{{clientDetails.profilePictureUrl}}" alt="Profile picture" class="profile-avatar"/>
+          
+            <div class="profile-text">
+              <div class="profile-name">{{clientDetails.name}}</div>
+            </div>
           </div>
-        </div>
-      </button>
+        </button>
+      }
       
       <button mat-raised-button color="warn" class="logout-button" (click)="logout()">
         <mat-icon>logout</mat-icon>

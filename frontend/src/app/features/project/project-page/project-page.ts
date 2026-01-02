@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { ProjectDetails, SprintDetails, SprintSummary, UserSummary } from '../../../core/ng-openapi';
+import { ClientDetails, ProjectDetails, SprintDetails, SprintSummary, UserSummary } from '../../../core/ng-openapi';
 import { EntityTable, TableColumn } from '../../../shared/component/entity-table/entity-table';
 import { SprintService } from '../../../core/services/sprint-service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -51,15 +51,15 @@ export interface SprintStatusCellContext {
   styleUrl: './project-page.css',
 })
 export class ProjectPage {
+  clientDetails!: ClientDetails;
+
   projectDetails: ProjectDetails = {
     id: -1,
     title: "PLACEHOLDER",
     description: "PLACEHOLDER",
     status: "PLANNED",
   };
-
   previewParticipants: UserSummary[] = [];
-
   sprints: SprintSummary[] = [];
 
   @ViewChild("sprintStatusTemplate", { static: true })
@@ -112,7 +112,7 @@ export class ProjectPage {
 
   constructor(
     private projectService: ProjectService, 
-    private sprintService: SprintService, 
+    private sprintService: SprintService,
     private dialogService: DialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private dialog: MatDialog,
@@ -121,6 +121,12 @@ export class ProjectPage {
   ) { }
 
   ngOnInit() {
+    this.clientDetails = this.route.snapshot.data["clientDetails"];
+
+    if (!this.clientDetails.permissions.canManipulateSprint) {
+      this.actions = [];
+    }
+
     this.cacheBuster = Date.now().toString();
     this.columns = [
       {

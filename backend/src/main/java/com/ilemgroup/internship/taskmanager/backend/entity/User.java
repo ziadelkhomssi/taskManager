@@ -19,6 +19,8 @@ public class User {
 
     private String name;
 
+    private String role; // temporarily added until real authentication is added
+
     @Email
     private String email;
 

@@ -4,6 +4,7 @@
     @if (editingCommentId === comment.id) {
       <app-ticket-comment-form
         [comment]="comment"
+        [clientDetails]="clientDetails"
         [ticketId]="ticketId"
         [isUpdate]="true"
         submitLabel="Save"
@@ -14,6 +15,7 @@
     @else {
       <app-ticket-comment
         [comment]="comment"
+        [clientDetails]="clientDetails"
         (edit)="startEdit($event)"
         (reply)="startReply($event)"
         (delete)="onDelete($event)"
@@ -23,6 +25,7 @@
     @if (replyingToCommentId === comment.id) {
       <app-ticket-comment-form
         [ticketId]="ticketId"
+        [clientDetails]="clientDetails"
         [parentCommentId]="comment.id"
         [isUpdate]="false"
         submitLabel="Reply"
@@ -34,6 +37,7 @@
     <div class="replies">
       <app-ticket-comment-thread
         [comments]="comments"
+        [clientDetails]="clientDetails"
         [parentCommentId]="comment.id"
         [ticketId]="ticketId"
         (createComment)="createComment.emit($event)"

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { TicketCommentDetails } from '../../../../core/ng-openapi';
+import { ClientDetails, TicketCommentDetails } from '../../../../core/ng-openapi';
 import { FallbackImage } from '../../../../shared/directive/fallback-image/fallback-image';
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from '@angular/material/menu';
@@ -22,12 +22,15 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class TicketComment {
   @Input({ required: true }) comment!: TicketCommentDetails;
+  @Input() clientDetails?: ClientDetails;
 
   @Output() reply = new EventEmitter<TicketCommentDetails>();
   @Output() edit = new EventEmitter<TicketCommentDetails>();
   @Output() delete = new EventEmitter<TicketCommentDetails>();
 
   onReply(): void {
+    console.log(this.comment);
+    console.log(this.clientDetails);
     this.reply.emit(this.comment);
   }
 }

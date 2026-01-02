@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { SprintDetails, TicketDetails, TicketSummary, UserSummary } from '../../../core/ng-openapi';
+import { ClientDetails, SprintDetails, TicketDetails, TicketSummary, UserSummary } from '../../../core/ng-openapi';
 import { EntityTable, TableColumn } from '../../../shared/component/entity-table/entity-table';
 import { TicketService } from '../../../core/services/ticket-service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,7 +15,6 @@ import { ErrorDialog } from '../../../shared/component/dialog/error-dialog';
 import { DialogService } from '../../../core/services/dialog-service';
 import { SprintStatusChip } from "../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip";
 import { TicketStatusChip } from "../../../shared/component/status-chip/ticket-status-chip/ticket-status-chip";
-
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {
   page: 0,
@@ -49,6 +48,8 @@ export interface TicketStatusCellContext {
   styleUrl: './sprint-page.css',
 })
 export class SprintPage {
+  clientDetails!: ClientDetails;
+  
   sprintDetails: SprintDetails = {
     id: -1,
     title: "PLACEHOLDER",
@@ -104,7 +105,7 @@ export class SprintPage {
 
   constructor(
     private sprintService: SprintService, 
-    private ticketService: TicketService, 
+    private ticketService: TicketService,
     private dialogService: DialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private dialog: MatDialog,
@@ -114,6 +115,8 @@ export class SprintPage {
   ) { }
 
   ngOnInit() {
+    this.clientDetails = this.route.snapshot.data["clientDetails"];
+
     this.columns = [
       { 
         columnDef: "id", 

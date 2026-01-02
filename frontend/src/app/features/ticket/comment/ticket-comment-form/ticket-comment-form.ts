@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { TicketCommentCreate, TicketCommentDetails, TicketCommentUpdate } from '../../../../core/ng-openapi';
+import { ClientDetails, TicketCommentCreate, TicketCommentDetails, TicketCommentUpdate } from '../../../../core/ng-openapi';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FallbackImage } from '../../../../shared/directive/fallback-image/fallback-image';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class TicketCommentForm {
   @Input() comment?: TicketCommentDetails;
+  @Input() clientDetails?: ClientDetails;
   @Input() parentCommentId?: number;
   @Input() isUpdate = false;
   @Input() ticketId!: number;

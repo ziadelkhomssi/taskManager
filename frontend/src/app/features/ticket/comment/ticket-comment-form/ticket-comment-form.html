@@ -1,7 +1,7 @@
 <mat-card class="comment-card comment-form-card">
   <mat-card-content class="comment-content">
     <img
-      [src]="comment?.userSummary?.profilePictureUrl"
+      [src]="clientDetails?.profilePictureUrl"
       alt="Profile picture"
       class="user-avatar"
     />
@@ -9,7 +9,7 @@
     <div class="comment-text">
       <div class="comment-text-header">
         <mat-card-title class="user-name">
-          {{ comment?.userSummary?.name ?? "You" }}
+          {{ clientDetails?.name }}
         </mat-card-title>
         <mat-card-subtitle>
           {{ isUpdate ? "Editing comment" : "Writing a comment…" }}
