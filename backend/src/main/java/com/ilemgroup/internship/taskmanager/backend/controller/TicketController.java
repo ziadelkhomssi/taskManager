@@ -5,6 +5,7 @@ import com.ilemgroup.internship.taskmanager.backend.dto.command.update.TicketUpd
 import com.ilemgroup.internship.taskmanager.backend.dto.details.TicketDetails;
 import com.ilemgroup.internship.taskmanager.backend.dto.summary.TicketSummary;
 import com.ilemgroup.internship.taskmanager.backend.service.TicketService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,14 +28,14 @@ public class TicketController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER', 'TEAM_MEMBER')")
-    public void createTicket(@RequestBody @Valid TicketCreate command) {
+    public void createTicket(@RequestBody @Valid TicketCreate command) throws MessagingException {
         ticketService.createTicket(command);
     }
 
     // should i make this have pathvariable ticket id? (need to edit TicketUpdate for that...)
     @PutMapping("/update")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER', 'TEAM_MEMBER')")
-    public void updateTicket(@RequestBody @Valid TicketUpdate command) {
+    public void updateTicket(@RequestBody @Valid TicketUpdate command) throws MessagingException {
         ticketService.updateTicket(command);
     }
 

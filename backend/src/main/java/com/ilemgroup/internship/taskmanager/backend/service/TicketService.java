@@ -12,6 +12,7 @@ import com.ilemgroup.internship.taskmanager.backend.mapper.TicketMapper;
 import com.ilemgroup.internship.taskmanager.backend.repository.SprintRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.TicketRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class TicketService {
         ).map(ticketMapper::toSummary);
     }
 
-    public void createTicket(TicketCreate command) {
+    public void createTicket(TicketCreate command) throws MessagingException {
         Sprint parentSprint = sprintRepository.findById(command.sprintId())
                 .orElseThrow(() -> new EntityNotFoundException("Sprint not found: " + command.sprintId()));
         User assignedUser = userRepository.findById(command.assignedUserId())
@@ -95,7 +96,7 @@ public class TicketService {
         notificationService.createNotification(ticket.getId(), NotificationType.TICKET_ASSIGNED);
     }
 
-    public void updateTicket(TicketUpdate command) {
+    public void updateTicket(TicketUpdate command) throws MessagingException {
         Ticket old = ticketRepository.findById(command.id())
                 .orElseThrow(() -> new EntityNotFoundException("Ticket not found: " + command.id()));
 
