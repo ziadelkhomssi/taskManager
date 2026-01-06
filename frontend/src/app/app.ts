@@ -13,6 +13,7 @@ import { NotificationService } from './core/services/notification-service';
 import { DialogService } from './core/services/dialog-service';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ import { AsyncPipe } from '@angular/common';
     MatSidenavContent, 
     MatToolbarModule,
     MatIconModule,
+    MatBadgeModule,
     MatButtonModule,
     FallbackImage
   ],
@@ -34,7 +36,7 @@ export class App {
   protected readonly title = signal('frontend');
 
   clientDetails$!: Observable<ClientDetails | null>;
-  notificationBellIcon: string = "notification";
+  hasUnreadNotifications: boolean = false;
   
   constructor(
     private userService: UserService,
@@ -62,14 +64,7 @@ export class App {
   checkNotifications() {
     this.notificationService.getHasUnread().subscribe({
       next: (response) => {
-        const hasUnread: boolean = response;
-        if (hasUnread) {
-          this.notificationBellIcon = "notifications_active";
-          this.changeDetectorRef.detectChanges();
-          return;
-        }
-
-        this.notificationBellIcon = "notifications";
+        this.hasUnreadNotifications = response;
         this.changeDetectorRef.detectChanges();
       },
       error: (error) => {
