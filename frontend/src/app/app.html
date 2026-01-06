@@ -37,8 +37,21 @@
 
       <span class="toolbar-title">Task Manager</span>
 
-      <button mat-icon-button class="notification-bell" routerLink="/notifications">
-        <mat-icon matBadge="​" [matBadgeHidden]="!hasUnreadNotifications" matBadgePosition="below before" matBadgeColor="accent">notifications</mat-icon>
+      <button 
+        mat-icon-button 
+        class="notification-bell" 
+        routerLink="/notifications"
+        >
+        <mat-icon
+          class="notification-badge"
+          aria-hidden="false"
+          matBadge="​" 
+          [matBadgeHidden]="!hasUnreadNotifications" 
+          matBadgePosition="below before" 
+          matBadgeColor="accent"
+          >
+          notifications
+        </mat-icon>
       </button>
     </mat-toolbar>
 
