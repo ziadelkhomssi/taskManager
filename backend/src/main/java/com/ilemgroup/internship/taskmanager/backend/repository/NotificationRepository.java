@@ -17,11 +17,15 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     Page<Notification> findAllByUserId(String userId, Pageable pageable);
 
     @Query("""
-            SELECT CASE WHEN COUNT(notif) > 0 
-            THEN true 
-            ELSE false 
+            SELECT DISTINCT CASE WHEN COUNT(no) > 0 
+                THEN true 
+                ELSE false 
             END 
-            FROM Notification notif WHERE notif.isRead = false
+            FROM Notification no 
+            LEFT JOIN Ticket ti ON no.ticket.id=ti.id
+            LEFT JOIN User us ON ti.user.azureOid=us.azureOid
+            WHERE no.isRead = false
+            AND no.ticket.user.azureOid=?1
     """)
-    boolean hasUnread();
+    boolean hasUnreadForUser(String userId);
 }

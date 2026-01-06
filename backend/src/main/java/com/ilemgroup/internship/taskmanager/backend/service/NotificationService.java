@@ -52,8 +52,9 @@ public class NotificationService {
                 .map(notificationMapper::toDetails);
     }
 
-    public boolean hasUnreadNotificationsForClient() {
-        return notificationRepository.hasUnread();
+    public boolean hasUnreadNotificationsForClient() throws AccessDeniedException {
+        String userId = AuthorizationService.getClientUserId();
+        return notificationRepository.hasUnreadForUser(userId);
     }
 
     // may want to make a batch version later, we'll see
