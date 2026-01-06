@@ -14,6 +14,7 @@ import { DialogService } from './core/services/dialog-service';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatBadgeModule } from '@angular/material/badge';
+import { Loader } from "./shared/component/loader/loader";
 
 @Component({
   selector: 'app-root',
@@ -22,13 +23,14 @@ import { MatBadgeModule } from '@angular/material/badge';
     RouterOutlet,
     RouterLink,
     MatSidenavModule,
-    MatSidenavContent, 
+    MatSidenavContent,
     MatToolbarModule,
     MatIconModule,
     MatBadgeModule,
     MatButtonModule,
-    FallbackImage
-  ],
+    FallbackImage,
+    Loader
+],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
