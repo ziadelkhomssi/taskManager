@@ -1,7 +1,12 @@
-<mat-card class="sprint-details-card">
-  <mat-card-content>
-    <div class="sprint-details">
-      <div class="sprint-text">
+<app-entity-card
+  [entity]="sprintDetails"
+  entityName="Sprint"
+  [showManipulateOptions]="clientDetails.permissions.canManipulateTicket || false"
+  [update]="updateSprint"
+  [delete]="deleteSprint"
+>
+  <div class="sprint-details" details>
+    <div class="sprint-text">
         <div class="sprint-title">
           <h4 class="section-label">Sprint</h4>
           <h1>{{ sprintDetails.title }}</h1>
@@ -50,27 +55,8 @@
           </div>
         }
       </div>
-    </div>
-  </mat-card-content>
-
-  @if(clientDetails.permissions.canManipulateSprint) {
-    <mat-card-actions align="end" class="sprint-actions">
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="updateSprint()">
-        Update
-      </button>
-
-      <button
-        mat-raised-button
-        color="warn"
-        (click)="deleteSprint()">
-        Delete
-      </button>
-    </mat-card-actions>
-  }
-</mat-card>
+  </div>
+</app-entity-card>
 
 <app-crud-table
   [columns]="columns"

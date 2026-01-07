@@ -1,0 +1,23 @@
+<mat-card class="entity-card">
+  <mat-card-content>
+      <ng-content select="[details]"></ng-content>
+  </mat-card-content>
+
+  @if(showManipulateOptions) {
+    <mat-card-actions align="end" class="entity-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onUpdate()">
+        Update
+      </button>
+
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onDelete()">
+        Delete
+      </button>
+    </mat-card-actions>
+  }
+</mat-card>

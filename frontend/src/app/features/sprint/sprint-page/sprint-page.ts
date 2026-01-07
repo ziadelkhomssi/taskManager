@@ -16,6 +16,7 @@ import { DialogService } from '../../../core/services/dialog-service';
 import { SprintStatusChip } from "../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip";
 import { TicketStatusChip } from "../../../shared/component/status-chip/ticket-status-chip/ticket-status-chip";
 import { CrudTable } from '../../../shared/component/crud-table/crud-table';
+import { EntityCard } from "../../../shared/component/entity-card/entity-card";
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {
   page: 0,
@@ -43,7 +44,8 @@ export interface TicketStatusCellContext {
     DatePipe,
     UserListPreviewButton,
     SprintStatusChip,
-    TicketStatusChip
+    TicketStatusChip,
+    EntityCard
 ],
   templateUrl: './sprint-page.html',
   styleUrl: './sprint-page.css',
@@ -159,24 +161,13 @@ export class SprintPage {
     });
   }
 
-  updateSprint() {
-    this.router.navigate(["/sprint/update/" + this.sprintDetails.id]);
+  updateSprint = (sprint: SprintDetails) => {
+    this.router.navigate(["/sprint/update/" + sprint.id]);
   }
-  deleteSprint() {
-    this.dialogService.openConfirmDialog(
-      "Delete Current Sprint?", null, null, null,
-      () => {
-        this.sprintService.deleteById(
-          this.sprintDetails.id
-        ).subscribe({
-          next: () => {
-            this.location.back(); // i'd prefer a more specific back
-          },
-          error: (error) => {
-            console.error("Could not delete sprint!", error);
-            this.dialogService.openErrorDialog("Could not delete sprint!\nPlease try again later!", null);
-          }
-    });});
+  deleteSprint = (sprint: SprintDetails) => {
+    return this.sprintService.deleteById(
+      sprint.id
+    );
   }
 
   loadTickets = (pageQuery: PageQuery) => {

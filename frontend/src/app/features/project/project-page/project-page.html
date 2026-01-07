@@ -1,60 +1,37 @@
-<mat-card class="project-details-card">
-  <mat-card-content>
-    <div class="project-details">
-      <div class="project-text">
-        <div class="project-title">
-          <h4 class="section-label">Project</h4>
-          <h1>{{ projectDetails.title }}</h1>
-        </div>
-
-        <div class="project-description">
-          <h2>Description</h2>
-          <p>{{ projectDetails.description }}</p>
-        </div>
-
-        <app-project-status-chip
-          [status]="projectDetails.status"
-        />
-
-        <div class="project-participants">
-          <app-user-list-preview-button
-            [previewUsers]="previewParticipants"
-            [avatarSize]="30"
-            (clicked)="onOpenParticipantList()"
-          />
-        </div>
+<app-entity-card
+  [entity]="projectDetails"
+  entityName="Project"
+  [showManipulateOptions]="clientDetails.permissions.canManipulateTicket || false"
+  [update]="updateProject"
+  [delete]="deleteProject"
+>
+  <div class="project-details" details>
+    <div class="project-text">
+      <div class="project-title">
+        <h4 class="section-label">Project</h4>
+        <h1>{{ projectDetails.title }}</h1>
       </div>
 
-      @if (projectDetails.profilePictureUrl) {
-        <img
-          mat-card-image
-          class="profile-picture"
-          [src]="projectDetails.profilePictureUrl+'?cacheBuster='+cacheBuster"
-          alt="Project profile picture"
-        />
-      }
-      
+      <div class="project-description">
+        <h2>Description</h2>
+        <p>{{ projectDetails.description }}</p>
+      </div>
+
+      <app-project-status-chip [status]="projectDetails.status" />
+
+      <div class="project-participants">
+        <app-user-list-preview-button [previewUsers]="previewParticipants" [avatarSize]="30"
+          (clicked)="onOpenParticipantList()" />
+      </div>
     </div>
-  </mat-card-content>
 
-  @if(clientDetails.permissions.canManipulateProject) {
-    <mat-card-actions align="end" class="project-actions">
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="updateProject()">
-        Update
-      </button>
+    @if (projectDetails.profilePictureUrl) {
+    <img mat-card-image class="profile-picture" [src]="projectDetails.profilePictureUrl+'?cacheBuster='+cacheBuster"
+      alt="Project profile picture" />
+    }
 
-      <button
-        mat-raised-button
-        color="warn"
-        (click)="deleteProject()">
-        Delete
-      </button>
-    </mat-card-actions>
-  }
-</mat-card>
+  </div>
+</app-entity-card>
 
 @if (columns) {
   <app-crud-table

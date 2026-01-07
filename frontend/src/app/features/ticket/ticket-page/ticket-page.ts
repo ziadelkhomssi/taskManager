@@ -13,6 +13,7 @@ import { TicketCommentService } from '../../../core/services/ticket-comment-serv
 import { PageQuery } from '../../../shared/types/types';
 import { TicketComment } from '../comment/ticket-comment/ticket-comment';
 import { TicketCommentForm } from "../comment/ticket-comment-form/ticket-comment-form";
+import { EntityCard } from "../../../shared/component/entity-card/entity-card";
 
 const DEFAULT_TICKET_COMMENTS_QUERY: PageQuery = {
   page: 0,
@@ -29,7 +30,8 @@ const DEFAULT_TICKET_COMMENTS_QUERY: PageQuery = {
     TicketStatusChip,
     FallbackImage,
     TicketCommentThread,
-    TicketCommentForm
+    TicketCommentForm,
+    EntityCard
 ],
   templateUrl: './ticket-page.html',
   styleUrl: './ticket-page.css',
@@ -164,27 +166,12 @@ export class TicketPage {
     this.router.navigate([`/user/${this.ticketDetails.userSummary.id}`]);
   }
 
-  updateTicket() {
-    this.router.navigate([`/ticket/update/${this.ticketDetails.id}`]);
+  updateTicket = (ticket: TicketDetails) => {
+    this.router.navigate([`/ticket/update/${ticket.id}`]);
   }
 
-  deleteTicket() {
-    this.dialogService.openConfirmDialog(
-      "Delete Current Ticket?",
-      null,
-      null,
-      null,
-      () => {
-        this.ticketService.deleteById(this.ticketDetails.id).subscribe({
-          next: () => this.location.back(),
-          error: () =>
-            this.dialogService.openErrorDialog(
-              "Could not delete ticket!\nPlease try again later!",
-              null
-            ),
-        });
-      }
-    );
+  deleteTicket = (ticket: TicketDetails) => {
+    return this.ticketService.deleteById(ticket.id);
   }
 }
 

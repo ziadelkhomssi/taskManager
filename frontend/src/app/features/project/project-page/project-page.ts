@@ -18,6 +18,7 @@ import { DialogService } from '../../../core/services/dialog-service';
 import { ProjectStatusChip } from "../../../shared/component/status-chip/project-status-chip/project-status-chip";
 import { SprintStatusChip } from '../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip';
 import { CrudTable } from '../../../shared/component/crud-table/crud-table';
+import { EntityCard } from "../../../shared/component/entity-card/entity-card";
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {
   page: 0,
@@ -46,7 +47,8 @@ export interface SprintStatusCellContext {
     CrudTable,
     FallbackImage,
     ProjectStatusChip,
-    SprintStatusChip
+    SprintStatusChip,
+    EntityCard
 ],
   templateUrl: './project-page.html',
   styleUrl: './project-page.css',
@@ -169,24 +171,14 @@ export class ProjectPage {
     });
   }
 
-  updateProject() {
-    this.router.navigate(["/project/update/" + this.projectDetails.id]);
+  updateProject = (project: ProjectDetails) => {
+    console.log("updating!")
+    this.router.navigate(["/project/update/" + project.id]);
   }
-  deleteProject() {
-    this.dialogService.openConfirmDialog(
-      "Delete Current Project?", null, null, null,
-      () => {
-        this.projectService.deleteById(
-          this.projectDetails.id
-        ).subscribe({
-          next: () => {
-            this.router.navigate(["/"])
-          },
-          error: (error) => {
-            console.error("Could not delete project!", error);
-            this.dialogService.openErrorDialog("Could not delete project!\nPlease try again later!", null);
-          }
-    });});
+  deleteProject = (project: ProjectDetails) => {
+    return this.projectService.deleteById(
+      project.id
+    );
   }
 
   loadSprints = (pageQuery: PageQuery) => {

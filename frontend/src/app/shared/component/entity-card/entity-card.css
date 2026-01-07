@@ -1,0 +1,25 @@
+.entity-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.entity-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.entity-actions button[color="warn"] {
+  min-width: 96px;
+}
+
+.entity-actions button {
+  text-transform: uppercase;
+  font-weight: 500;
+}
