@@ -72,19 +72,18 @@
   }
 </mat-card>
 
-<app-entity-table
-  [rows]="tickets"
+<app-crud-table
   [columns]="columns"
-  [actions]="actions"
-  [showAddButton]="clientDetails.permissions.canManipulateTicket || false"
+  [showManipulateOptions]="clientDetails.permissions.canManipulateTicket || false"
   [filters]="filters"
-  [totalElements]="totalElements"
-  [pageIndex]="pageIndex"
-  [pageSize]="pageSize"
-  (pageQueryEvent)="onPageQuery($event)"
-  (rowClick)="onRowClick($event)"
-  (addClick)="createTicket()">
-</app-entity-table>
+  entityName="Ticket"
+  [view]="viewTicket"
+  [create]="createTicket"
+  [update]="updateTicket"
+  [delete]="deleteTicket"
+  [pageQuery]="loadTickets"
+  >
+</app-crud-table>
 
 <ng-template #ticketStatusTemplate let-status>
   <app-ticket-status-chip [status]="status"></app-ticket-status-chip>

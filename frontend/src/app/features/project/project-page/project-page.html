@@ -57,20 +57,19 @@
 </mat-card>
 
 @if (columns) {
-  <app-entity-table
-    [rows]="sprints"
+  <app-crud-table
     [columns]="columns"
     [rowClass]="rowClass"
-    [actions]="actions"
-    [showAddButton]="clientDetails.permissions.canManipulateSprint || false"
+    [showManipulateOptions]="clientDetails.permissions.canManipulateSprint || false"
     [filters]="filters"
-    [totalElements]="totalElements"
-    [pageIndex]="pageIndex"
-    [pageSize]="pageSize"
-    (pageQueryEvent)="onPageQuery($event)"
-    (rowClick)="onRowClick($event)"
-    (addClick)="createSprint()">
-  </app-entity-table>
+    entityName="Sprint"
+    [view]="viewSprint"
+    [create]="createSprint"
+    [update]="updateSprint"
+    [delete]="deleteSprint"
+    [pageQuery]="loadSprints"
+    >
+  </app-crud-table>
 }
 
 <ng-template #sprintStatusTemplate let-status>

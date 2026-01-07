@@ -1,20 +1,19 @@
 <h1>Dashboard</h1>
 
 @if (columns) {
-  <app-entity-table
-    [rows]="projects"
+  <app-crud-table
     [columns]="columns"
     [rowClass]="rowClass"
-    [actions]="actions"
-    [showAddButton]="clientDetails.permissions.canManipulateProject || false"
+    [showManipulateOptions]="clientDetails.permissions.canManipulateProject || false"
     [filters]="filters"
-    [totalElements]="totalElements"
-    [pageIndex]="pageIndex"
-    [pageSize]="pageSize"
-    (pageQueryEvent)="onPageQuery($event)"
-    (rowClick)="onRowClick($event)"
-    (addClick)="createProject()">
-  </app-entity-table>
+    entityName="Project"
+    [view]="viewProject"
+    [create]="createProject"
+    [update]="updateProject"
+    [delete]="deleteProject"
+    [pageQuery]="loadProjects"
+    >
+  </app-crud-table>
 }
 
 <ng-template #projectStatusTemplate let-status>

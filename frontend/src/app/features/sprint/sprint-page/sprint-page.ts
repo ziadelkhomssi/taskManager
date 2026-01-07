@@ -15,6 +15,7 @@ import { ErrorDialog } from '../../../shared/component/dialog/error-dialog';
 import { DialogService } from '../../../core/services/dialog-service';
 import { SprintStatusChip } from "../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip";
 import { TicketStatusChip } from "../../../shared/component/status-chip/ticket-status-chip/ticket-status-chip";
+import { CrudTable } from '../../../shared/component/crud-table/crud-table';
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {
   page: 0,
@@ -38,7 +39,7 @@ export interface TicketStatusCellContext {
   imports: [
     MatCardModule,
     MatButtonModule,
-    EntityTable,
+    CrudTable,
     DatePipe,
     UserListPreviewButton,
     SprintStatusChip,
@@ -48,6 +49,17 @@ export interface TicketStatusCellContext {
   styleUrl: './sprint-page.css',
 })
 export class SprintPage {
+  constructor(
+    private sprintService: SprintService, 
+    private ticketService: TicketService,
+    private dialogService: DialogService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private location: Location,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
+
   clientDetails!: ClientDetails;
   
   sprintDetails: SprintDetails = {
@@ -60,8 +72,6 @@ export class SprintPage {
   };
 
   previewParticipants: UserSummary[] = [];
-
-  tickets: TicketSummary[] = [];
 
   @ViewChild("ticketStatusTemplate", { static: true })
   ticketStatusTemplate!: TemplateRef<TicketStatusCellContext>;
@@ -77,42 +87,14 @@ export class SprintPage {
       || ticket.status === "COMPLETED"
       ,
   });
-
-  actions = [
-    {
-      label: "Update",
-      callback: (ticket: TicketSummary) => this.updateTicket(ticket)
-    },
-    {
-      label: "Delete",
-      callback: (ticket: TicketSummary) => this.deleteTicket(ticket)
-    },
-  ];
-
   filters: string[] = [
     "Ticket",
     "Status",
     "User"
   ];
 
-  lastTicketsQuery: PageQuery = DEFAULT_TICKETS_QUERY;
-  pageIndex = 0;
-  pageSize = 10;
-  totalElements = 0;
-
   sprintUserFetcher = (query: PageQuery) => 
     this.sprintService.getUserSummaryList(this.sprintDetails.id, query);
-
-  constructor(
-    private sprintService: SprintService, 
-    private ticketService: TicketService,
-    private dialogService: DialogService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private dialog: MatDialog,
-    private location: Location,
-    private router: Router,
-    private route: ActivatedRoute
-  ) { }
 
   ngOnInit() {
     this.clientDetails = this.route.snapshot.data["clientDetails"];
@@ -148,7 +130,6 @@ export class SprintPage {
       next: (response) => {
         this.sprintDetails = response;
         this.loadPreviewParticipants();
-        this.loadTickets(DEFAULT_TICKETS_QUERY);
 
         this.changeDetectorRef.detectChanges();
       },
@@ -178,34 +159,6 @@ export class SprintPage {
     });
   }
 
-  loadTickets(pageQuery: PageQuery) {
-    this.sprintService.getTicketSummaryList(
-      this.sprintDetails.id,
-      pageQuery
-    ).subscribe({
-      next: (response) => {
-        this.tickets = response.content || [];
-        this.pageIndex = response.pageable?.pageNumber || 0;
-        this.pageSize = response.pageable?.pageSize || 0;
-        this.totalElements = response.totalElements || 0;
-        this.changeDetectorRef.detectChanges();
-      },
-      error: (error) => {
-        console.error("Could not load tickets!", error);
-        this.tickets = [];
-        this.pageIndex = 0;
-        this.pageSize = 0;
-        this.totalElements = 0;
-        this.changeDetectorRef.detectChanges();
-
-        this.dialogService.openErrorDialog(
-          "Could not load tickets!\nPlease try again later!", 
-          null
-        );
-      }
-    })
-  }
-
   updateSprint() {
     this.router.navigate(["/sprint/update/" + this.sprintDetails.id]);
   }
@@ -226,13 +179,25 @@ export class SprintPage {
     });});
   }
 
-  onPageQuery(pageQuery: PageQuery) {
-    this.lastTicketsQuery = pageQuery;
-    this.loadTickets(pageQuery);
+  loadTickets = (pageQuery: PageQuery) => {
+    return this.sprintService.getTicketSummaryList(
+      this.sprintDetails.id,
+      pageQuery
+    );
   }
-
-  onRowClick(ticket: TicketSummary) {
-    this.viewTicket(ticket);
+  viewTicket = (ticket: TicketSummary) => {
+    this.router.navigate(["/ticket/" + ticket.id]);
+  }
+  createTicket = () => {
+    this.router.navigate(["/ticket/create"], 
+      { queryParams: { sprintId: this.sprintDetails.id } }
+    );
+  }
+  updateTicket = (ticket: TicketSummary) => {
+    this.router.navigate(["/ticket/update/" + ticket.id]);
+  }
+  deleteTicket = (ticket: TicketSummary) => {
+    return this.ticketService.deleteById(ticket.id);
   }
 
   onOpenParticipantList() {
@@ -248,32 +213,5 @@ export class SprintPage {
         description: "Sprint Participants"
       }
     });
-  }
-
-  viewTicket(ticket: TicketSummary) {
-    this.router.navigate(["/ticket/" + ticket.id]);
-  }
-  createTicket() {
-    this.router.navigate(["/ticket/create"], { queryParams: { sprintId: this.sprintDetails.id } });
-  }
-  updateTicket(ticket: TicketSummary) {
-    this.router.navigate(["/ticket/update/" + ticket.id]);
-  }
-  deleteTicket(ticket: TicketSummary) {
-    this.dialogService.openConfirmDialog(
-      `Delete Ticket ${ticket.title}?`, null, null, null,
-      () => {
-        this.ticketService.deleteById(
-          ticket.id
-        ).subscribe({
-          next: () => {
-            this.loadTickets(this.lastTicketsQuery);
-          },
-          error: (error) => {
-            console.error("Could not delete ticket!", error);
-            this.dialogService.openErrorDialog(
-              "Could not delete ticket!\nPlease try again later!", null
-            );
-    }});});
   }
 }

@@ -1,0 +1,43 @@
+table {
+  width: 100%;
+}
+
+button {
+  margin-right: 8px;
+}
+
+.entity-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.add-button {
+  white-space: nowrap;
+}
+
+:host ::ng-deep .mat-mdc-row {
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+:host ::ng-deep .row-normal {
+  background-color: transparent;
+}
+
+:host ::ng-deep .row-unimportant {
+  background-color: #dddddd;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:host ::ng-deep .row-important {
+  background-color: #fde3e3;
+  font-weight: 500;
+}
+
+:host ::ng-deep .mat-mdc-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}

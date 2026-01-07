@@ -17,6 +17,7 @@ import { ConfirmDialog } from '../../../shared/component/dialog/confirm-dialog';
 import { DialogService } from '../../../core/services/dialog-service';
 import { ProjectStatusChip } from "../../../shared/component/status-chip/project-status-chip/project-status-chip";
 import { SprintStatusChip } from '../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip';
+import { CrudTable } from '../../../shared/component/crud-table/crud-table';
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {
   page: 0,
@@ -42,7 +43,7 @@ export interface SprintStatusCellContext {
     UserListPreviewButton,
     MatCardModule,
     MatButtonModule,
-    EntityTable,
+    CrudTable,
     FallbackImage,
     ProjectStatusChip,
     SprintStatusChip
@@ -51,6 +52,16 @@ export interface SprintStatusCellContext {
   styleUrl: './project-page.css',
 })
 export class ProjectPage {
+  constructor(
+    private projectService: ProjectService, 
+    private sprintService: SprintService,
+    private dialogService: DialogService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
+
   clientDetails!: ClientDetails;
 
   projectDetails: ProjectDetails = {
@@ -59,13 +70,16 @@ export class ProjectPage {
     description: "PLACEHOLDER",
     status: "PLANNED",
   };
+
   previewParticipants: UserSummary[] = [];
-  sprints: SprintSummary[] = [];
+  projectUserFetcher = (query: PageQuery) => 
+    this.projectService.getUserSummaryList(
+      this.projectDetails.id, query
+    );
 
   @ViewChild("sprintStatusTemplate", { static: true })
   sprintStatusTemplate!: TemplateRef<SprintStatusCellContext>;
   
-  columns!: TableColumn<SprintSummary, SprintStatusCellContext>[];
   rowClass = (sprint: SprintSummary) => ({
     "row-important": 
       new Date(sprint.dueDate).getTime() < Date.now() && sprint.status == "ACTIVE"
@@ -79,18 +93,7 @@ export class ProjectPage {
       || sprint.status === "PLANNED"
       ,
   });
-
-  actions = [
-    {
-      label: "Update",
-      callback: (sprint: SprintSummary) => this.updateSprint(sprint)
-    },
-    {
-      label: "Delete",
-      callback: (sprint: SprintSummary) => this.deleteSprint(sprint)
-    },
-  ];
-
+  columns!: TableColumn<SprintSummary, SprintStatusCellContext>[];
   filters: string[] = [
     "Sprint",
     "Status",
@@ -98,34 +101,10 @@ export class ProjectPage {
     "User"
   ];
 
-  lastSprintsQuery: PageQuery = DEFAULT_SPRINTS_QUERY;
-  pageIndex = 0;
-  pageSize = 10;
-  totalElements = 0;
-
   cacheBuster = Date.now().toString();
-
-  projectUserFetcher = (query: PageQuery) => 
-    this.projectService.getUserSummaryList(
-      this.projectDetails.id, query
-    );
-
-  constructor(
-    private projectService: ProjectService, 
-    private sprintService: SprintService,
-    private dialogService: DialogService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private dialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute
-  ) { }
 
   ngOnInit() {
     this.clientDetails = this.route.snapshot.data["clientDetails"];
-
-    if (!this.clientDetails.permissions.canManipulateSprint) {
-      this.actions = [];
-    }
 
     this.cacheBuster = Date.now().toString();
     this.columns = [
@@ -163,14 +142,7 @@ export class ProjectPage {
     this.projectService.getDetailsById(id).subscribe({
       next: (response) => {
         this.projectDetails = response;
-
-        this.projectUserFetcher = (query: PageQuery) => 
-          this.projectService.getUserSummaryList(
-            this.projectDetails.id, query
-          );
-
         this.loadPreviewParticipants();
-        this.loadSprints(DEFAULT_SPRINTS_QUERY);
 
         this.changeDetectorRef.detectChanges();
       },
@@ -197,31 +169,6 @@ export class ProjectPage {
     });
   }
 
-  loadSprints(pageQuery: PageQuery) {
-    this.projectService.getSprintSummaryList(
-      this.projectDetails.id,
-      pageQuery
-    ).subscribe({
-      next: (response) => {
-        this.sprints = response.content || [];
-        this.pageIndex = response.pageable?.pageNumber || 0;
-        this.pageSize = response.pageable?.pageSize || 0;
-        this.totalElements = response.totalElements || 0;
-        this.changeDetectorRef.detectChanges();
-      },
-      error: (error) => {
-        console.error("Could not load sprints!", error);
-        this.sprints = [];
-        this.pageIndex = 0;
-        this.pageSize = 0;
-        this.totalElements = 0;
-        this.changeDetectorRef.detectChanges();
-
-        this.dialogService.openErrorDialog("Could not load sprints!\nPlease try again later!", null);
-      }
-    })
-  }
-
   updateProject() {
     this.router.navigate(["/project/update/" + this.projectDetails.id]);
   }
@@ -242,13 +189,29 @@ export class ProjectPage {
     });});
   }
 
-  onPageQuery(pageQuery: PageQuery) {
-    this.lastSprintsQuery = pageQuery;
-    this.loadSprints(pageQuery);
+  loadSprints = (pageQuery: PageQuery) => {
+    return this.projectService.getSprintSummaryList(
+      this.projectDetails.id,
+      pageQuery
+    );
   }
-
-  onRowClick(sprint: SprintSummary) {
-    this.viewSprint(sprint);
+  viewSprint = (sprint: SprintSummary) => {
+    this.router.navigate(["/sprint/" + sprint.id]);
+  }
+  createSprint = () => {
+    this.router.navigate(
+      ["/sprint/create"], 
+      {queryParams: {projectId: this.projectDetails.id} }
+    );
+  }
+  updateSprint = (sprint: SprintSummary) => {
+    this.router.navigate(
+      ["/sprint/update/" + sprint.id], 
+      {queryParams: {projectId: this.projectDetails.id} }
+    );
+  }
+  deleteSprint = (sprint: SprintSummary) => {
+    return this.sprintService.deleteById(sprint.id);
   }
 
   onOpenParticipantList() {
@@ -264,32 +227,5 @@ export class ProjectPage {
         description: "Project Participants"
       }
     });
-  }
-
-  viewSprint(sprint: SprintSummary) {
-    this.router.navigate(["/sprint/" + sprint.id]);
-  }
-  createSprint() {
-    this.router.navigate(["/sprint/create"], {queryParams: {projectId: this.projectDetails.id} });
-  }
-  updateSprint(sprint: SprintSummary) {
-    this.router.navigate(["/sprint/update/" + sprint.id], {queryParams: {projectId: this.projectDetails.id} });
-  }
-  deleteSprint(sprint: SprintSummary) {
-    this.dialogService.openConfirmDialog(
-      `Delete Sprint ${sprint.title}?`, null, null, null,
-      () => {
-        this.sprintService.deleteById(
-          sprint.id
-        ).subscribe({
-          next: () => {
-            this.loadSprints(this.lastSprintsQuery);
-          },
-          error: (error) => {
-            console.error("Could not delete sprint!", error);
-            this.dialogService.openErrorDialog(
-              "Could not delete sprint!\nPlease try again later!", null
-            );
-    }});});
   }
 }
