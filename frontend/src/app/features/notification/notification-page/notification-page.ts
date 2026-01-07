@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { EntityTable, TableColumn } from "../../../shared/component/entity-table/entity-table";
 import { NotificationDetails, TicketDetails } from '../../../core/ng-openapi';
 import { PageQuery } from '../../../shared/types/types';
 import { NotificationService } from '../../../core/services/notification-service';
@@ -10,6 +9,7 @@ import { TicketStatusChip } from "../../../shared/component/status-chip/ticket-s
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { TableColumn } from '../../../shared/component/crud-table/crud-table';
 
 export interface TicketStatusCellContext {
   $implicit: TicketDetails["status"];

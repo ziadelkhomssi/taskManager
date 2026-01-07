@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { ClientDetails, ProjectDetails, SprintDetails, SprintSummary, UserSummary } from '../../../core/ng-openapi';
-import { EntityTable, TableColumn } from '../../../shared/component/entity-table/entity-table';
 import { SprintService } from '../../../core/services/sprint-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../../../core/services/project-service';
@@ -17,7 +16,7 @@ import { ConfirmDialog } from '../../../shared/component/dialog/confirm-dialog';
 import { DialogService } from '../../../core/services/dialog-service';
 import { ProjectStatusChip } from "../../../shared/component/status-chip/project-status-chip/project-status-chip";
 import { SprintStatusChip } from '../../../shared/component/status-chip/sprint-status-chip/sprint-status-chip';
-import { CrudTable } from '../../../shared/component/crud-table/crud-table';
+import { CrudTable, TableColumn } from '../../../shared/component/crud-table/crud-table';
 import { EntityCard } from "../../../shared/component/entity-card/entity-card";
 
 const DEFAULT_PREVIEW_PARTICIPANTS_QUERY: PageQuery = {

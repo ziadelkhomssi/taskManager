@@ -1,16 +1,15 @@
 import { Routes } from '@angular/router';
-import { Dashboard } from './features/dashboard/dashboard';
 import { environment } from '../environments/environment';
-import { EntityTableDemo } from './shared/component/entity-table/entity-table-demo';
-import { ProjectPage } from './features/project/project-page/project-page';
-import { SprintPage } from './features/sprint/sprint-page/sprint-page';
-import { UserProfile } from './features/user/user-profile/user-profile';
-import { NotificationPage } from './features/notification/notification-page/notification-page';
-import { TicketPage } from './features/ticket/ticket-page/ticket-page';
-import { SprintForm } from './features/sprint/sprint-form/sprint-form';
-import { ProjectForm } from './features/project/project-form/project-form';
-import { TicketForm } from './features/ticket/ticket-form/ticket-form';
 import { clientDataResolver } from './core/resolver/client-data-resolver';
+import { Dashboard } from './features/dashboard/dashboard';
+import { NotificationPage } from './features/notification/notification-page/notification-page';
+import { ProjectForm } from './features/project/project-form/project-form';
+import { ProjectPage } from './features/project/project-page/project-page';
+import { SprintForm } from './features/sprint/sprint-form/sprint-form';
+import { SprintPage } from './features/sprint/sprint-page/sprint-page';
+import { TicketForm } from './features/ticket/ticket-form/ticket-form';
+import { TicketPage } from './features/ticket/ticket-page/ticket-page';
+import { UserProfile } from './features/user/user-profile/user-profile';
 import { CrudTableDemo } from './shared/component/crud-table/crud-table-demo';
 
 export const routes: Routes = [
@@ -96,10 +95,6 @@ export const routes: Routes = [
     
     ...(environment.enableDevelopmentRoutes
     ? [
-        {
-          path: "entity-table-demo",
-          component: EntityTableDemo,
-        },
         {
           path: "crud-table-demo",
           component: CrudTableDemo,

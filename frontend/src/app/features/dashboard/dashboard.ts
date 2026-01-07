@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
-import { EntityTable, TableColumn } from '../../shared/component/entity-table/entity-table';
 import { ClientDetails, ProjectDetails, ProjectSummary } from '../../core/ng-openapi';
 import { ProjectService } from '../../core/services/project-service';
 import { response } from 'express';
@@ -10,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PageQuery } from '../../shared/types/types';
 import { ProjectStatusChip } from "../../shared/component/status-chip/project-status-chip/project-status-chip";
 import { DialogService } from '../../core/services/dialog-service';
-import { CrudTable } from '../../shared/component/crud-table/crud-table';
+import { CrudTable, TableColumn } from '../../shared/component/crud-table/crud-table';
 
 export interface ProjectStatusCellContext {
   $implicit: ProjectDetails["status"];
