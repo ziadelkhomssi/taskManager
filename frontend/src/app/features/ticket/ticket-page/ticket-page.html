@@ -51,12 +51,14 @@
     />
   </div>
 
-  <app-ticket-comment-thread
-    [comments]="comments"
-    [clientDetails]="clientDetails"
-    [ticketId]="ticketDetails.id"
-    (createComment)="onCreateComment($event)"
-    (updateComment)="onUpdateComment($event)"
-    (deleteComment)="onDeleteComment($event)"
-  />
+  <div class="scrollable">
+    <app-ticket-comment-thread
+      [comments]="comments"
+      [clientDetails]="clientDetails"
+      [ticketId]="ticketDetails.id"
+      (createComment)="onCreateComment($event)"
+      (updateComment)="onUpdateComment($event)"
+      (deleteComment)="onDeleteComment($event)"
+    />
+  </div>
 </div>
