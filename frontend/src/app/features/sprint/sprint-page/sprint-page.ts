@@ -93,6 +93,7 @@ export class SprintPage {
     "Status",
     "User"
   ];
+  isLoadTicketData: boolean = false;
 
   sprintUserFetcher = (query: PageQuery) => 
     this.sprintService.getUserSummaryList(this.sprintDetails.id, query);
@@ -131,8 +132,9 @@ export class SprintPage {
       next: (response) => {
         this.sprintDetails = response;
         this.loadPreviewParticipants();
-
         this.changeDetectorRef.detectChanges();
+        
+        this.isLoadTicketData = true;
       },
       error: (error) => {
         console.error("Could not load sprint!", error);

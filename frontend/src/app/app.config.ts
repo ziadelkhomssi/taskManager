@@ -4,8 +4,9 @@ import { provideRouter, withRouterConfig } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { environment } from '../environments/environment.development';
+import { environment } from '../environments/environment.ngrok';
 import { loaderInterceptor } from './core/interceptors/loader-interceptor';
+import { ngrokInterceptor } from './core/interceptors/ngrok-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +14,9 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes, withRouterConfig({ onSameUrlNavigation: 'reload' })), 
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withInterceptors([loaderInterceptor]))
+    provideHttpClient(withInterceptors([
+      loaderInterceptor,
+      ...(environment.bypassNgrokWarning ? [ngrokInterceptor] : [])
+    ]))
   ]
 };

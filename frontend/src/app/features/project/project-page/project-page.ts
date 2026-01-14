@@ -101,6 +101,7 @@ export class ProjectPage {
     "Ticket",
     "User"
   ];
+  isLoadSprintData: boolean = false;
 
   cacheBuster = Date.now().toString();
 
@@ -144,8 +145,8 @@ export class ProjectPage {
       next: (response) => {
         this.projectDetails = response;
         this.loadPreviewParticipants();
-
         this.changeDetectorRef.detectChanges();
+        this.isLoadSprintData = true;
       },
       error: (error) => {
         console.error("Could not load project!", error);

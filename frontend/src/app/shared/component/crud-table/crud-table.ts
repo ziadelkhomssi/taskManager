@@ -92,6 +92,7 @@ export class CrudTable<T> {
   @Input() delete: (entity: T) => Observable<void> = () => {
     return new Observable
   };
+  @Input() isLoadData: boolean = false;
 
 	rows: T[] = [];
 
@@ -105,6 +106,13 @@ export class CrudTable<T> {
     search: "", 
     filter: "" 
   };
+
+  ngOnChanges() {
+    if (!this.isLoadData) {
+      return
+    }
+    this.loadEntities(this.lastPageQuery);
+  }
 
 	onPageChange(event: PageEvent) {
 		this.pageIndex = event.pageIndex;
