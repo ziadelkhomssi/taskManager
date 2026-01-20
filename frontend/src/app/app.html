@@ -1,62 +1,61 @@
-<app-loader/>
+@if(loading) {
+  <div class="loading-overlay">
+    <mat-spinner></mat-spinner>
+    <p>Loading Task Manager...</p>
+  </div>
+}
 
-<mat-sidenav-container class="sidenav-container">
+<div class="app-content">
+  <app-loader />
 
-  <mat-sidenav #drawer class="sidenav" mode="side">
-    <div class="sidebar-content">
-      <button mat-button class="sidebar-button" routerLink="/">
-        <span>Dashboard</span>
-      </button>
-      
-      <div class="sidebar-spacer"></div>
-      
-      @if(clientDetails$ | async; as clientDetails) {
+  <mat-sidenav-container class="sidenav-container">
+
+    <mat-sidenav #drawer class="sidenav" mode="side">
+      <div class="sidebar-content">
+        <button mat-button class="sidebar-button" routerLink="/">
+          <span>Dashboard</span>
+        </button>
+
+        <div class="sidebar-spacer"></div>
+
+        @if(clientDetails$ | async; as clientDetails) {
         <button mat-raised-button class="profile-button" [routerLink]="['/user', clientDetails.userId]">
           <div class="profile-info">
-            <img src="{{clientDetails.profilePictureUrl}}" alt="Profile picture" class="profile-avatar"/>
-          
+            <img src="{{clientDetails.profilePictureUrl}}" alt="Profile picture" class="profile-avatar" />
+
             <div class="profile-text">
               <div class="profile-name">{{clientDetails.name}}</div>
             </div>
           </div>
         </button>
-      }
-      
-      <button mat-raised-button color="warn" class="logout-button" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        Logout
-      </button>
-    </div>
-  </mat-sidenav>
+        }
 
-  <mat-sidenav-content>
-    <mat-toolbar color="primary" class="floating-toolbar">
-      <button mat-icon-button (click)="drawer.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
+        <button mat-raised-button color="warn" class="logout-button" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </div>
+    </mat-sidenav>
 
-      <span class="toolbar-title">Task Manager</span>
+    <mat-sidenav-content>
+      <mat-toolbar color="primary" class="floating-toolbar">
+        <button mat-icon-button (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
 
-      <button 
-        mat-icon-button 
-        class="notification-bell" 
-        routerLink="/notifications"
-        >
-        <mat-icon
-          class="notification-badge"
-          aria-hidden="false"
-          matBadge="​" 
-          [matBadgeHidden]="!hasUnreadNotifications" 
-          matBadgePosition="below before" 
-          matBadgeColor="accent"
-          >
-          notifications
-        </mat-icon>
-      </button>
-    </mat-toolbar>
+        <span class="toolbar-title">Task Manager</span>
 
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+        <button mat-icon-button class="notification-bell" routerLink="/notifications">
+          <mat-icon class="notification-badge" aria-hidden="false" matBadge="​"
+            [matBadgeHidden]="!hasUnreadNotifications" matBadgePosition="below before" matBadgeColor="accent">
+            notifications
+          </mat-icon>
+        </button>
+      </mat-toolbar>
+
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

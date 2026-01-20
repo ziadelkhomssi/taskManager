@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ClientDetails, TicketCommentCreate, TicketCommentDetails, TicketCommentUpdate, TicketDetails, UserSummary } from '../../../core/ng-openapi';
@@ -6,7 +6,7 @@ import { TicketStatusChip } from "../../../shared/component/status-chip/ticket-s
 import { TicketService } from '../../../core/services/ticket-service';
 import { DialogService } from '../../../core/services/dialog-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { isPlatformBrowser, Location } from '@angular/common';
 import { FallbackImage } from '../../../shared/directive/fallback-image/fallback-image';
 import { TicketCommentThread } from "../comment/ticket-comment-thread/ticket-comment-thread";
 import { TicketCommentService } from '../../../core/services/ticket-comment-service';
@@ -62,10 +62,15 @@ export class TicketPage {
     private changeDetectorRef: ChangeDetectorRef,
     private location: Location,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    
     this.clientDetails = this.route.snapshot.data["clientDetails"];
 
     this.route.params.subscribe((params) => {

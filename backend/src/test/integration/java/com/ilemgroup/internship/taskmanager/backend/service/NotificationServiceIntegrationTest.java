@@ -5,6 +5,7 @@ import com.ilemgroup.internship.taskmanager.backend.dto.details.NotificationDeta
 import com.ilemgroup.internship.taskmanager.backend.entity.*;
 import com.ilemgroup.internship.taskmanager.backend.entity.enums.NotificationType;
 import com.ilemgroup.internship.taskmanager.backend.repository.*;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -108,7 +109,7 @@ public class NotificationServiceIntegrationTest {
     }
 
     @Test
-    void testCreateNotification() {
+    void testCreateNotification() throws MessagingException {
         Project project = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
         User user = userRepository.save(TestEntityFactory.createBaseUser());

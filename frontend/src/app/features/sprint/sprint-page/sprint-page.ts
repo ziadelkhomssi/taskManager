@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, PLATFORM_ID, TemplateRef, ViewChild } from '@angular/core';
 import { ClientDetails, SprintDetails, TicketDetails, TicketSummary, UserSummary } from '../../../core/ng-openapi';
 import { TicketService } from '../../../core/services/ticket-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SprintService } from '../../../core/services/sprint-service';
-import { Location, DatePipe } from '@angular/common';
+import { Location, DatePipe, isPlatformBrowser } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { PageQuery } from '../../../shared/types/types';
@@ -58,7 +58,8 @@ export class SprintPage {
     private dialog: MatDialog,
     private location: Location,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   clientDetails!: ClientDetails;
@@ -99,6 +100,10 @@ export class SprintPage {
     this.sprintService.getUserSummaryList(this.sprintDetails.id, query);
 
   ngOnInit() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.clientDetails = this.route.snapshot.data["clientDetails"];
 
     this.columns = [

@@ -49,11 +49,11 @@ public class TicketCommentService {
                 .map((comment) -> ticketCommentMapper.toDetails(comment, baseUrl));
     }
 
-    public void createTicketComment(TicketCommentCreate command) {
+    public void createTicketComment(TicketCommentCreate command) throws AccessDeniedException {
         Ticket ticket = ticketRepository.findById(command.ticketId())
                 .orElseThrow(() -> new EntityNotFoundException("Ticket not found: " + command.ticketId()));
         User user = userRepository.findById(
-                        Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName()
+                        AuthorizationService.getClientUserId()
                 )
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + command.ticketId()));
 

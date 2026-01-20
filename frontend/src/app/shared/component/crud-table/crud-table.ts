@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output, PLATFORM_ID, TemplateRef } from '@angular/core';
 import { PageQuery } from '../../types/types';
 import { SearchBar, SearchQuery } from '../search-bar/search-bar';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PageableObject, SortObject } from '../../../core/ng-openapi';
 import { Observable } from 'rxjs';
 import { DialogService } from '../../../core/services/dialog-service';
@@ -61,7 +61,8 @@ export class CrudTable<T> {
   constructor(
     private dialogService: DialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private location: Location
+    private location: Location,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   @Input() entityName: string = "Entity";
@@ -138,6 +139,10 @@ export class CrudTable<T> {
 	}
 
 	loadEntities(pageQuery: PageQuery) {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.pageQuery(
       pageQuery
     ).subscribe({

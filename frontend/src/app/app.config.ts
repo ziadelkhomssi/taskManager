@@ -7,6 +7,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { environment } from '../environments/environment.ngrok';
 import { loaderInterceptor } from './core/interceptors/loader-interceptor';
 import { ngrokInterceptor } from './core/interceptors/ngrok-interceptor';
+import { credentialInterceptor } from './core/interceptors/credential-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptors([
       loaderInterceptor,
+      credentialInterceptor,
       ...(environment.bypassNgrokWarning ? [ngrokInterceptor] : [])
     ]))
   ]

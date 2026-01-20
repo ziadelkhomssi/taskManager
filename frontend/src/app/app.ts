@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, signal } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { afterNextRender, ApplicationInitStatus, ChangeDetectorRef, Component, Inject, PLATFORM_ID, signal } from '@angular/core';
+import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
@@ -12,9 +12,11 @@ import { MatButtonModule, MatIconButton } from '@angular/material/button';
 import { NotificationService } from './core/services/notification-service';
 import { DialogService } from './core/services/dialog-service';
 import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser } from '@angular/common';
 import { MatBadgeModule } from '@angular/material/badge';
 import { Loader } from "./shared/component/loader/loader";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { AuthenticationService } from './core/services/authentication-service';
 
 @Component({
   selector: 'app-root',
@@ -29,24 +31,29 @@ import { Loader } from "./shared/component/loader/loader";
     MatBadgeModule,
     MatButtonModule,
     FallbackImage,
-    Loader
+    Loader,
+    MatProgressSpinner
 ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('frontend');
+  protected readonly title = signal("frontend");
+
+  loading = true;
 
   clientDetails$!: Observable<ClientDetails | null>;
   hasUnreadNotifications: boolean = false;
   
   constructor(
+    private authenticationService: AuthenticationService,
     private userService: UserService,
     private notificationService: NotificationService,
     private dialogService: DialogService,
     private router: Router,
     private route: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.router.events
       .subscribe((event) => {
@@ -60,10 +67,19 @@ export class App {
   }
 
   ngOnInit() {
+    if (this.authenticationService.isLoggedIn().subscribe(
+      (loggedIn) => {
+        this.loading = !loggedIn
+      }
+    ))
     this.clientDetails$ = this.userService.clientDetails$
   }
 
   checkNotifications() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.notificationService.getHasUnread().subscribe({
       next: (response) => {
         this.hasUnreadNotifications = response;
@@ -80,6 +96,7 @@ export class App {
   }
 
   logout() {
-    console.log("woah!! you logged out (jk)")
-  }
+    this.loading = true;
+    this.router.navigate(["/authentication/logout"]);
+  }   
 }

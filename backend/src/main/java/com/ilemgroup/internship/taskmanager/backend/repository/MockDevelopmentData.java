@@ -57,7 +57,18 @@ public class MockDevelopmentData implements CommandLineRunner {
                 null
         );
 
-        userRepository.saveAll(List.of(user1, user2));
+        User userAzure = new User(
+                "00000000-0000-0000-5eb8-9c27ce8b92c1",
+                "Marie Koll",
+                "ADMIN",
+                "mariecrudecoal@outlook.com",
+                "Fullstack Developer",
+                "static/image/user/mock/user_jane_profile_picture.png",
+                null,
+                null
+        );
+
+        userRepository.saveAll(List.of(user1, user2, userAzure));
 
 
         Project project1 = new Project(

@@ -31,7 +31,7 @@ public class TicketCommentController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER', 'TEAM_MEMBER')")
-    public void createTicketComment(@RequestBody @Valid TicketCommentCreate command) {
+    public void createTicketComment(@RequestBody @Valid TicketCommentCreate command) throws AccessDeniedException {
         ticketCommentService.createTicketComment(command);
     }
 

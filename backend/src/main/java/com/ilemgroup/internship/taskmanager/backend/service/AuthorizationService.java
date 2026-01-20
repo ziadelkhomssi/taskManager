@@ -5,6 +5,9 @@ import com.mysql.cj.xdevapi.Client;
 import org.mapstruct.Named;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
@@ -39,12 +42,11 @@ public class AuthorizationService {
 
     public static String getClientUserId() throws AccessDeniedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null) {
-            throw new AccessDeniedException("User is not authenticated!");
+        if (authentication instanceof OAuth2AuthenticationToken token &&
+                token.getPrincipal() instanceof OidcUser user) {
+            return user.getIdToken().getClaims().get("oid").toString();
         }
-
-        return authentication.getName();
+        throw new AccessDeniedException("User not authenticated or not an OidcUser");
     }
 
     @Named("buildPermissionsFromRole")

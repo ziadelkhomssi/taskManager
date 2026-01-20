@@ -1,5 +1,8 @@
+import { commonEnvironment } from "./environment.common";
+
 export const environment = {
-    API_URL: "http://localhost:8080", // fill in your own ngrok url here
+    ...commonEnvironment,
+    API_URL: "https://fasciate-meri-archesporial.ngrok-free.dev/api", // fill in your own ngrok url here
     bypassNgrokWarning: true,
     enableDevelopmentRoutes: true,
 };

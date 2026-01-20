@@ -11,94 +11,112 @@ import { TicketForm } from './features/ticket/ticket-form/ticket-form';
 import { TicketPage } from './features/ticket/ticket-page/ticket-page';
 import { UserProfile } from './features/user/user-profile/user-profile';
 import { CrudTableDemo } from './shared/component/crud-table/crud-table-demo';
+import { authenticationGuard } from './core/guards/authentication-guard';
+import { Login } from './features/authentication/login/login';
+import { Logout } from './features/authentication/logout/logout';
 
 export const routes: Routes = [
-  { 
-    path: "", 
+  {
+    path: "",
+    pathMatch: "prefix",
     component: Dashboard,
+    canActivate: [authenticationGuard],
     resolve: { clientDetails: clientDataResolver },
   },
-  { 
-    path: "project", 
-    resolve: { clientDetails: clientDataResolver }, 
+  {
+    path: "project",
+    canActivate: [authenticationGuard],
+    resolve: { clientDetails: clientDataResolver },
     children: [
-      { 
-        path: "create", 
+      {
+        path: "create",
         component: ProjectForm,
         resolve: { clientDetails: clientDataResolver },
       },
-      { 
-        path: "update/:id", 
+      {
+        path: "update/:id",
         component: ProjectForm,
         resolve: { clientDetails: clientDataResolver },
-       },
-      { 
-        path: ":id", 
+      },
+      {
+        path: ":id",
         component: ProjectPage,
         resolve: { clientDetails: clientDataResolver },
       },
-    ] 
+    ]
   },
-  { 
-    path: "sprint", 
+  {
+    path: "sprint",
     resolve: { clientDetails: clientDataResolver },
+    canActivate: [authenticationGuard],
     children: [
-      { 
-        path: "create", 
+      {
+        path: "create",
         component: SprintForm,
         resolve: { clientDetails: clientDataResolver },
       },
-      { 
-        path: "update/:id", 
+      {
+        path: "update/:id",
         component: SprintForm,
         resolve: { clientDetails: clientDataResolver },
       },
-      { 
-        path: ":id", 
+      {
+        path: ":id",
         component: SprintPage,
         resolve: { clientDetails: clientDataResolver },
       },
-    ] 
+    ]
   },
-  { 
-    path: "ticket", 
+  {
+    path: "ticket",
     resolve: { clientDetails: clientDataResolver },
+    canActivate: [authenticationGuard],
     children: [
-      { 
-        path: "create", 
+      {
+        path: "create",
         component: TicketForm,
         resolve: { clientDetails: clientDataResolver },
       },
-      { 
-        path: "update/:id", 
+      {
+        path: "update/:id",
         component: TicketForm,
         resolve: { clientDetails: clientDataResolver },
       },
-      { 
-        path: ":id", 
+      {
+        path: ":id",
         component: TicketPage,
         resolve: { clientDetails: clientDataResolver },
       },
-    ] 
+    ]
   },
-  { 
-    path: "user/:id", 
-    component: UserProfile, 
+  {
+    path: "user/:id",
+    component: UserProfile,
+    canActivate: [authenticationGuard],
     resolve: { clientDetails: clientDataResolver },
   },
-  { 
-    path: "notifications", 
-    component: NotificationPage, 
-    resolve: { clientDetails: clientDataResolver },
+  {
+    path: "notifications",
+    canActivate: [authenticationGuard],
+    component: NotificationPage,
   },
 
-    
-    ...(environment.enableDevelopmentRoutes
+  {
+    path: "authentication/login",
+    component: Login
+  },
+  {
+    path: "authentication/logout",
+    component: Logout
+  },
+
+
+  ...(environment.enableDevelopmentRoutes
     ? [
-        {
-          path: "crud-table-demo",
-          component: CrudTableDemo,
-        },
-      ]
+      {
+        path: "crud-table-demo",
+        component: CrudTableDemo,
+      },
+    ]
     : []),
 ];

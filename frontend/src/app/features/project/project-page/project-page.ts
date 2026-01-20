@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, PLATFORM_ID, TemplateRef, ViewChild } from '@angular/core';
 import { ClientDetails, ProjectDetails, SprintDetails, SprintSummary, UserSummary } from '../../../core/ng-openapi';
 import { SprintService } from '../../../core/services/sprint-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../../../core/services/project-service';
 import { FallbackImage } from '../../../shared/directive/fallback-image/fallback-image';
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule, formatDate, isPlatformBrowser } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { PageQuery } from '../../../shared/types/types';
@@ -60,7 +60,8 @@ export class ProjectPage {
     private changeDetectorRef: ChangeDetectorRef,
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   clientDetails!: ClientDetails;
@@ -106,9 +107,11 @@ export class ProjectPage {
   cacheBuster = Date.now().toString();
 
   ngOnInit() {
-    this.clientDetails = this.route.snapshot.data["clientDetails"];
+    if (!isPlatformBrowser(this.platformId)) {
+      this.cacheBuster = Date.now().toString();
+      return;
+    }
 
-    this.cacheBuster = Date.now().toString();
     this.columns = [
       {
         columnDef: "id",
@@ -134,6 +137,8 @@ export class ProjectPage {
         cell: sprint => formatDate(new Date(sprint.dueDate), "yyyy-MM-dd", "en-US")
       }
     ];
+
+    this.clientDetails = this.route.snapshot.data["clientDetails"];
 
     this.route.params.subscribe(params => {
       this.loadProjectDetails(params["id"])

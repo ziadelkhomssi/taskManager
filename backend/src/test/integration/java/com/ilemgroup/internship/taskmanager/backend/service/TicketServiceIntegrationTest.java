@@ -15,6 +15,7 @@ import com.ilemgroup.internship.taskmanager.backend.repository.ProjectRepository
 import com.ilemgroup.internship.taskmanager.backend.repository.SprintRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.TicketRepository;
 import com.ilemgroup.internship.taskmanager.backend.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -217,7 +218,7 @@ public class TicketServiceIntegrationTest {
     }
 
     @Test
-    void testCreateTicket() {
+    void testCreateTicket() throws MessagingException {
         Project project = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
         User user = userRepository.save(TestEntityFactory.createBaseUser());
@@ -238,7 +239,7 @@ public class TicketServiceIntegrationTest {
     }
 
     @Test
-    void testUpdateTicket() {
+    void testUpdateTicket() throws MessagingException {
         Project project = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
         User user = userRepository.save(TestEntityFactory.createBaseUser());
