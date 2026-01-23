@@ -188,7 +188,7 @@ export class CrudTable<T> {
       () => {
         this.delete(row).subscribe({
           next: () => {
-            this.location.back();
+            this.loadEntities(this.lastPageQuery);
           },
           error: (error) => {
             console.error(`Could not delete ${this.entityName.toLowerCase()}!`, error);
