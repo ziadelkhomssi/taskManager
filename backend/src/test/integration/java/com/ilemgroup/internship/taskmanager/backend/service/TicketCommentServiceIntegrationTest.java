@@ -73,7 +73,7 @@ public class TicketCommentServiceIntegrationTest {
 
     @Test
     @WithMockUser(username = "abc123", password = "mypasswordwoah", roles = {"TEAM_MEMBER"})
-    void testCreateTicketComment() {
+    void testCreateTicketComment() throws AccessDeniedException {
         Project project = projectRepository.save(TestEntityFactory.createBaseProject());
         Sprint sprint = sprintRepository.save(TestEntityFactory.createBaseSprint(project));
         User user = TestEntityFactory.createBaseUser();

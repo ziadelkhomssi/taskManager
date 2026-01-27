@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,8 +16,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 @Configuration
 @EnableMethodSecurity
@@ -27,9 +23,6 @@ public class SecurityConfiguration {
 
     @Value("${allowed.origins}")
     private String[] allowedOrigins;
-
-    @Value("${FRONTEND_URL}")
-    private String frontendUrl;
 
     @Autowired
     private CustomOidcUserService customOidcUserService;
@@ -84,14 +77,9 @@ public class SecurityConfiguration {
     }
 
     private LogoutSuccessHandler oidcLogoutSuccessHandler() {
-        OidcClientInitiatedLogoutSuccessHandler handler =
-                new OidcClientInitiatedLogoutSuccessHandler(
-                        clientRegistrationRepository
-                );
-
-        handler.setPostLogoutRedirectUri(frontendUrl);
-
-        return handler;
+        return new OidcClientInitiatedLogoutSuccessHandler(
+                clientRegistrationRepository
+        );
     }
 
 }
