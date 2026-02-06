@@ -108,9 +108,10 @@ export class ProjectPage {
 
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) {
-      this.cacheBuster = Date.now().toString();
       return;
     }
+
+    this.cacheBuster = Date.now().toString();
 
     this.columns = [
       {
