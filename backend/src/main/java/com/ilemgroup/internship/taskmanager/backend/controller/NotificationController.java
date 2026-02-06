@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.nio.file.AccessDeniedException;
 
 @RestController
-@RequestMapping("/notification")
+@RequestMapping("/api/notification")
 public class NotificationController {
 
     @Autowired

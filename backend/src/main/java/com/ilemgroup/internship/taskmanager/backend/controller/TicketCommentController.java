@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.nio.file.AccessDeniedException;
 
 @RestController
-@RequestMapping("/ticketComment")
+@RequestMapping("/api/ticketComment")
 public class TicketCommentController {
     @Autowired
     private TicketCommentService ticketCommentService;

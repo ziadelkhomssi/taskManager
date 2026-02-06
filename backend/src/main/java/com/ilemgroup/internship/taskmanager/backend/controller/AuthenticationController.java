@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
-@RequestMapping("/authentication")
+@RequestMapping("/api/authentication")
 public class AuthenticationController {
     @GetMapping("/status")
     public ResponseEntity<Void> status(@AuthenticationPrincipal OidcUser principal) {
@@ -22,8 +24,8 @@ public class AuthenticationController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         new SecurityContextLogoutHandler().logout(request, response, null);
-        return "redirect:https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/oauth2/v2.0/logout";
+        response.sendRedirect("https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/oauth2/v2.0/logout");
     }
 }

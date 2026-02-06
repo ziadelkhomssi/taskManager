@@ -17,7 +17,7 @@ public interface UserMapper {
     @Mapping(target = "id", source = "azureOid")
     @Mapping(
             target = "profilePictureUrl",
-            expression = "java(baseUrl + \"/user/profile-picture/\" + user.getAzureOid())"
+            expression = "java(baseUrl + \"/api/user/profile-picture/\" + user.getAzureOid())"
     )
     UserSummary toSummary(User user, @Context String baseUrl);
 
@@ -27,14 +27,14 @@ public interface UserMapper {
     @Mapping(target = "id", source = "azureOid")
     @Mapping(
             target = "profilePictureUrl",
-            expression = "java(baseUrl + \"/user/profile-picture/\" + user.getAzureOid())"
+            expression = "java(baseUrl + \"/api/user/profile-picture/\" + user.getAzureOid())"
     )
     UserDetails toDetails(User user, @Context String baseUrl);
 
     @Mapping(target = "userId", source = "azureOid")
     @Mapping(
             target = "profilePictureUrl",
-            expression = "java(baseUrl + \"/user/profile-picture/\" + user.getAzureOid())"
+            expression = "java(baseUrl + \"/api/user/profile-picture/\" + user.getAzureOid())"
     )
     @Mapping(target = "permissions", source = "role", qualifiedByName = "buildPermissionsFromRole")
     ClientDetails toClientDetails(User user, @Context String baseUrl);

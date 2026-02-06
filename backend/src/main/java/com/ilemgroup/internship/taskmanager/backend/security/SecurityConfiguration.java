@@ -38,10 +38,12 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/error",
-                                "/authentication/status"
+                                "/api/authentication/status"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/api/**"
+                        ).authenticated()
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler((request, response, authentication) -> {

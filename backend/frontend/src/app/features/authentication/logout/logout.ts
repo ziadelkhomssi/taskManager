@@ -16,6 +16,6 @@ export class Logout {
       return;
     }
 
-    window.location.href = `${environment.API_URL}/logout`;
+    window.location.href = `${environment.API_URL}/authentication/logout`;
   }
 }

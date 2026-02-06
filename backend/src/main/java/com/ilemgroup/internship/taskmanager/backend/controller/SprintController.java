@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/sprint")
+@RequestMapping("/api/sprint")
 public class SprintController {
     @Autowired
     private SprintService sprintService;

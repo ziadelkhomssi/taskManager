@@ -28,7 +28,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/api/project")
 public class ProjectController {
     @Autowired
     private ProjectService projectService;

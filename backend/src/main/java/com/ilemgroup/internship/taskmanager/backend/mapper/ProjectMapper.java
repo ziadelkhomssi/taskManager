@@ -18,14 +18,14 @@ public interface ProjectMapper {
 
     @Mapping(
             target = "profilePictureUrl",
-            expression = "java(baseUrl + \"/project/profile-picture/\" + project.getId())"
+            expression = "java(baseUrl + \"/api/project/profile-picture/\" + project.getId())"
     )
     ProjectSummary toSummary(Project project, @Context String baseUrl);
     List<ProjectSummary> toSummaryList(List<Project> projectList);
 
     @Mapping(
             target = "profilePictureUrl",
-            expression = "java(baseUrl + \"/project/profile-picture/\" + project.getId())"
+            expression = "java(baseUrl + \"/api/project/profile-picture/\" + project.getId())"
     )
     ProjectDetails toDetails(Project project, @Context String baseUrl);
 

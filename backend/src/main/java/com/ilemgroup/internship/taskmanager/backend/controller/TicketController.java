@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/ticket")
+@RequestMapping("/api/ticket")
 public class TicketController {
     @Autowired
     private TicketService ticketService;

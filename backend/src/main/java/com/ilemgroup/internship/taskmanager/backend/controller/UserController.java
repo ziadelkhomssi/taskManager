@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
