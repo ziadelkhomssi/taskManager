@@ -11,6 +11,8 @@ import com.ilemgroup.internship.taskmanager.backend.repository.TicketRepository;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
@@ -43,6 +45,8 @@ public class NotificationService {
 
     @Autowired
     private TemplateEngine templateEngine;
+
+    private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
     public Page<NotificationDetails> getAllForClient(
             Pageable pageable
@@ -110,10 +114,15 @@ public class NotificationService {
             }
         }
 
-        emailService.sendHtml(
-                recipient.getEmail(),
-                title,
-                body
-        );
+        try {
+            emailService.sendHtml(
+                    recipient.getEmail(),
+                    title,
+                    body
+            );
+        } catch (MessagingException e) {
+            logger.error("Email failed to send!");
+        }
+
     }
 }
