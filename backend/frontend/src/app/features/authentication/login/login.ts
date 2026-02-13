@@ -15,6 +15,6 @@ export class Login {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    window.location.href = `${environment.API_URL}/oauth2/authorization/azure`;
+    window.location.href = `${environment.API_URL}/authentication/login`;
   }
 }

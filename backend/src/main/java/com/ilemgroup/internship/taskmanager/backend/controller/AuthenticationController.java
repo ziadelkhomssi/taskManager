@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -21,6 +22,16 @@ public class AuthenticationController {
         return (principal != null)
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @GetMapping("/login")
+    public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String baseUrl = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .build()
+                .toUriString();
+        new SecurityContextLogoutHandler().logout(request, response, null);
+        response.sendRedirect(baseUrl + "/oauth2/authorization/azure");
     }
 
     @GetMapping("/logout")

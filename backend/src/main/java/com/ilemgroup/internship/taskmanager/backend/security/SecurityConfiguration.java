@@ -1,15 +1,19 @@
 package com.ilemgroup.internship.taskmanager.backend.security;
 
+import com.ilemgroup.internship.taskmanager.backend.security.filter.NoAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -23,11 +27,13 @@ public class SecurityConfiguration {
 
     @Value("${allowed.origins}")
     private String[] allowedOrigins;
+    @Value("${app.authentication.enabled}")
+    private Boolean isAuthenticationEnabled;
 
     @Autowired
     private CustomOidcUserService customOidcUserService;
     @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
+    private NoAuthenticationFilter noAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -44,24 +50,35 @@ public class SecurityConfiguration {
                                 "/api/**"
                         ).authenticated()
                         .anyRequest().permitAll()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler((request, response, authentication) -> {
-                            String redirectUrl =
-                                    request.getScheme()
-                                            + "://"
-                                            + request.getServerName() +
-                                            "/";
-
-                            response.sendRedirect(redirectUrl);
-                        })
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .oidcUserService(customOidcUserService)
-                        )
-                )
-                .logout(logout -> logout
-                        .logoutSuccessHandler(oidcLogoutSuccessHandler())
                 );
+
+        if (!isAuthenticationEnabled) {
+            http.addFilterBefore(
+                    noAuthenticationFilter,
+                    AnonymousAuthenticationFilter.class
+            );
+        }
+        else {
+            http
+                    .oauth2Login(oauth2 -> oauth2
+                            .successHandler((
+                                    request,
+                                    response,
+                                    authentication) -> {
+                                String redirectUrl =
+                                        request.getScheme()
+                                                + "://"
+                                                + request.getServerName() +
+                                                "/";
+
+                                response.sendRedirect(redirectUrl);
+                            })
+                            .userInfoEndpoint(userInfo -> userInfo
+                                    .oidcUserService(customOidcUserService)
+                            )
+                    )
+                    .logout(Customizer.withDefaults());
+        }
 
         return http.build();
     }
@@ -76,12 +93,6 @@ public class SecurityConfiguration {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
-    }
-
-    private LogoutSuccessHandler oidcLogoutSuccessHandler() {
-        return new OidcClientInitiatedLogoutSuccessHandler(
-                clientRegistrationRepository
-        );
     }
 
 }
