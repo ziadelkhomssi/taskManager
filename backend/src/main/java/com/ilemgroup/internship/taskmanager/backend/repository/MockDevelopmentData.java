@@ -17,7 +17,6 @@ import java.time.ZoneId;
 import java.util.List;
 
 @Configuration
-@Profile("development")
 public class MockDevelopmentData implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
